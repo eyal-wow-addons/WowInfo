@@ -1,0 +1,33 @@
+tag f0089a105594db4e3a430b303519f5676a8d2037 1.10b
+Author:	Eyal Solnik <eyal@solnik.net>
+Date:	Wed Mar 10 12:35:33 2021 +0200
+
+Update the Great Vault Progress display
+
+commit 2b8d7b25f546bfc34e80180ea15ef6c51e9b3f57
+Author: Eyal Solnik <eyal@solnik.net>
+Date:   Wed Mar 10 12:34:59 2021 +0200
+
+    Update version
+
+commit 8b3611f4b54e0241cd5012348ab9b463c79d3ea1
+Author: Eyal Solnik <eyal@solnik.net>
+Date:   Tue Mar 9 04:55:01 2021 +0200
+
+    Update the display of Great Vault Progress
+    
+    1. Previously, most of the string on the left was gray but the
+    threshhold number to indicate that the player is on progress but
+    it was hardly noticeable so now I color the whole string.
+    
+    2. Fixed some quirks with the logic.
+
+commit 3f21b3240ab19eb96ac1e27b4d9caa5bc2d0c71b
+Author: Eyal Solnik <eyal@solnik.net>
+Date:   Thu Feb 4 23:31:35 2021 +0200
+
+    Refactor Scripts\Collections
+    
+    It's the first part of an on going refactoring series
+    which will allow me to add data broker support and other features.
+

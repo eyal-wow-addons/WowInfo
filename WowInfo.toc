@@ -1,0 +1,52 @@
+## Interface: 100100
+## Author: Eyal Alon
+## Title: Wow|cff40a5f7Info|r
+## Notes: Provides game and character information.
+## IconTexture: 939375
+
+## Version: 1.10 BETA
+## SavedVariables: WowInfoDB
+
+Libs\LibStub.lua
+Libs\CallbackHandler-1.0.lua
+Libs\AceAddon-3.0\AceAddon-3.0.xml
+Libs\AceEvent-3.0\AceEvent-3.0.xml
+Libs\AceHook-3.0\AceHook-3.0.xml
+Libs\AceGUI-3.0\AceGUI-3.0.xml
+Libs\AceConfig-3.0\AceConfig-3.0.xml
+Libs\AceDB-3.0\AceDB-3.0.xml
+Libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
+
+Main.lua
+
+Core\Events.lua
+Core\AceOptions.lua
+Core\Character.lua
+Core\Realm.lua
+Core\ScriptLoader.lua
+Core\Tooltip.lua
+
+API\Collections.lua
+API\Achievements.lua
+
+Storage\Gold.lua
+Storage\GuildFriends.lua
+Storage\Reputation.lua
+Storage\Social.lua
+
+Scripts\Collections.lua
+Scripts\ConnectedRealms.lua
+Scripts\Currency.lua
+Scripts\GreatVaultProgress.lua
+Scripts\DailyReset.lua
+Scripts\Durability.lua
+Scripts\Experience.lua
+Scripts\Gold.lua
+Scripts\GuildFriends.lua
+Scripts\Instances.lua
+Scripts\PvPStatus.lua
+Scripts\Reputation.lua
+Scripts\Social.lua
+Scripts\Speedometer.lua
+
+Options.lua
