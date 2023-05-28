@@ -15,7 +15,7 @@ local function GetFactionDisplayInfoByID(factionID)
         local factionName = GetFactionInfoByID(factionID)
         if factionName then
             local _, _, standingID, repMin, repMax, repValue = GetFactionInfoByID(factionID)
-            local friendID = GetFriendshipReputation(factionID)
+            local friendID = C_GossipInfo.GetFriendshipReputation(factionID)
             local isCapped
 
             local gender = UnitSex("player")
@@ -25,7 +25,7 @@ local function GetFactionDisplayInfoByID(factionID)
             local hasParagonRewardPending = false
 
             if friendID then
-                local _, friendRep, _, _, _, _, friendTextLevel, friendThreshold, nextFriendThreshold = GetFriendshipReputation(factionID)
+                local _, friendRep, _, _, _, _, friendTextLevel, friendThreshold, nextFriendThreshold = C_GossipInfo.GetFriendshipReputation(factionID)
                 if nextFriendThreshold then
                     repMin, repMax, repValue = friendThreshold, nextFriendThreshold, friendRep
                 else

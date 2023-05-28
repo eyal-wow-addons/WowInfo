@@ -1,4 +1,4 @@
-if not MinimapZoneTextButton:IsVisible() then return end
+if not MinimapCluster.ZoneTextButton:IsVisible() then return end
 
 local _, addon = ...
 local module = addon:NewModule("Scripts:Speedometer", "AceEvent-3.0")
@@ -24,11 +24,11 @@ local function UpdateText()
 end
 
 local function UpdateTextWhenStartMoving()
-    MinimapZoneTextButton:SetScript("OnUpdate", UpdateText)
+    MinimapCluster.ZoneTextButton:SetScript("OnUpdate", UpdateText)
 end
 
 local function UpdateTextWhenStopMoving()
-    MinimapZoneTextButton:SetScript("OnUpdate", nil)
+    MinimapCluster.ZoneTextButton:SetScript("OnUpdate", nil)
     Minimap_Update()
 end
 
@@ -58,7 +58,7 @@ module:RegisterEvent("UNIT_EXITED_VEHICLE", function(event, unit)
     end
 end)
 
-MinimapZoneTextButton:HookScript("OnEnter", function(self)
+MinimapCluster.ZoneTextButton:HookScript("OnEnter", function(self)
     Tooltip:AddEmptyLine()
 
     local _, runSpeed, flightSpeed, swimSpeed = GetUnitSpeed("player")
