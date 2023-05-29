@@ -1,6 +1,6 @@
 local _, addon = ...
 
-local API = {}
+local Lib = {}
 
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("PLAYER_LOGIN")
@@ -18,30 +18,30 @@ do
             func(index)
             queue[index] = nil
         end
-        for key, plugins in pairs(queue) do
-            for index, plugin in ipairs(plugins) do 
-                plugin(key, index)
+        for key, funcs in pairs(queue) do
+            for index, func in ipairs(funcs) do 
+                func(key, index)
             end
             queue[key] = nil
         end
     end
 
-    function API:RegisterScript(key, func)
-        local plugin = queue[key]
-        if not plugin then
+    function Lib:RegisterFunctionByKey(key, func)
+        local funcs = queue[key]
+        if not funcs then
             queue[key] = {}
-            plugin = queue[key]
+            funcs = queue[key]
         end
-        tinsert(plugin, func)
+        tinsert(funcs, func)
     end
 
-    function API:RegisterFunction(func)
+    function Lib:RegisterFunction(func)
         tinsert(queue, func)
     end
 end
 
-function API:RegisterHookScript(frame, event, func)
-    self:RegisterScript(frame, function()
+function Lib:RegisterHookScript(frame, event, func)
+    self:RegisterFunctionByKey(frame, function()
         frame:HookScript(event, func)
     end)
 end
@@ -58,7 +58,7 @@ do
 
         local module = addon:NewModule(moduleName, ...)
 
-        for name, func in pairs(API) do
+        for name, func in pairs(Lib) do
             if not module[name] then
                 module[name] = func
             end

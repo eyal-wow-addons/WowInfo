@@ -17,7 +17,6 @@ storage:RegisterFunction(function()
     end
     local rep = addon.DB.global.Reputation
     local charFullName = Character:GetFullName()
-    print(charFullName)
     rep[charFullName] = rep[charFullName] or {}
     Factions = rep[charFullName]
 end)
