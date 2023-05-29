@@ -24,7 +24,7 @@ plugin:RegisterHookScript(LFDMicroButton, "OnEnter", function()
             if defeatedBosses < maxBosses then
                 Tooltip:AddRightHighlightDoubleLine(label, INSTANCE_INFO_STATS_FORMAT:format(defeatedBosses, maxBosses))
             else
-                Tooltip:AddDoubleLine(label, INSTANCE_CLEARED_STATUS, nil, nil, nil, RED_FONT_COLOR.r, RED_FONT_COLOR.g, RED_FONT_COLOR.b)
+                Tooltip:AddDoubleLine(label, INSTANCE_CLEARED_STATUS, nil, nil, nil, RED_FONT_COLOR:GetRGB())
             end
             isSaved = true
         end
@@ -32,7 +32,7 @@ plugin:RegisterHookScript(LFDMicroButton, "OnEnter", function()
 
     for index = 1, GetNumSavedWorldBosses() do
         local bossName, worldBossID = GetSavedWorldBossInfo(index)
-        Tooltip:AddDoubleLine(bossName, BOSS_DEAD, nil, nil, nil, RED_FONT_COLOR.r, RED_FONT_COLOR.g, RED_FONT_COLOR.b)
+        Tooltip:AddDoubleLine(bossName, BOSS_DEAD, nil, nil, nil, RED_FONT_COLOR:GetRGB())
         isSaved = true
     end
 

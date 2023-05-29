@@ -14,8 +14,8 @@ local FRIENDS_BNET_CLIENT_OTHER_LABEL_FORMAT = "%s |cffffffff(|r%s|cffffffff)|r"
 local FRIENDS_BNET_STATUS_TABLE = {"|cffff0000<AFK>|r", "|cffff0000<DND>|r", ""}
 local FRIENDS_BNET_NO_CLASS_COLOR = "ffffffff"
 
-local FRIENDS_ACTIVE_ZONE_COLOR = {r=0.3, g=1.0, b=0.3}
-local FRIENDS_INACTIVE_ZONE_COLOR = {r=0.65, g=0.65, b=0.65}
+local FRIENDS_ACTIVE_ZONE_COLOR = CreateColor(0.3, 1.0, 0.3)
+local FRIENDS_INACTIVE_ZONE_COLOR = CreateColor(0.65, 0.65, 0.65)
 local FRIENDS_GROUPED_TABLE = {"|cffaaaaaa*|r", ""}
 
 plugin:RegisterHookScript(QuickJoinToastButton, "OnEnter", function()

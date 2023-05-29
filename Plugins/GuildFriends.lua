@@ -76,9 +76,9 @@ plugin:RegisterHookScript(GuildMicroButton, "OnEnter", function()
             end
             if zone then
                 local color = RAID_CLASS_COLORS[class]
-                Tooltip:AddRightHighlightDoubleLine(name .. status, zone, color.r, color.g, color.b)
+                Tooltip:AddRightHighlightDoubleLine(name .. status, zone, color:GetRGB())
             else
-                Tooltip:AddDoubleLine(name, zone, GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b)
+                Tooltip:AddDoubleLine(name, zone, GRAY_FONT_COLOR:GetRGB())
             end
         end
     end

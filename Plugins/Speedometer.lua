@@ -20,7 +20,7 @@ local function FormatSpeed(speed)
 end
 
 local function UpdateText()
-    MinimapZoneText:SetTextColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
+    MinimapZoneText:SetTextColor(NORMAL_FONT_COLOR:GetRGB())
     MinimapZoneText:SetText(FormatSpeed(GetUnitSpeed(currentUnit)))
 end
 

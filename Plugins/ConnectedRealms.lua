@@ -8,8 +8,6 @@ if #realms == 0 then return end
 
 local CONNECTED_REALMS_LABEL = "Connected Realms:"
 
-local REALM_CLASS_COLOR_FORMAT = "|cff%.2x%.2x%.2x%s|r"
-
 plugin:SecureHook("MainMenuBarPerformanceBarFrame_OnEnter", function()
     Tooltip:AddEmptyLine()
     Tooltip:AddHighlightLine(CONNECTED_REALMS_LABEL)
@@ -18,9 +16,7 @@ plugin:SecureHook("MainMenuBarPerformanceBarFrame_OnEnter", function()
 
     for _, realm in ipairs(realms) do
         if realm == playerRealm then
-            local _, englishClass = UnitClass("player")
-            local classColor = englishClass and RAID_CLASS_COLORS[englishClass] or NORMAL_FONT_COLOR
-            realm = REALM_CLASS_COLOR_FORMAT:format(classColor.r * 255, classColor.g * 255, classColor.b * 255, realm)
+            realm = GetClassColoredTextForUnit("player", realm)
         end
         Tooltip:AddLine(realm)
     end

@@ -11,7 +11,6 @@ local TOTAL_GOLD_LABEL = "Total"
 local GOLD_LABEL = "Gold:"
 
 local REALM_PATTERN = "% - (.+)"
-local CHARACTER_CLASS_COLOR_FORMAT = "|cff%.2x%.2x%.2x%s|r"
 
 local sum, goldInfo = 0, {}
 
@@ -75,9 +74,7 @@ plugin:RegisterHookScript(MainMenuBarBackpackButton, "OnEnter", function()
             local isCharacterCurrentPlayer = character == Character:GetName()
 
             if isCharacterCurrentPlayer then
-                local _, englishClass = UnitClass("player")
-                local classColor = englishClass and RAID_CLASS_COLORS[englishClass] or NORMAL_FONT_COLOR
-                character = CHARACTER_CLASS_COLOR_FORMAT:format(classColor.r * 255, classColor.g * 255, classColor.b * 255, character)
+                character = GetClassColoredTextForUnit("player", character)
             end
 
             if isCharacterCurrentPlayer or gold > db:GetMinGoldAmount() then
