@@ -1,12 +1,10 @@
 local _, addon = ...
-local plugin = addon:NewPlugin("Reputation")
+local plugin, db = addon:NewPlugin("Reputation")
 
 local Tooltip = addon.Tooltip
-local ReputationDB = addon.ReputationDB
 
 local REPUTATION_LABEL = "Reputation:"
 local STANDING_FORMAT = "%s / %s"
-local FACTION_NAME_FORMAT = "|cff%.2x%.2x%.2x%s|r"
 
 local factions = {}
 
@@ -15,7 +13,7 @@ local function GetFactionDisplayInfoByID(factionID)
         local factionName = GetFactionInfoByID(factionID)
         if factionName then
             local _, _, standingID, repMin, repMax, repValue = GetFactionInfoByID(factionID)
-            local friendID = C_GossipInfo.GetFriendshipReputation(factionID)
+            local repInfo = C_GossipInfo.GetFriendshipReputation(factionID)
             local isCapped
 
             local gender = UnitSex("player")
@@ -24,16 +22,15 @@ local function GetFactionDisplayInfoByID(factionID)
 
             local hasParagonRewardPending = false
 
-            if friendID then
-                local _, friendRep, _, _, _, _, friendTextLevel, friendThreshold, nextFriendThreshold = C_GossipInfo.GetFriendshipReputation(factionID)
-                if nextFriendThreshold then
-                    repMin, repMax, repValue = friendThreshold, nextFriendThreshold, friendRep
+            if repInfo.friendshipFactionID > 0 then
+                if repInfo.nextThreshold then
+                    repMin, repMax, repValue = repInfo.reactionThreshold, repInfo.nextThreshold, repInfo.standing
                 else
                     repMin, repMax, repValue = 0, 1, 1
                     isCapped = true
                 end
                 standingID = 5 -- Always color friendship factions with green
-                standing = friendTextLevel
+                standing = repInfo.reaction
             elseif C_Reputation.IsFactionParagon(factionID) then
                 local currentValue, threshold, _, hasRewardPending, tooLowLevelForParagon = C_Reputation.GetFactionParagonInfo(factionID)
                 repMin, repMax, repValue = 0, threshold, currentValue % threshold
@@ -53,7 +50,7 @@ local function GetFactionDisplayInfoByID(factionID)
 
             repMax = AbbreviateNumbers(repMax)
             repValue = AbbreviateNumbers(repValue)
-            factionName = FACTION_NAME_FORMAT:format(standingColor.r * 255, standingColor.g * 255, standingColor.b * 255, factionName)
+            factionName = standingColor:WrapTextInColorCode(factionName)
 
             return factionName, standing, isCapped, repValue, repMax, hasParagonRewardPending
         end
@@ -68,7 +65,7 @@ plugin:RegisterHookScript(CharacterMicroButton, "OnEnter", function()
     for index = 1, GetNumFactions() do
         local factionID =  select(14, GetFactionInfo(index))
         factionName, standing, isCapped, repValue, repMax, hasParagonRewardPending = GetFactionDisplayInfoByID(factionID)
-        if ReputationDB:HasFactionsTracked() and ReputationDB:IsSelectedFaction(factionID) or (ReputationDB:GetAlwaysShowParagon() and hasParagonRewardPending) then
+        if db:HasFactionsTracked() and db:IsSelectedFaction(factionID) or (db:GetAlwaysShowParagon() and hasParagonRewardPending) then
             table.insert(factions, {factionName, standing, isCapped, repValue, repMax})
         end
     end
