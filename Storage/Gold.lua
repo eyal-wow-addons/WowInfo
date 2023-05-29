@@ -1,11 +1,10 @@
 if not MainMenuBarBackpackButton:IsVisible() then return end
 
 local _, addon = ...
-local module = addon:NewModule("Storage:Gold")
-local Events = addon.Events
+local storage, db = addon:NewStorage("Gold")
+local options, Gold
 
-local GoldDB, Gold, options = {}
-addon.GoldDB = GoldDB
+local Events = addon.Events
 
 local defaults = {
     profile = {
@@ -14,10 +13,10 @@ local defaults = {
     }
 }
 
-function module:OnInitialize()
-    Events:New(GoldDB)
+function storage:OnInitialize()
+    Events:New(db)
 
-    options = addon.DB:RegisterNamespace("Gold", defaults)
+    options = self:RegisterDB(defaults)
 
     if not addon.DB.global.Gold then
         addon.DB.global.Gold = {}
@@ -32,40 +31,42 @@ function module:OnInitialize()
     Gold = addon.DB.global.Gold[englishFaction]
 end
 
-function GoldDB:UpdateGold(player, money)
+function db:UpdateGold(player, money)
     Gold[player] = money
 end
 
-function GoldDB:GetGoldInfo()
+function db:GetGoldInfo()
     return pairs(Gold)
 end
 
-function GoldDB:ResetGold()
+function db:ResetGold()
     for key, value in pairs(addon.DB.global.Gold) do
         if type(value) ~= "table" then
             addon.DB.global.Gold[key] = nil
         end
     end
+
     for player in self:GetGoldInfo() do
         Gold[player] = nil
     end
+
     Gold[addon.Character:GetFullName()] = GetMoney()
 
     self:TriggerEvent("GoldDB_Reset")
 end
 
-function GoldDB:SetMinGoldAmount(value)
+function db:SetMinGoldAmount(value)
     options.profile.minGoldAmount = tonumber(value)
 end
 
-function GoldDB:GetMinGoldAmount()
+function db:GetMinGoldAmount()
     return options.profile.minGoldAmount or 0
 end
 
-function GoldDB:ToggleConnectedRealmsNames()
+function db:ToggleConnectedRealmsNames()
     options.profile.hideConnectedRealmsNames = not options.profile.hideConnectedRealmsNames
 end
 
-function GoldDB:IsConnectedRealmsNamesHidden()
+function db:IsConnectedRealmsNamesHidden()
     return options.profile.hideConnectedRealmsNames
 end

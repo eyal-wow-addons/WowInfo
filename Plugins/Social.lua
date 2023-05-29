@@ -1,8 +1,8 @@
 if not QuickJoinToastButton:IsVisible() then return end
 
 local _, addon = ...
-local module = addon:NewModule("Scripts:Social")
-local ScriptLoader = addon.ScriptLoader
+local plugin = addon:NewPlugin("Social")
+
 local Tooltip = addon.Tooltip
 local SocialDB = addon.SocialDB
 
@@ -18,7 +18,7 @@ local FRIENDS_ACTIVE_ZONE_COLOR = {r=0.3, g=1.0, b=0.3}
 local FRIENDS_INACTIVE_ZONE_COLOR = {r=0.65, g=0.65, b=0.65}
 local FRIENDS_GROUPED_TABLE = {"|cffaaaaaa*|r", ""}
 
-ScriptLoader:AddHookScript(QuickJoinToastButton, "OnEnter", function()
+plugin:RegisterHookScript(QuickJoinToastButton, "OnEnter", function()
     local maxOnlineFriends = SocialDB:GetMaxOnlineFriends()
     if maxOnlineFriends == 0 then return end
 

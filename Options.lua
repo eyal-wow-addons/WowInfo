@@ -1,10 +1,10 @@
 local _, addon = ...
-local module = addon:NewModule("WowInfo:Options", "AceEvent-3.0")
+local options = addon:NewOptions("AceEvent-3.0")
 
-local GoldDB = addon.GoldDB
-local GuildFriendsDB = addon.GuildFriendsDB
-local SocialDB = addon.SocialDB
-local ReputationDB = addon.ReputationDB
+local GoldDB = addon:GetDB("Gold")
+local GuildFriendsDB = addon:GetDB("GuildFriends")
+local SocialDB = addon:GetDB("Social")
+local ReputationDB = addon:GetDB("Reputation")
 
 local function CreateReputationOptions()
     local args = {}
@@ -204,7 +204,7 @@ local function BuildOptions()
     BuildOptions = function() end 
 end
 
-function module:OnInitialize()
+function options:OnInitialize()
     SLASH_WOWINFO1 = "/wowinfo"
     SLASH_WOWINFO2 = "/wowi"
     SLASH_WOWINFO2 = "/wi"

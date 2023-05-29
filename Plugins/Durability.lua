@@ -1,6 +1,6 @@
 local _, addon = ...
-local module = addon:NewModule("Scripts:Durability", "AceEvent-3.0")
-local ScriptLoader = addon.ScriptLoader
+local plugin = addon:NewPlugin("Plugins:Durability", "AceEvent-3.0")
+
 local Tooltip = addon.Tooltip
 
 local DURABILITY_LABEL = "Durability:"
@@ -87,10 +87,10 @@ local function UpdateDurability()
     backpackPct = GetPercentage(backpack, backpackMax)
 end
 
-module:RegisterEvent("UPDATE_INVENTORY_DURABILITY", UpdateDurability)
-module:RegisterEvent("PLAYER_EQUIPMENT_CHANGED", UpdateDurability)
+plugin:RegisterEvent("UPDATE_INVENTORY_DURABILITY", UpdateDurability)
+plugin:RegisterEvent("PLAYER_EQUIPMENT_CHANGED", UpdateDurability)
 
-ScriptLoader:AddHookScript(CharacterMicroButton, "OnEnter", function()
+plugin:RegisterHookScript(CharacterMicroButton, "OnEnter", function()
     Tooltip:AddEmptyLine()
     Tooltip:AddHighlightLine(DURABILITY_LABEL)
     Tooltip:AddDoubleLine(DURABILITY_EQUIPPED_LABEL, inventoryPct and GetColoredText(inventoryPct) or DURABILITY_NA_LABEL)

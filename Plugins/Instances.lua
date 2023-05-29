@@ -1,6 +1,6 @@
 local _, addon = ...
-local module = addon:NewModule("Scripts:Instances")
-local ScriptLoader = addon.ScriptLoader
+local plugin = addon:NewPlugin("Instances")
+
 local Tooltip = addon.Tooltip
 
 local INSTANCE_LABEL = "Dungeons & Raids:"
@@ -9,7 +9,7 @@ local INSTANCE_CLEARED_STATUS = "Cleared"
 local INSTANCE_INFO_LABEL_FORMAT = "%s (%s)"
 local INSTANCE_INFO_STATS_FORMAT = "|cffff0000%d|r / |cff00ff00%d|r"
 
-ScriptLoader:AddHookScript(LFDMicroButton, "OnEnter", function()
+plugin:RegisterHookScript(LFDMicroButton, "OnEnter", function()
     RequestRaidInfo()
 
     Tooltip:AddEmptyLine()

@@ -1,6 +1,6 @@
 local _, addon = ...
-local module = addon:NewModule("Scripts:GreatVaultProgress")
-local ScriptLoader = addon.ScriptLoader
+local plugin = addon:NewPlugin("GreatVaultProgress")
+
 local Tooltip = addon.Tooltip
 
 local GREAT_VAULT_REWARDS_LABEL = GREAT_VAULT_REWARDS .. ":"
@@ -11,6 +11,7 @@ local GREAT_VAULT_UNLOCKED_3RD_REWARD_COLOR = "ffc745f9"
 
 local function AddGreatVaultProgressTooltipInfo(activityInfo)
     local thresholdString, progressString
+    
     if activityInfo.type == Enum.WeeklyRewardChestThresholdType.Raid then
         thresholdString = WEEKLY_REWARDS_THRESHOLD_RAID
     elseif activityInfo.type == Enum.WeeklyRewardChestThresholdType.MythicPlus then
@@ -52,7 +53,7 @@ local function GetActivityInfo(type)
     return info
 end
 
-ScriptLoader:AddHookScript(CharacterMicroButton, "OnEnter", function()
+plugin:RegisterHookScript(CharacterMicroButton, "OnEnter", function()
     if IsPlayerAtEffectiveMaxLevel() then
         Tooltip:AddEmptyLine()
         Tooltip:AddHighlightLine(GREAT_VAULT_REWARDS_LABEL)

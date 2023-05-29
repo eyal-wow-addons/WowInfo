@@ -1,10 +1,11 @@
 local _, addon = ...
-local ScriptLoader = addon.ScriptLoader
+local plugin = addon:NewPlugin("Collections")
+
 local Tooltip = addon.Tooltip
 local Collections = addon.Collections
 local Achievements = addon.Achievements
 
-ScriptLoader:AddHookScript(CollectionsMicroButton, "OnEnter", function()
+plugin:RegisterHookScript(CollectionsMicroButton, "OnEnter", function()
     Tooltip:AddEmptyLine()
 
     local totalMountsString = Collections:GetTotalMountsString()

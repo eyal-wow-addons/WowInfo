@@ -1,10 +1,8 @@
 local _, addon = ...
-local module = addon:NewModule("Storage:Reputation")
-local ScriptLoader = addon.ScriptLoader
-local Character = addon.Character
+local storage, db = addon:NewStorage("Reputation")
+local options, Factions
 
-local ReputationDB, Factions, options = {}
-addon.ReputationDB = ReputationDB
+local Character = addon.Character
 
 local defaults = {
     profile = {
@@ -12,30 +10,31 @@ local defaults = {
     }
 }
 
-ScriptLoader:RegisterScript(function()
-    options = addon.DB:RegisterNamespace("Reputation", defaults)
+storage:RegisterFunction(function()
+    options = storage:RegisterDB(defaults)
     if not addon.DB.global.Reputation then
         addon.DB.global.Reputation = {}
     end
     local rep = addon.DB.global.Reputation
     local charFullName = Character:GetFullName()
+    print(charFullName)
     rep[charFullName] = rep[charFullName] or {}
     Factions = rep[charFullName]
 end)
 
-function ReputationDB:GetAlwaysShowParagon()
+function db:GetAlwaysShowParagon()
     return options.profile.alwaysShowParagon
 end
 
-function ReputationDB:ToggleAlwaysShowParagon()
+function db:ToggleAlwaysShowParagon()
     options.profile.alwaysShowParagon = not options.profile.alwaysShowParagon
 end
 
-function ReputationDB:IsSelectedFaction(factionID)
+function db:IsSelectedFaction(factionID)
     return factionID and select(14, GetFactionInfoByID(factionID)) and Factions[factionID] ~= nil
 end
 
-function ReputationDB:ToggleFaction(factionID)
+function db:ToggleFaction(factionID)
     if factionID and select(14, GetFactionInfoByID(factionID)) then
         if Factions[factionID] then
             Factions[factionID] = nil
@@ -45,7 +44,7 @@ function ReputationDB:ToggleFaction(factionID)
     end
 end
 
-function ReputationDB:HasFactionsTracked()
+function db:HasFactionsTracked()
 	return Factions and next(Factions) and true or false
 end
 

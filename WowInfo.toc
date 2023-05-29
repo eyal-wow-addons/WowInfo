@@ -23,30 +23,30 @@ Core\Events.lua
 Core\AceOptions.lua
 Core\Character.lua
 Core\Realm.lua
-Core\ScriptLoader.lua
 Core\Tooltip.lua
+Core\Collections.lua
+Core\Achievements.lua
 
-API\Collections.lua
-API\Achievements.lua
+PluginCore.lua
 
 Storage\Gold.lua
 Storage\GuildFriends.lua
 Storage\Reputation.lua
 Storage\Social.lua
 
-Scripts\Collections.lua
-Scripts\ConnectedRealms.lua
-Scripts\Currency.lua
-Scripts\GreatVaultProgress.lua
-Scripts\DailyReset.lua
-Scripts\Durability.lua
-Scripts\Experience.lua
-Scripts\Gold.lua
-Scripts\GuildFriends.lua
-Scripts\Instances.lua
-Scripts\PvPStatus.lua
-Scripts\Reputation.lua
-Scripts\Social.lua
-Scripts\Speedometer.lua
+Plugins\Collections.lua
+Plugins\ConnectedRealms.lua
+Plugins\Currency.lua
+Plugins\GreatVaultProgress.lua
+Plugins\DailyReset.lua
+Plugins\Durability.lua
+Plugins\Experience.lua
+Plugins\Gold.lua
+Plugins\GuildFriends.lua
+Plugins\Instances.lua
+Plugins\PvPStatus.lua
+Plugins\Reputation.lua
+Plugins\Social.lua
+Plugins\Speedometer.lua
 
 Options.lua

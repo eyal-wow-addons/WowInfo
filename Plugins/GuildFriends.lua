@@ -1,6 +1,6 @@
 local _, addon = ...
-local module = addon:NewModule("Scripts:GuildFriends")
-local ScriptLoader = addon.ScriptLoader
+local plugin = addon:NewPlugin("GuildFriends")
+
 local Tooltip = addon.Tooltip
 local GuildFriendsDB = addon.GuildFriendsDB
 
@@ -10,7 +10,7 @@ local GUILD_ON_MOBILE_ICON_FORMAT = "|TInterface\\ChatFrame\\UI-ChatIcon-ArmoryC
 local GUILD_FRIEND_AFK = " |cffff0000<AFK>|r"
 local GUILD_FRIEND_DND = " |cffff0000<DND>|r"
 
-ScriptLoader:AddHookScript(GuildMicroButton, "OnEnter", function()
+plugin:RegisterHookScript(GuildMicroButton, "OnEnter", function()
     local maxOnlineGuildFriends = GuildFriendsDB:GetMaxOnlineGuildFriends()
     if maxOnlineGuildFriends == 0 then return end
 

@@ -1,5 +1,6 @@
 local _, addon = ...
-local module = addon:NewModule("Scripts:Experience", "AceHook-3.0")
+local plugin = addon:NewPlugin("Experience", "AceHook-3.0")
+
 local Tooltip = addon.Tooltip
 
 local EXP_LABEL = "Experience:"
@@ -10,7 +11,7 @@ local EXP_TNL_LABEL_FORMAT = "To Next Level (|cffffffff%d|r)"
 local EXP_CURRENT_LABEL = "Current"
 local EXP_RESTED_LABEL = "Rested"
 
-module:SecureHook(ExhaustionTickMixin, "ExhaustionToolTipText", function()
+plugin:SecureHook(ExhaustionTickMixin, "ExhaustionToolTipText", function()
     GameTooltip_SetDefaultAnchor(Tooltip, UIParent)
 
     local xp, xpMax = UnitXP("player"), UnitXPMax("player")

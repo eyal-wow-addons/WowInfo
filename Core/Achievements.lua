@@ -1,5 +1,4 @@
 local _, addon = ...
-
 Achievements = {}
 addon.Achievements = Achievements
 

@@ -1,7 +1,8 @@
 if not MinimapCluster.ZoneTextButton:IsVisible() then return end
 
 local _, addon = ...
-local module = addon:NewModule("Scripts:Speedometer", "AceEvent-3.0")
+local plugin = addon:NewPlugin("Speedometer", "AceEvent-3.0")
+
 local Tooltip = addon.Tooltip
 
 local SPEED_HEADER = STAT_SPEED .. ":"
@@ -32,7 +33,7 @@ local function UpdateTextWhenStopMoving()
     Minimap_Update()
 end
 
-module:RegisterEvent("PLAYER_ENTERING_WORLD", function()
+plugin:RegisterEvent("PLAYER_ENTERING_WORLD", function()
     if UnitInVehicle("player") then
         currentUnit = "vehicle"
     end
@@ -43,16 +44,16 @@ module:RegisterEvent("PLAYER_ENTERING_WORLD", function()
     end
 end)
 
-module:RegisterEvent("PLAYER_STARTED_MOVING", UpdateTextWhenStartMoving)
-module:RegisterEvent("PLAYER_STOPPED_MOVING", UpdateTextWhenStopMoving)
+plugin:RegisterEvent("PLAYER_STARTED_MOVING", UpdateTextWhenStartMoving)
+plugin:RegisterEvent("PLAYER_STOPPED_MOVING", UpdateTextWhenStopMoving)
 
-module:RegisterEvent("UNIT_ENTERED_VEHICLE", function(event, unit)
+plugin:RegisterEvent("UNIT_ENTERED_VEHICLE", function(event, unit)
     if unit == "player" then
         currentUnit = "vehicle"
     end
 end)
 
-module:RegisterEvent("UNIT_EXITED_VEHICLE", function(event, unit)
+plugin:RegisterEvent("UNIT_EXITED_VEHICLE", function(event, unit)
     if unit == "player" then
         currentUnit = "player"
     end

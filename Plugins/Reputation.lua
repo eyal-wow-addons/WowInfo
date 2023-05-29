@@ -1,6 +1,6 @@
 local _, addon = ...
-local module = addon:NewModule("Scripts:Reputation")
-local ScriptLoader = addon.ScriptLoader
+local plugin = addon:NewPlugin("Reputation")
+
 local Tooltip = addon.Tooltip
 local ReputationDB = addon.ReputationDB
 
@@ -60,7 +60,7 @@ local function GetFactionDisplayInfoByID(factionID)
     end
 end
 
-ScriptLoader:AddHookScript(CharacterMicroButton, "OnEnter", function()
+plugin:RegisterHookScript(CharacterMicroButton, "OnEnter", function()
     local factionName, standing, isCapped, repValue, repMax, hasParagonRewardPending
 
     wipe(factions)

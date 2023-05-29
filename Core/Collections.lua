@@ -1,5 +1,4 @@
 local _, addon = ...
-
 Collections = {}
 addon.Collections = Collections
 

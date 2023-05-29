@@ -1,12 +1,11 @@
 if not MainMenuBarBackpackButton:IsVisible() then return end
 
 local _, addon = ...
-local module = addon:NewModule("Scripts:Gold", "AceEvent-3.0")
-local ScriptLoader = addon.ScriptLoader
+local plugin, db = addon:NewPlugin("Gold", "AceEvent-3.0")
+
 local Tooltip = addon.Tooltip
 local Character = addon.Character
 local Realm = addon.Realm
-local GoldDB = addon.GoldDB
 
 local TOTAL_GOLD_LABEL = "Total"
 local GOLD_LABEL = "Gold:"
@@ -27,12 +26,12 @@ end
 local function UpdateGold()
     local money = GetMoney()
 
-    GoldDB:UpdateGold(Character:GetFullName(), money)
+    db:UpdateGold(Character:GetFullName(), money)
 
     sum = 0
     wipe(goldInfo)
 
-    for character, money in GoldDB:GetGoldInfo() do
+    for character, money in db:GetGoldInfo() do
         local isCharacterOnCurrentRealm = character:find(Character:GetRealm())
         if money > 0 and (IsCharacterOnConnectedRealm(character, true) or isCharacterOnCurrentRealm) then
             table.insert(goldInfo, {character, money})
@@ -43,18 +42,18 @@ local function UpdateGold()
     table.sort(goldInfo, SortCharacterNamesAlphabetically)
 end
 
-function module:OnInitialize()
-    GoldDB:RegisterEvent("GoldDB_Reset", UpdateGold)
+function plugin:OnInitialize()
+    db:RegisterEvent("GoldDB_Reset", UpdateGold)
 end
 
-module:RegisterEvent("PLAYER_LOGIN", UpdateGold)
-module:RegisterEvent("PLAYER_MONEY", UpdateGold)
-module:RegisterEvent("SEND_MAIL_MONEY_CHANGED", UpdateGold)
-module:RegisterEvent("SEND_MAIL_COD_CHANGED", UpdateGold)
-module:RegisterEvent("PLAYER_TRADE_MONEY", UpdateGold)
-module:RegisterEvent("TRADE_MONEY_CHANGED", UpdateGold)
+plugin:RegisterEvent("PLAYER_LOGIN", UpdateGold)
+plugin:RegisterEvent("PLAYER_MONEY", UpdateGold)
+plugin:RegisterEvent("SEND_MAIL_MONEY_CHANGED", UpdateGold)
+plugin:RegisterEvent("SEND_MAIL_COD_CHANGED", UpdateGold)
+plugin:RegisterEvent("PLAYER_TRADE_MONEY", UpdateGold)
+plugin:RegisterEvent("TRADE_MONEY_CHANGED", UpdateGold)
 
-ScriptLoader:AddHookScript(MainMenuBarBackpackButton, "OnEnter", function()
+plugin:RegisterHookScript(MainMenuBarBackpackButton, "OnEnter", function()
     Tooltip:AddEmptyLine()
     Tooltip:AddHighlightLine(GOLD_LABEL)
 
@@ -63,7 +62,7 @@ ScriptLoader:AddHookScript(MainMenuBarBackpackButton, "OnEnter", function()
             local character = data[1]
             local isCharacterOnCurrentRealm = character:find(Character:GetRealm())
 
-            if IsCharacterOnConnectedRealm(character, false) and GoldDB:IsConnectedRealmsNamesHidden() then
+            if IsCharacterOnConnectedRealm(character, false) and db:IsConnectedRealmsNamesHidden() then
                 character = character:gsub(REALM_PATTERN, "*")
             elseif isCharacterOnCurrentRealm then
                 character = character:gsub(REALM_PATTERN, "")
@@ -81,7 +80,7 @@ ScriptLoader:AddHookScript(MainMenuBarBackpackButton, "OnEnter", function()
                 character = CHARACTER_CLASS_COLOR_FORMAT:format(classColor.r * 255, classColor.g * 255, classColor.b * 255, character)
             end
 
-            if isCharacterCurrentPlayer or gold > GoldDB:GetMinGoldAmount() then
+            if isCharacterCurrentPlayer or gold > db:GetMinGoldAmount() then
                 Tooltip:AddRightHighlightDoubleLine(character, GetMoneyString(money, true))
             end
         end

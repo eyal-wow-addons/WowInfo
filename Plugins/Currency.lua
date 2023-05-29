@@ -1,6 +1,6 @@
 local _, addon = ...
-local module = addon:NewModule("Scripts:Currency")
-local ScriptLoader = addon.ScriptLoader
+local plugin = addon:NewPlugin("Currency")
+
 local Tooltip = addon.Tooltip
 
 local CURRENCY_ITEM_FORMAT = "|T%s:0|t %s"
@@ -12,12 +12,12 @@ for i = 0, currentExpansionLevel do
     table.insert(expansions, _G["EXPANSION_NAME" .. i])
 end
 
-local function addHeader(name)
+local function AddHeader(name)
     Tooltip:AddEmptyLine()
     Tooltip:AddHighlightLine(("%s Currency:"):format(name))
 end
 
-local function addItem(name, icon, count)
+local function AddItem(name, icon, count)
     local leftText = CURRENCY_ITEM_FORMAT:format(icon, name)
     local rightText = BreakUpLargeNumbers(count)
     if count > 0 then
@@ -27,7 +27,7 @@ local function addItem(name, icon, count)
     end
 end
 
-ScriptLoader:AddHookScript(CharacterMicroButton, "OnEnter", function()
+plugin:RegisterHookScript(CharacterMicroButton, "OnEnter", function()
     local pvpFound = false
     local latestExpansionLevelAvailableForCurrencyFound = false
     local expansionLevel = currentExpansionLevel + 1
@@ -37,12 +37,12 @@ ScriptLoader:AddHookScript(CharacterMicroButton, "OnEnter", function()
             local info = C_CurrencyInfo.GetCurrencyListInfo(j)
             local name, isHeader, count, icon = info.name, info.isHeader, info.quantity, info.iconFileID
             if not isHeader and latestExpansionLevelAvailableForCurrencyFound then
-                addItem(name, icon, count)
+                AddItem(name, icon, count)
             elseif name == expansions[expansionLevel] then
                 local nextName, nextIsHeader = C_CurrencyInfo.GetCurrencyListInfo(j + 1)
                 if nextName and not nextIsHeader then
                     latestExpansionLevelAvailableForCurrencyFound = true
-                    addHeader(name)
+                    AddHeader(name)
                 end
             else
                 -- If we didn't find a header for the latest expansion available
@@ -62,12 +62,12 @@ ScriptLoader:AddHookScript(CharacterMicroButton, "OnEnter", function()
         local info = C_CurrencyInfo.GetCurrencyListInfo(i)
         local name, isHeader, count, icon = info.name, info.isHeader, info.quantity, info.iconFileID
         if not isHeader and pvpFound then
-            addItem(name, icon, count)
+            AddItem(name, icon, count)
         elseif name == PLAYER_V_PLAYER then
             local nextName, nextIsHeader = C_CurrencyInfo.GetCurrencyListInfo(i + 1)
             if nextName and not nextIsHeader then
                 pvpFound = true
-                addHeader(name)
+                AddHeader(name)
             end
         elseif pvpFound then
             break

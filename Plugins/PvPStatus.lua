@@ -1,6 +1,6 @@
 local _, addon = ...
-local module = addon:NewModule("Scripts:PvPStatus", "AceEvent-3.0")
-local ScriptLoader = addon.ScriptLoader
+local plugin = addon:NewPlugin("PvPStatus", "AceEvent-3.0")
+
 local Tooltip = addon.Tooltip
 
 local NO_ARENA_SEASON = 0
@@ -36,11 +36,11 @@ local function GetRatedPvPSeasonState()
 	end
 end
 
-module:RegisterEvent("PVP_TYPES_ENABLED", function(event, wargameBattlegrounds, ratedBattlegrounds, ratedArenas)
+plugin:RegisterEvent("PVP_TYPES_ENABLED", function(event, wargameBattlegrounds, ratedBattlegrounds, ratedArenas)
     ratedPvPDisabled = not ratedBattlegrounds and not ratedArenas
 end)
 
-ScriptLoader:AddHookScript(LFDMicroButton, "OnEnter", function()
+plugin:RegisterHookScript(LFDMicroButton, "OnEnter", function()
     Tooltip:AddEmptyLine()
     Tooltip:AddHighlightLine(PVP_PROGRESS_LABEL)
 

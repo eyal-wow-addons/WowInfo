@@ -1,5 +1,6 @@
 local _, addon = ...
-local module = addon:NewModule("Scripts:DailyReset", "AceHook-3.0")
+local plugin = addon:NewPlugin("DailyReset", "AceHook-3.0")
+
 local Tooltip = addon.Tooltip
 
 local DAILY_RESET_LABEL = "Daily Reset:"
@@ -7,7 +8,7 @@ local DAILY_RESET_LABEL = "Daily Reset:"
 local interval = 1
 local lastUpdate = 0
 
-module:SecureHook("GameTime_UpdateTooltip", function()
+plugin:SecureHook("GameTime_UpdateTooltip", function()
     Tooltip:AddEmptyLine()
 
     local resetTime, maxCount = GetQuestResetTime(), 1
