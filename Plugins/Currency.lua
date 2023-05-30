@@ -1,26 +1,20 @@
 local _, addon = ...
 local plugin = addon:NewPlugin("Currency")
 
+local Currency = addon.Currency
 local Tooltip = addon.Tooltip
 
 local CURRENCY_ITEM_FORMAT = "|T%s:0|t %s"
-
-local expansions = {}
-local currentExpansionLevel = GetClampedCurrentExpansionLevel()
-
-for i = 0, currentExpansionLevel do
-    table.insert(expansions, _G["EXPANSION_NAME" .. i])
-end
 
 local function AddHeader(name)
     Tooltip:AddEmptyLine()
     Tooltip:AddHighlightLine(("%s Currency:"):format(name))
 end
 
-local function AddItem(name, icon, count)
+local function AddItem(name, icon, quantity)
     local leftText = CURRENCY_ITEM_FORMAT:format(icon, name)
-    local rightText = BreakUpLargeNumbers(count)
-    if count > 0 then
+    local rightText = BreakUpLargeNumbers(quantity)
+    if quantity > 0 then
         Tooltip:AddRightHighlightDoubleLine(leftText, rightText)
     else
         Tooltip:AddGrayDoubleLine(leftText, rightText)
@@ -28,53 +22,27 @@ local function AddItem(name, icon, count)
 end
 
 plugin:RegisterHookScript(CharacterMicroButton, "OnEnter", function()
-    local pvpFound = false
-    local latestExpansionLevelAvailableForCurrencyFound = false
-    local expansionLevel = currentExpansionLevel + 1
+    local refreshTooltip = false
 
-    for i = 1, #expansions do
-        for j = 1, C_CurrencyInfo.GetCurrencyListSize() do
-            local info = C_CurrencyInfo.GetCurrencyListInfo(j)
-            local name, isHeader, count, icon = info.name, info.isHeader, info.quantity, info.iconFileID
-            if not isHeader and latestExpansionLevelAvailableForCurrencyFound then
-                AddItem(name, icon, count)
-            elseif name == expansions[expansionLevel] then
-                local nextName, nextIsHeader = C_CurrencyInfo.GetCurrencyListInfo(j + 1)
-                if nextName and not nextIsHeader then
-                    latestExpansionLevelAvailableForCurrencyFound = true
-                    AddHeader(name)
-                end
-            else
-                -- If we didn't find a header for the latest expansion available
-                -- then break and try to get one for the expansion before that
-                break
-            end
-        end
-        if not latestExpansionLevelAvailableForCurrencyFound then
-            expansionLevel = expansionLevel - 1
+    for name, isHeader, icon, quantity in Currency:IterableLatestExpansionCurrencyInfo() do
+        refreshTooltip = true
+        if isHeader then
+            AddHeader(name)
         else
-            -- If we got this far it means currency was found and we can bail out
-            break
+            AddItem(name, icon, quantity)
         end
     end
 
-    for i = 1, C_CurrencyInfo.GetCurrencyListSize() do
-        local info = C_CurrencyInfo.GetCurrencyListInfo(i)
-        local name, isHeader, count, icon = info.name, info.isHeader, info.quantity, info.iconFileID
-        if not isHeader and pvpFound then
-            AddItem(name, icon, count)
-        elseif name == PLAYER_V_PLAYER then
-            local nextName, nextIsHeader = C_CurrencyInfo.GetCurrencyListInfo(i + 1)
-            if nextName and not nextIsHeader then
-                pvpFound = true
-                AddHeader(name)
-            end
-        elseif pvpFound then
-            break
+    for name, isHeader, icon, quantity in Currency:IterablePvPCurrencyInfo() do
+        refreshTooltip = true
+        if isHeader then
+            AddHeader(name)
+        else
+            AddItem(name, icon, quantity)
         end
     end
 
-    if latestExpansionLevelAvailableForCurrencyFound or pvpFound then
+    if refreshTooltip then
         Tooltip:Show()
     end
 end)

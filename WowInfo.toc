@@ -19,13 +19,18 @@ Libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
 
 Main.lua
 
-Core\Events.lua
 Core\AceOptions.lua
-Core\Character.lua
-Core\Realm.lua
+Core\Events.lua
 Core\Tooltip.lua
-Core\Collections.lua
-Core\Achievements.lua
+
+API\Achievements.lua
+API\Character.lua
+API\Collections.lua
+API\Currency.lua
+API\Durability.lua
+API\Experience.lua
+API\Quest.lua
+API\Realm.lua
 
 PluginCore.lua
 

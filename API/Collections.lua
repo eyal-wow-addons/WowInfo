@@ -23,7 +23,7 @@ do
         return numMounts, numCollectedMounts
     end
 
-    function Collections:GetTotalMountsString()
+    function Collections:GetTotalMountsText()
         local _, numCollectedMounts = GetNumMounts()
         if numCollectedMounts > 0 then
             return MOUNTS_TOTAL_LABEL_FORMAT:format(numCollectedMounts)
@@ -35,7 +35,7 @@ end
 do
     local PETS_TOTAL_LABEL_FORMAT = "Pets: |cffffffff%d|r"
 
-    function Collections:GetTotalPetsString()
+    function Collections:GetTotalPetsText()
         local _, numOwnedPets = C_PetJournal.GetNumPets()
         if numOwnedPets > 0 then
             return PETS_TOTAL_LABEL_FORMAT:format(numOwnedPets)
@@ -47,7 +47,7 @@ end
 do
     local TOYBOX_TOTAL_LABEL_FORMAT = "Toys: |cffffffff%d|r / |cff20ff20%d|r"
 
-    function Collections:GetTotalToysString()
+    function Collections:GetTotalToysText()
         local numToys, learnedToys = C_ToyBox.GetNumTotalDisplayedToys(), C_ToyBox.GetNumLearnedDisplayedToys()
         if learnedToys > 0 then
             return TOYBOX_TOTAL_LABEL_FORMAT:format(learnedToys, numToys)

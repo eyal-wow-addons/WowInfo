@@ -8,32 +8,32 @@ local Achievements = addon.Achievements
 plugin:RegisterHookScript(CollectionsMicroButton, "OnEnter", function()
     Tooltip:AddEmptyLine()
 
-    local totalMountsString = Collections:GetTotalMountsString()
-    if totalMountsString  then
-        local achievementString = Achievements:GetMountAchievementString()
-        Tooltip:AddLine(totalMountsString)
-        if achievementString then
-            Tooltip:AddLine(achievementString)
+    local totalMountsText = Collections:GetTotalMountsText()
+    if totalMountsText  then
+        local achievementText = Achievements:GetMountAchievementText()
+        Tooltip:AddLine(totalMountsText)
+        if achievementText then
+            Tooltip:AddLine(achievementText)
         end
     end
 
-    local totalPetsString = Collections:GetTotalPetsString()
-    if totalPetsString then
-        local achievementString = Achievements:GetPetsAchievementString()
+    local totalPetsText = Collections:GetTotalPetsText()
+    if totalPetsText then
+        local achievementText = Achievements:GetPetsAchievementText()
         Tooltip:AddEmptyLine()
-        Tooltip:AddLine(totalPetsString)
-        if achievementString then
-            Tooltip:AddLine(achievementString)
+        Tooltip:AddLine(totalPetsText)
+        if achievementText then
+            Tooltip:AddLine(achievementText)
         end
     end
 
-    local totalToysString = Collections:GetTotalToysString()
-    if totalToysString then
-        local achievementString = Achievements:GetToysAchievementString()
+    local totalToysText = Collections:GetTotalToysText()
+    if totalToysText then
+        local achievementText = Achievements:GetToysAchievementText()
         Tooltip:AddEmptyLine()
-        Tooltip:AddLine(totalToysString)
-        if achievementString then
-            Tooltip:AddLine(achievementString)
+        Tooltip:AddLine(totalToysText)
+        if achievementText then
+            Tooltip:AddLine(achievementText)
         end
     end
 
