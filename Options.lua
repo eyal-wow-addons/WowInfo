@@ -1,7 +1,7 @@
 local _, addon = ...
 local options = addon:NewOptions("AceEvent-3.0")
 
-local GoldDB = addon:GetDB("Gold")
+local MoneyDB = addon:GetStorage("Money")
 local GuildFriendsDB = addon:GetDB("GuildFriends")
 local SocialDB = addon:GetDB("Social")
 local ReputationDB = addon:GetDB("Reputation")
@@ -93,9 +93,9 @@ local function BuildOptions()
     if MainMenuBarBackpackButton:IsVisible() then
         addon.AceOptions:RegisterOptions({
             type = "group",
-            name = "Gold",
+            name = "Money",
             inline = true,
-            handler = GoldDB,
+            handler = MoneyDB,
             args = {
                 {
                     type = "toggle",
@@ -110,23 +110,38 @@ local function BuildOptions()
                     end
                 },
                 {
+                    type = "toggle",
+                    name = "Show All Characters",
+                    descStyle = "hidden",
+                    width = "full",
+                    get = function(self)
+                        return self.handler:CanShowAllCharacters()
+                    end,
+                    set = function(self)
+                        self.handler:ToggleShowAllCharacters()
+                    end
+                },
+                {
                     type = "description",
-                    name = "\n" .. "Show only characters that has more than specified amount of |TInterface\\MoneyFrame\\UI-GoldIcon:0:0:0:-1|t gold:",
+                    name = "\n" .. "Show only characters that has more than specified amount of |TInterface\\MoneyFrame\\UI-GoldIcon:0:0:0:-1|t money:",
                 },
                 {
                     type = "input",
                     name = "",
                     get = function(self)
-                        return tostring(self.handler:GetMinGoldAmount())
+                        return tostring(self.handler:GetMinMoneyAmount())
                     end,
                     set = function(self, value)
-                        self.handler:SetMinGoldAmount(value)
+                        self.handler:SetMinMoneyAmount(value)
                     end,
                     validate = function(info, value)
                         if value ~= nil and value ~= "" and (not tonumber(value) or tonumber(value) >= 2^31) then
                             return false;
                         end
                         return true
+                    end,
+                    disabled = function(self)
+                        return self.handler:CanShowAllCharacters()
                     end
                 },
                 {
@@ -134,11 +149,11 @@ local function BuildOptions()
                 },
                 {
                     type = "execute",
-                    name = "Reset Gold Information",
+                    name = "Reset Money Information",
                     descStyle = "hidden",
                     width = "double",
                     func = function(self)
-                        self.handler:ResetGold()
+                        self.handler:Reset()
                     end
                 }
             }

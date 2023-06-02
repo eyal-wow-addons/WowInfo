@@ -19,12 +19,6 @@ WowInfo is a collection of enhancements to World of Warcraft that provides the f
 * **Experience**: Shows the experience of the current character.
     * Appears when hovering over the Experience bar.
 
-* **Gold**: Shows the gold of the player.
-    * Appears when hovering over the Backpack bag.
-    * Supports multiple characters.
-    * Supports connected realms.
-    * Can be configured via the options.
-
 * **Great Vault Progress**: Shows the progress of the great vault.
     * Appears when hovering over the Character Info button.
 
@@ -34,6 +28,12 @@ WowInfo is a collection of enhancements to World of Warcraft that provides the f
 
 * **Instances**: Shows the progress of saved dungeons and raids.
     * Appears when hovering over Looking for Group button.
+
+* **Money**: Shows the money of the character.
+    * Appears when hovering over the Backpack bag.
+    * Supports multiple characters.
+    * Supports connected realms.
+    * Can be configured via the options.
 
 * **PvPS Status**: Shows the progress of honor level, conquest bar and the current arena/rbg rating.
     * Appears when hovering over Looking for Group button.

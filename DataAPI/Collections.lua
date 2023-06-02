@@ -1,6 +1,5 @@
 local _, addon = ...
-Collections = {}
-addon.Collections = Collections
+local Collections = addon:NewObject("Collections")
 
 do
     local MOUNTS_TOTAL_LABEL_FORMAT = "Mounts: |cffffffff%d|r"
@@ -23,7 +22,7 @@ do
         return numMounts, numCollectedMounts
     end
 
-    function Collections:GetTotalMountsText()
+    function Collections:GetTotalMountsString()
         local _, numCollectedMounts = GetNumMounts()
         if numCollectedMounts > 0 then
             return MOUNTS_TOTAL_LABEL_FORMAT:format(numCollectedMounts)
@@ -35,7 +34,7 @@ end
 do
     local PETS_TOTAL_LABEL_FORMAT = "Pets: |cffffffff%d|r"
 
-    function Collections:GetTotalPetsText()
+    function Collections:GetTotalPetsString()
         local _, numOwnedPets = C_PetJournal.GetNumPets()
         if numOwnedPets > 0 then
             return PETS_TOTAL_LABEL_FORMAT:format(numOwnedPets)
@@ -47,7 +46,7 @@ end
 do
     local TOYBOX_TOTAL_LABEL_FORMAT = "Toys: |cffffffff%d|r / |cff20ff20%d|r"
 
-    function Collections:GetTotalToysText()
+    function Collections:GetTotalToysString()
         local numToys, learnedToys = C_ToyBox.GetNumTotalDisplayedToys(), C_ToyBox.GetNumLearnedDisplayedToys()
         if learnedToys > 0 then
             return TOYBOX_TOTAL_LABEL_FORMAT:format(learnedToys, numToys)

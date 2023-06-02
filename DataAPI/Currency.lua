@@ -1,6 +1,5 @@
 local _, addon = ...
-local Currency = {}
-addon.Currency = Currency
+local Currency = addon:NewObject("Currency")
 
 local expansions = {}
 local currentExpansionLevel = GetClampedCurrentExpansionLevel()

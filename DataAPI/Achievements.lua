@@ -1,6 +1,5 @@
 local _, addon = ...
-Achievements = {}
-addon.Achievements = Achievements
+local Achievements = addon:NewObject("Achievements")
 
 local ACHIEVEMENT_LABEL_FORMAT = "- %s: |cffffffff%d|r / |cff20ff20%d|r"
 
@@ -39,7 +38,7 @@ end
 do
     local MOUNTS_BASE_ACHIEVEMENT_ID = 2143 -- Leading the Cavalry
 
-    function Achievements:GetMountAchievementText()
+    function Achievements:GetMountAchievementString()
         local achievementName, achievementCurrAmount, achievementReqAmount = FindAchievementInfo(MOUNTS_BASE_ACHIEVEMENT_ID)
         if achievementName then
             return ACHIEVEMENT_LABEL_FORMAT:format(achievementName, achievementCurrAmount, achievementReqAmount)
@@ -51,7 +50,7 @@ end
 do
     local PETS_BASE_ACHIEVEMENT_ID = 1017 -- Can I Keep Him?
 
-    function Achievements:GetPetsAchievementText()
+    function Achievements:GetPetsAchievementString()
         local achievementName, achievementCurrAmount, achievementReqAmount = FindAchievementInfo(PETS_BASE_ACHIEVEMENT_ID)
         if achievementName then
             return ACHIEVEMENT_LABEL_FORMAT:format(achievementName, achievementCurrAmount, achievementReqAmount)
@@ -63,7 +62,7 @@ end
 do
     local TOYBOX_BASE_ACHIEVEMENT_ID = 9670 -- Toying Around
 
-    function Achievements:GetToysAchievementText()
+    function Achievements:GetToysAchievementString()
         local achievementName, achievementCurrAmount, achievementReqAmount = FindAchievementInfo(TOYBOX_BASE_ACHIEVEMENT_ID)
         if achievementName then
             return ACHIEVEMENT_LABEL_FORMAT:format(achievementName, achievementCurrAmount, achievementReqAmount)

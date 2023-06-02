@@ -1,17 +1,13 @@
 local _, addon = ...
-local Character = {}
-addon.Character = Character
+local Character = addon:NewObject("Character")
 
 local charName, charRealm1, charRealm2, charFullName
 
-local frame = CreateFrame("Frame", "WowInfo_CharacterFrame")
-frame:RegisterEvent("PLAYER_LOGIN")
-frame:SetScript("OnEvent", function(self, event, ...)
+function Character:OnConfig()
     charName, charRealm1 = UnitName("player"), GetRealmName()
     charRealm2 = select(2, UnitFullName("player"))
     charFullName = string.join(" - ", charName, charRealm1)
-    frame:UnregisterEvent(event)
-end)
+end
 
 function Character:GetName()
     return charName

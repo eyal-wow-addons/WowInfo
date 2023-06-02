@@ -1,19 +1,5 @@
 local _, addon = ...
-
-local function CreateProxy(frame, tbl)
-    local mt  = {
-        __index = frame
-    }
-
-    local wrapper = setmetatable(tbl, mt)
-
-    -- Sets the userdata so the widget API would work with the wrapper
-    wrapper[0] = frame[0]
-
-    return wrapper
-end
-
-local Tooltip = CreateProxy(GameTooltip, {})
+local Tooltip = addon.WidgetUtils:CreateWidgetProxy(GameTooltip, {})
 addon.Tooltip = Tooltip
 
 local EMPTY = " "

@@ -1,27 +1,25 @@
 local _, addon = ...
-local plugin = addon:NewPlugin("Currency")
-
+local Display = addon:NewDisplay("Currency")
 local Currency = addon.Currency
-local Tooltip = addon.Tooltip
 
 local CURRENCY_ITEM_FORMAT = "|T%s:0|t %s"
 
 local function AddHeader(name)
-    Tooltip:AddEmptyLine()
-    Tooltip:AddHighlightLine(("%s Currency:"):format(name))
+    Display:AddEmptyLine()
+    Display:AddHighlightLine(("%s Currency:"):format(name))
 end
 
 local function AddItem(name, icon, quantity)
     local leftText = CURRENCY_ITEM_FORMAT:format(icon, name)
     local rightText = BreakUpLargeNumbers(quantity)
     if quantity > 0 then
-        Tooltip:AddRightHighlightDoubleLine(leftText, rightText)
+        Display:AddRightHighlightDoubleLine(leftText, rightText)
     else
-        Tooltip:AddGrayDoubleLine(leftText, rightText)
+        Display:AddGrayDoubleLine(leftText, rightText)
     end
 end
 
-plugin:RegisterHookScript(CharacterMicroButton, "OnEnter", function()
+Display:RegisterHookScript(CharacterMicroButton, "OnEnter", function()
     local refreshTooltip = false
 
     for name, isHeader, icon, quantity in Currency:IterableLatestExpansionCurrencyInfo() do
@@ -43,6 +41,6 @@ plugin:RegisterHookScript(CharacterMicroButton, "OnEnter", function()
     end
 
     if refreshTooltip then
-        Tooltip:Show()
+        Display:Show()
     end
 end)

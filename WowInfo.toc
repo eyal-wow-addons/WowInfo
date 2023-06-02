@@ -4,54 +4,50 @@
 ## Notes: Provides game and character information.
 ## IconTexture: 939375
 
-## Version: 1.10 BETA
+## Version: 2.0.0 BETA
 ## SavedVariables: WowInfoDB
 
 Libs\LibStub.lua
-Libs\CallbackHandler-1.0.lua
-Libs\AceAddon-3.0\AceAddon-3.0.xml
-Libs\AceEvent-3.0\AceEvent-3.0.xml
-Libs\AceHook-3.0\AceHook-3.0.xml
 Libs\AceGUI-3.0\AceGUI-3.0.xml
 Libs\AceConfig-3.0\AceConfig-3.0.xml
 Libs\AceDB-3.0\AceDB-3.0.xml
 Libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
 
+Addon.lua
 Main.lua
 
+Core\WidgetUtils.lua
 Core\AceOptions.lua
-Core\Events.lua
 Core\Tooltip.lua
 
-API\Achievements.lua
-API\Character.lua
-API\Collections.lua
-API\Currency.lua
-API\Durability.lua
-API\Experience.lua
-API\Quest.lua
-API\Realm.lua
+#Storage\GuildFriends.lua
+Storage\Money.lua
+#Storage\Reputation.lua
+#Storage\Social.lua
 
-PluginCore.lua
+DataAPI\Realm.lua
+DataAPI\Character.lua
+DataAPI\Achievements.lua
+DataAPI\Collections.lua
+DataAPI\Currency.lua
+DataAPI\Durability.lua
+DataAPI\Experience.lua
+DataAPI\Money.lua
+DataAPI\Quest.lua
 
-Storage\Gold.lua
-Storage\GuildFriends.lua
-Storage\Reputation.lua
-Storage\Social.lua
+Display\Collections.lua
+Display\ConnectedRealms.lua
+Display\Currency.lua
+Display\GreatVaultProgress.lua
+Display\DailyReset.lua
+Display\Durability.lua
+Display\Experience.lua
+#Display\GuildFriends.lua
+#Display\Instances.lua
+Display\Money.lua
+#Display\PvPStatus.lua
+#Display\Reputation.lua
+#Display\Social.lua
+#Display\Speedometer.lua
 
-Plugins\Collections.lua
-Plugins\ConnectedRealms.lua
-Plugins\Currency.lua
-Plugins\GreatVaultProgress.lua
-Plugins\DailyReset.lua
-Plugins\Durability.lua
-Plugins\Experience.lua
-Plugins\Gold.lua
-Plugins\GuildFriends.lua
-Plugins\Instances.lua
-Plugins\PvPStatus.lua
-Plugins\Reputation.lua
-Plugins\Social.lua
-Plugins\Speedometer.lua
-
-Options.lua
+#Options.lua

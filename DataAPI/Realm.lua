@@ -1,6 +1,5 @@
 local _, addon = ...
-local Realm = {}
-addon.Realm = Realm
+local Realm = addon:NewObject("Realm")
 
 local myRealm
 local realms, realmsMap = GetAutoCompleteRealms() or {}, {}
@@ -9,13 +8,10 @@ for i, v in ipairs(realms) do
     realmsMap[v] = true
 end
 
-local frame = CreateFrame("Frame", "WowInfo_RealmFrame")
-frame:RegisterEvent("PLAYER_LOGIN")
-frame:SetScript("OnEvent", function(self, event, ...)
+function Realm:OnConfig()
     local _, realm = UnitFullName("player")
     myRealm = realm
-    frame:UnregisterEvent(event)
-end)
+end
 
 function Realm:IsRealmConnectedRealm(realm, includeOwn)
     realm = realm:gsub("[ -]", "")
