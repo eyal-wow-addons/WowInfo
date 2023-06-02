@@ -2,7 +2,7 @@
 ## Author: Eyal Alon
 ## Title: Wow|cff40a5f7Info|r
 ## Notes: Provides game and character information.
-## IconTexture: 939375
+## IconTexture: Interface\AddOns\WowInfo\Logo
 
 ## Version: 2.0.0 BETA
 ## SavedVariables: WowInfoDB
