@@ -59,9 +59,9 @@ plugin:RegisterHookScript(LFDMicroButton, "OnEnter", function()
             Tooltip:AddEmptyLine()
             Tooltip:AddHighlightDoubleLine(RATED_PVP_LABEL, ARENA_WEEKLY_STATS)
 
-            for index = 1, 3 do
-                local name = CONQUEST_SIZE_STRINGS[index]
-                local bracketIndex = CONQUEST_BRACKET_INDEXES[index]
+            for i = 1, 3 do
+                local name = CONQUEST_SIZE_STRINGS[i]
+                local bracketIndex = CONQUEST_BRACKET_INDEXES[i]
                 local rating, _, _, _, _, weeklyPlayed, weeklyWon = GetPersonalRatedInfo(bracketIndex)
                 if rating > 0 then
                     Tooltip:AddRightHighlightDoubleLine(RATED_PVP_LABEL_FORMAT:format(name, rating), RATED_PVP_STATUS_FORMAT:format(weeklyPlayed, weeklyWon, weeklyPlayed - weeklyWon))

@@ -10,7 +10,7 @@ local EXP_RESTED_LABEL = "Rested"
 Display:RegisterHookScript(MainStatusTrackingBarContainer.bars[4], "OnEnter", function()
     GameTooltip_SetDefaultAnchor(Display, UIParent)
 
-    local xp, xpMax, exhaustionThreshold = Experience:GetInfo()
+    local xp, xpMax, exhaustionThreshold = Experience:GetPlayerProgressInfo()
 
     Display:AddHighlightLine(EXP_LABEL)
     Display:AddRightHighlightDoubleLine(EXP_CURRENT_LABEL, Experience:GetCurrentProgressString(xp, xpMax))

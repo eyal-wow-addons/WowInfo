@@ -5,7 +5,7 @@ local GREAT_VAULT_UNLOCKED_1ST_REWARD_COLOR = "ff14b200"
 local GREAT_VAULT_UNLOCKED_2ND_REWARD_COLOR = "ff0091f2"
 local GREAT_VAULT_UNLOCKED_3RD_REWARD_COLOR = "ffc745f9"
 
-local function GetGreatVaultProgressInfo(activityInfo)
+local function GetGreatVaultProgressString(activityInfo)
     local thresholdString, progressString
     
     if activityInfo.type == Enum.WeeklyRewardChestThresholdType.Raid then
@@ -36,27 +36,27 @@ local function GetGreatVaultProgressInfo(activityInfo)
 end
 
 local function GetActivityInfo(type)
-    local info
+    local activityInfo
     local minThreshold
-    for _, activityInfo in ipairs(C_WeeklyRewards.GetActivities(type)) do
-        info = activityInfo
-        info.minThreshold = minThreshold or activityInfo.threshold
-        if activityInfo.progress <= activityInfo.threshold then
+    for _, currentActivityInfo in ipairs(C_WeeklyRewards.GetActivities(type)) do
+        activityInfo = currentActivityInfo
+        activityInfo.minThreshold = minThreshold or currentActivityInfo.threshold
+        if currentActivityInfo.progress <= currentActivityInfo.threshold then
             break
         end
-        minThreshold = activityInfo.threshold
+        minThreshold = currentActivityInfo.threshold
     end
-    return info
+    return activityInfo
 end
 
-function WeeklyRewards:GetGreatVaultRaidProgressInfo()
-    return GetGreatVaultProgressInfo(GetActivityInfo(Enum.WeeklyRewardChestThresholdType.Raid))
+function WeeklyRewards:GetGreatVaultRaidProgressString()
+    return GetGreatVaultProgressString(GetActivityInfo(Enum.WeeklyRewardChestThresholdType.Raid))
 end
 
-function WeeklyRewards:GetGreatVaultMythicPlusProgressInfo()
-    return GetGreatVaultProgressInfo(GetActivityInfo(Enum.WeeklyRewardChestThresholdType.MythicPlus))
+function WeeklyRewards:GetGreatVaultMythicPlusProgressString()
+    return GetGreatVaultProgressString(GetActivityInfo(Enum.WeeklyRewardChestThresholdType.MythicPlus))
 end
 
-function WeeklyRewards:GetGreatVaultPvPProgressInfo()
-    return GetGreatVaultProgressInfo(GetActivityInfo(Enum.WeeklyRewardChestThresholdType.RankedPvP))
+function WeeklyRewards:GetGreatVaultPvPProgressString()
+    return GetGreatVaultProgressString(GetActivityInfo(Enum.WeeklyRewardChestThresholdType.RankedPvP))
 end

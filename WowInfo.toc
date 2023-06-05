@@ -15,12 +15,13 @@ Libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
 
 Addon.lua
 Main.lua
+FakeAPI.lua
 
 Core\WidgetUtils.lua
 Core\AceOptions.lua
 Core\Tooltip.lua
 
-#Storage\GuildFriends.lua
+Storage\Guild.lua
 Storage\Money.lua
 #Storage\Reputation.lua
 #Storage\Social.lua
@@ -32,6 +33,8 @@ DataAPI\Collections.lua
 DataAPI\Currency.lua
 DataAPI\Durability.lua
 DataAPI\Experience.lua
+DataAPI\Friends.lua
+DataAPI\Guild.lua
 DataAPI\Money.lua
 DataAPI\Quest.lua
 
@@ -42,7 +45,7 @@ Display\GreatVaultProgress.lua
 Display\DailyReset.lua
 Display\Durability.lua
 Display\Experience.lua
-#Display\GuildFriends.lua
+Display\GuildFriends.lua
 #Display\Instances.lua
 Display\Money.lua
 #Display\PvPStatus.lua

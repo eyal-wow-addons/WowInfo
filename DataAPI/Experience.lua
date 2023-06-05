@@ -5,7 +5,7 @@ local CURRENT_PROGRESS_LABEL_FORMAT = "%s / %s (%s)"
 local RESTED_STATUS_LABEL_FORMAT = "%s (%s)"
 local TNL_PROGRESS_LABEL_FORMAT = "%s (%s)"
 
-function Experience:GetInfo()
+function Experience:GetPlayerProgressInfo()
     local xp, xpMax = UnitXP("player"), UnitXPMax("player")
     local exhaustionThreshold = GetXPExhaustion()
     return xp, xpMax, exhaustionThreshold

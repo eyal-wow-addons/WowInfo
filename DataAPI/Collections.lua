@@ -11,7 +11,7 @@ do
         if numMounts >= 1 then
             local hideOnChar, isCollected
             local mountIDs = C_MountJournal.GetMountIDs()
-            for index, mountID in ipairs(mountIDs) do
+            for _, mountID in ipairs(mountIDs) do
                 hideOnChar, isCollected = select(10, C_MountJournal.GetMountInfoByID(mountID))
                 if isCollected and hideOnChar ~= true then
                     numCollectedMounts = numCollectedMounts + 1

@@ -80,9 +80,9 @@ function Callbacks:UnregisterEvent(eventName, callback)
     end
     local callbacks = Callbacks[eventName]
     if callbacks then
-        for index, registeredCallbacks in ipairs(callbacks) do
+        for i, registeredCallbacks in ipairs(callbacks) do
             if registeredCallbacks == callback then
-                Callbacks[eventName][index] = nil
+                Callbacks[eventName][i] = nil
             end
         end
         if #Callbacks[eventName] == 0 then

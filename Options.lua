@@ -26,8 +26,8 @@ local function CreateReputationOptions()
 
 
     local parentName
-    for index = 1, GetNumFactions() do
-        local name, _, _, _, _, _, _, _, isHeader, _, hasRep, _, isChild, factionID = GetFactionInfo(index)
+    for i = 1, GetNumFactions() do
+        local name, _, _, _, _, _, _, _, isHeader, _, hasRep, _, isChild, factionID = GetFactionInfo(i)
         if isHeader and not hasRep and not isChild then
             parentName = name
         end
@@ -59,9 +59,9 @@ local function CreateReputationOptions()
         end
     end
 
-    for index, parent in ipairs(args) do
+    for i, parent in ipairs(args) do
         if parent.args and #parent.args == 0 then 
-            table.remove(args, index) 
+            table.remove(args, i) 
         end
     end
 

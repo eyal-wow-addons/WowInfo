@@ -5,7 +5,7 @@ local Character = addon.Character
 
 local REALM_PATTERN = "% - (.+)"
 
-local totalMoney, data = 0, {}
+local totalMoney, moneyInfo = 0, {}
 
 local function IsCharacterOnConnectedRealm(character, includeOwn)
     return Realm:IsRealmConnectedRealm(character:match(REALM_PATTERN), includeOwn)
@@ -29,28 +29,28 @@ Money:RegisterEvents(
 
         totalMoney = 0
 
-        table.wipe(data)
+        table.wipe(moneyInfo)
 
         for character, money in Money.db:IterableMoneyInfo() do
             local isCharacterOnCurrentRealm = character:find(Character:GetRealm())
             if money > 0 and (IsCharacterOnConnectedRealm(character, true) or isCharacterOnCurrentRealm) then
-                table.insert(data, {character, money})
+                table.insert(moneyInfo, {character, money})
                 totalMoney = totalMoney + money
             end
         end
 
-        table.sort(data, SortCharacterNamesAlphabetically)
+        table.sort(moneyInfo, SortCharacterNamesAlphabetically)
     end)
 
-function Money:IterableMoneyInfo()
+function Money:IterableMoneyStrings()
     local i = 0
-    local n = #data
+    local n = #moneyInfo
     return function()
         i = i + 1
         if i <= n then
-            local info = data[i]
+            local value = moneyInfo[i]
 
-            local characterString = info[1]
+            local characterString = value[1]
             local isCharacterOnCurrentRealm = characterString:find(Character:GetRealm())
 
             if IsCharacterOnConnectedRealm(characterString, false) and Money.db:IsConnectedRealmsNamesHidden() then
@@ -61,7 +61,7 @@ function Money:IterableMoneyInfo()
 
             characterString = Ambiguate(characterString, "none")
 
-            local money = info[2]
+            local money = value[2]
             local fraction = floor(money / (COPPER_PER_SILVER * SILVER_PER_GOLD))
             local isCharacterCurrentPlayer = characterString == Character:GetName()
 

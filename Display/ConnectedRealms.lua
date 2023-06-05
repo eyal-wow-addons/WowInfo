@@ -9,7 +9,7 @@ hooksecurefunc("MainMenuBarPerformanceBarFrame_OnEnter", function()
     Display:AddEmptyLine()
     Display:AddHighlightLine(CONNECTED_REALMS_LABEL)
 
-    for isPlayerRealm, realm in Realm:IterableConnectedRealmsInfo() do
+    for isPlayerRealm, realm in Realm:IterableConnectedRealms() do
         if isPlayerRealm then
             realm = GetClassColoredTextForUnit("player", realm)
         end

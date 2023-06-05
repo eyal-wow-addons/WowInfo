@@ -62,8 +62,8 @@ plugin:RegisterHookScript(CharacterMicroButton, "OnEnter", function()
 
     wipe(factions)
 
-    for index = 1, GetNumFactions() do
-        local factionID =  select(14, GetFactionInfo(index))
+    for i = 1, GetNumFactions() do
+        local factionID =  select(14, GetFactionInfo(i))
         factionName, standing, isCapped, repValue, repMax, hasParagonRewardPending = GetFactionDisplayInfoByID(factionID)
         if db:HasFactionsTracked() and db:IsSelectedFaction(factionID) or (db:GetAlwaysShowParagon() and hasParagonRewardPending) then
             table.insert(factions, {factionName, standing, isCapped, repValue, repMax})

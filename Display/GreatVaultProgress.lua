@@ -14,9 +14,9 @@ Display:RegisterHookScript(CharacterMicroButton, "OnEnter", function()
             Display:AddHighlightLine(WrapTextInColorCode(GREAT_VAULT_REWARDS_WAITING, GREAT_VAULT_HAS_REWARDS_DESC_COLOR))
         end
 
-        Display:AddGrayDoubleLine(WeeklyRewards:GetGreatVaultRaidProgressInfo())
-        Display:AddGrayDoubleLine(WeeklyRewards:GetGreatVaultMythicPlusProgressInfo())
-        Display:AddGrayDoubleLine(WeeklyRewards:GetGreatVaultPvPProgressInfo())
+        Display:AddGrayDoubleLine(WeeklyRewards:GetGreatVaultRaidProgressString())
+        Display:AddGrayDoubleLine(WeeklyRewards:GetGreatVaultMythicPlusProgressString())
+        Display:AddGrayDoubleLine(WeeklyRewards:GetGreatVaultPvPProgressString())
 
         Display:Show()
     end

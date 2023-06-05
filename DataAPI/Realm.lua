@@ -18,7 +18,7 @@ function Realm:IsRealmConnectedRealm(realm, includeOwn)
     return (realm ~= myRealm or includeOwn) and realmsMap[realm]
 end
 
-function Realm:IterableConnectedRealmsInfo()
+function Realm:IterableConnectedRealms()
     local i = 0
     local n = #realms
     return function ()
