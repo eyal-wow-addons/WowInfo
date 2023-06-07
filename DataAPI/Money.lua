@@ -42,12 +42,12 @@ Money:RegisterEvents(
         table.sort(moneyInfo, SortCharacterNamesAlphabetically)
     end)
 
-function Money:IterableMoneyStrings()
+function Money:IterableMoneyInfo()
     local i = 0
     local n = #moneyInfo
     return function()
         i = i + 1
-        if i <= n then
+        while i <= n do
             local value = moneyInfo[i]
 
             local characterString = value[1]
@@ -73,7 +73,7 @@ function Money:IterableMoneyStrings()
                 return characterString, GetMoneyString(money, true)
             end
 
-            return characterString
+            i = i + 1
         end
     end
 end

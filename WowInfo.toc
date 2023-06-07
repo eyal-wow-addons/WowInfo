@@ -15,7 +15,6 @@ Libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
 
 Addon.lua
 Main.lua
-FakeAPI.lua
 
 Core\WidgetUtils.lua
 Core\AceOptions.lua
@@ -36,7 +35,12 @@ DataAPI\Experience.lua
 DataAPI\Friends.lua
 DataAPI\Guild.lua
 DataAPI\Money.lua
+DataAPI\PvP.lua
 DataAPI\Quest.lua
+DataAPI\Reputation.lua
+DataAPI\SavedBosses.lua
+DataAPI\WeeklyRewards.lua
+DataAPI\FakeAPI.lua
 
 Display\Collections.lua
 Display\ConnectedRealms.lua
@@ -46,10 +50,10 @@ Display\DailyReset.lua
 Display\Durability.lua
 Display\Experience.lua
 Display\GuildFriends.lua
-#Display\Instances.lua
+Display\Instances.lua
 Display\Money.lua
-#Display\PvPStatus.lua
-#Display\Reputation.lua
+Display\PvPStatus.lua
+Display\Reputation.lua
 #Display\Social.lua
 #Display\Speedometer.lua
 

@@ -1,14 +1,19 @@
 local _, addon = ...
 local Friends = addon:NewObject("Friends")
 
+Friends.GetNumFriends = C_FriendList.GetNumFriends
+Friends.GetFriendInfoByIndex = C_FriendList.GetFriendInfoByIndex
+Friends.BNGetNumFriends = BNGetNumFriends
+Friends.GetFriendAccountInfo = C_BattleNet.GetFriendAccountInfo
+
 function Friends:GetOnlineFriendsInfo()
-    local numWoWTotal = C_FriendList.GetNumFriends()
-    local numBNetTotal = BNGetNumFriends()
+    local numWoWTotal = self.GetNumFriends()
+    local numBNetTotal = self.BNGetNumFriends()
     local onlineFriendsCounter = 0
     local onlineFriends
 
     for i = 1, numWoWTotal do
-        local info = C_FriendList.GetFriendInfoByIndex(i)
+        local info = self.GetFriendInfoByIndex(i)
         if info and info.connected then
             onlineFriends = onlineFriends or {}
             onlineFriends[info.name] = true
@@ -17,7 +22,7 @@ function Friends:GetOnlineFriendsInfo()
     end
 
     for i = 1, numBNetTotal do
-        local accountInfo = C_BattleNet.GetFriendAccountInfo(i)
+        local accountInfo = self.GetFriendAccountInfo(i)
         local characterName = accountInfo.gameAccountInfo.characterName
         local client = accountInfo.gameAccountInfo.clientProgram
         local isOnline = accountInfo.gameAccountInfo.isOnline

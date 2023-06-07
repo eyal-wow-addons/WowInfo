@@ -7,8 +7,9 @@ Callbacks["PLAYER_LOGIN"] = {}
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("PLAYER_LOGIN")
 frame:RegisterEvent("ADDON_LOADED")
-frame:SetScript("OnEvent", function(self, eventName, arg1)
+frame:SetScript("OnEvent", function(self, eventName, ...)
     if eventName == "ADDON_LOADED" then
+        local arg1 = ...
         if arg1 == addonName then
             for _, object in ipairs(Objects) do
                 local callback = object.OnInitialize
@@ -27,7 +28,7 @@ frame:SetScript("OnEvent", function(self, eventName, arg1)
         end
         self:UnregisterEvent(eventName)
     end
-    Callbacks:TriggerEvent(eventName)
+    Callbacks:TriggerEvent(eventName, ...)
 end)
 
 function Callbacks:RegisterCallback(callback)
@@ -94,11 +95,11 @@ function Callbacks:UnregisterEvent(eventName, callback)
     end
 end
 
-function Callbacks:TriggerEvent(eventName)
+function Callbacks:TriggerEvent(eventName, ...)
     local callbacks = Callbacks[eventName]
     if callbacks then
         for _, callback in ipairs(callbacks) do
-            callback(eventName)
+            callback(eventName, ...)
         end
     end
 end

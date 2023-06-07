@@ -11,10 +11,8 @@ Display:RegisterHookScript(MainMenuBarBackpackButton, "OnEnter", function()
     Display:AddEmptyLine()
     Display:AddHighlightLine(MONEY_LABEL)
 
-    for characterString, moneyString in Money:IterableMoneyStrings() do
-        if moneyString then
-            Display:AddRightHighlightDoubleLine(characterString, moneyString)
-        end
+    for characterString, moneyString in Money:IterableMoneyInfo() do
+        Display:AddRightHighlightDoubleLine(characterString, moneyString)
     end
 
     Display:AddEmptyLine()

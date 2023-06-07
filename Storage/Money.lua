@@ -7,10 +7,12 @@ local Character = addon.Character
 local defaults = {
     profile = {
         hideConnectedRealmsNames = true,
-        showAllCharacters = true,
+        showAllCharacters = false,
         minMoneyAmount = 0
     }
 }
+
+local moneyStore
 
 function MoneyDB:OnInitialize()
     self:RegisterDB(defaults)
@@ -25,15 +27,15 @@ function MoneyDB:OnInitialize()
         addon.DB.global.Money[englishFaction] = {}
     end
 
-    self.__money = addon.DB.global.Money[englishFaction]
+    moneyStore = addon.DB.global.Money[englishFaction]
 end
 
 function MoneyDB:UpdateForCharacter(character, money)
-    self.__money[character] = money
+    moneyStore[character] = money
 end
 
 function MoneyDB:IterableMoneyInfo()
-    return pairs(self.__money)
+    return pairs(moneyStore)
 end
 
 function MoneyDB:Reset()

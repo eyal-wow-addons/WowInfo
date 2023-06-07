@@ -1,7 +1,5 @@
 local _, addon = ...
-local storage, db = addon:NewStorage("Reputation")
-local options, Factions
-
+local RepDB = addon:NewStorage("Reputation")
 local Character = addon.Character
 
 local defaults = {
@@ -10,40 +8,49 @@ local defaults = {
     }
 }
 
-storage:RegisterFunction(function()
-    options = storage:RegisterDB(defaults)
+local factionStore
+
+local function GetFactionID(factionID)
+    return select(14, GetFactionInfoByID(factionID))
+end
+
+function RepDB:OnConfig()
+    self:RegisterDB(defaults)
+
     if not addon.DB.global.Reputation then
         addon.DB.global.Reputation = {}
     end
+
     local rep = addon.DB.global.Reputation
     local charFullName = Character:GetFullName()
+
     rep[charFullName] = rep[charFullName] or {}
-    Factions = rep[charFullName]
-end)
-
-function db:GetAlwaysShowParagon()
-    return options.profile.alwaysShowParagon
+    factionStore = rep[charFullName]
 end
 
-function db:ToggleAlwaysShowParagon()
-    options.profile.alwaysShowParagon = not options.profile.alwaysShowParagon
+function RepDB:GetAlwaysShowParagon()
+    return self.options.profile.alwaysShowParagon
 end
 
-function db:IsSelectedFaction(factionID)
-    return factionID and select(14, GetFactionInfoByID(factionID)) and Factions[factionID] ~= nil
+function RepDB:ToggleAlwaysShowParagon()
+    self.options.profile.alwaysShowParagon = not self.options.profile.alwaysShowParagon
 end
 
-function db:ToggleFaction(factionID)
-    if factionID and select(14, GetFactionInfoByID(factionID)) then
-        if Factions[factionID] then
-            Factions[factionID] = nil
+function RepDB:IsSelectedFaction(factionID)
+    return factionID and GetFactionID(factionID) and factionStore ~= nil
+end
+
+function RepDB:ToggleFaction(factionID)
+    if factionID and GetFactionID(factionID) then
+        if factionStore[factionID] then
+            factionStore[factionID] = nil
         else
-            Factions[factionID] = true
+            factionStore[factionID] = true
         end
     end
 end
 
-function db:HasFactionsTracked()
-	return Factions and next(Factions) and true or false
+function RepDB:HasFactionsTracked()
+	return factionStore and next(factionStore) and true or false
 end
 

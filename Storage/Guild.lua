@@ -3,7 +3,7 @@ local GuildDB = addon:NewStorage("Guild")
 
 local defaults = {
     profile = {
-        maxOnlineFriends = 3
+        maxOnlineFriends = 20
     }
 }
 

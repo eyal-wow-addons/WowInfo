@@ -4,8 +4,6 @@ if not addon.debug then
     return
 end
 
-local FakeAPI = addon:NewObject("FakeAPI")
-
 local GuildRosterData = {
     {
         name = "Shadowstrike",
@@ -550,24 +548,19 @@ local GuildRosterData = {
 }
 
 do
-    local Guild = {}
-    FakeAPI.Guild = Guild
+    local Guild = addon.Guild
 
-    function Guild:GetNumGuildMembers()
+    Guild.GetNumGuildMembers = function()
         return #GuildRosterData
     end
 
-    function Guild:GetGuildRosterInfo(index)
+    Guild.GetGuildRosterInfo = function(index)
         local info = GuildRosterData[index]
-    
         return info.name, info.rank, info.rankIndex, info.level, info.class, info.zone, info.note, info.officernote, info.online, info.status, info.classFileName, info.achievementPoints, info.achievementRank, info.isMobile, info.isSoREligible, info.standingID
     end
 end
 
 do
-    local Friends = {}
-    FakeAPI.Friends = Friends
-
     local FriendInfo = {
         [1] = {
             connected = GuildRosterData[20].online,
@@ -853,17 +846,6 @@ do
         }
     }
 
-    local OnlineFriendsInfo = {
-        [GuildRosterData[12].name] = true,
-        [GuildRosterData[20].name] = true,
-        [GuildRosterData[1].name] = true,
-        [GuildRosterData[2].name] = true,
-        [GuildRosterData[4].name] = true,
-        [GuildRosterData[6].name] = true,
-        [GuildRosterData[7].name] = true,
-        [GuildRosterData[9].name] = true
-    }
-
     local BNetAccountInfo = {
         {
             gameAccountInfo = BNetGameAccountInfo[1]
@@ -896,32 +878,27 @@ do
             gameAccountInfo = BNetGameAccountInfo[10]
         },
     }
+
+    local Friends = addon.Friends
     
-    function Friends:GetNumFriends()
+    Friends.GetNumFriends = function()
         return #FriendInfo
     end
 
-    function Friends:GetFriendInfoByIndex(index)
+    Friends.GetFriendInfoByIndex = function(index)
         return FriendInfo[index]
     end
 
-    function Friends:BNGetNumFriends()
+    Friends.BNGetNumFriends = function()
         return #BNetAccountInfo
     end
 
-    function Friends:GetFriendAccountInfo(index)
+    Friends.GetFriendAccountInfo = function(index)
         return BNetAccountInfo[index]
-    end
-
-    function Friends:GetOnlineFriendsInfo()
-        return OnlineFriendsInfo, 8
     end
 end
 
 do
-    local Currency = {}
-    FakeAPI.Currency = Currency
-
     local CurrencyInfo = {
         {
             name = "Dragonflight",
@@ -932,7 +909,7 @@ do
             isShowInBackpack = false,
             quantity = 0,
             trackedQuantity = nil,
-            iconFileID = 1234, -- Random FileID
+            iconFileID = 0,
             maxQuantity = 0,
             canEarnPerWeek = false,
             quantityEarnedThisWeek = 0,
@@ -952,11 +929,11 @@ do
             isShowInBackpack = true,
             quantity = 5,
             trackedQuantity = nil,
-            iconFileID = 5678, -- Random FileID
+            iconFileID = 5172976,
             maxQuantity = 10,
             canEarnPerWeek = false,
             quantityEarnedThisWeek = 0,
-            isTradeable = true,
+            isTradeable = false,
             quality = Enum.ItemQuality.Rare, -- Random quality
             maxWeeklyQuantity = 0,
             totalEarned = 0,
@@ -972,7 +949,7 @@ do
             isShowInBackpack = true,
             quantity = 20,
             trackedQuantity = nil,
-            iconFileID = 9012, -- Random FileID
+            iconFileID = 651737,
             maxQuantity = 100,
             canEarnPerWeek = true,
             quantityEarnedThisWeek = 50,
@@ -992,7 +969,7 @@ do
             isShowInBackpack = false,
             quantity = 0,
             trackedQuantity = nil,
-            iconFileID = 3456, -- Random FileID
+            iconFileID = 0,
             maxQuantity = 0,
             canEarnPerWeek = false,
             quantityEarnedThisWeek = 0,
@@ -1012,11 +989,11 @@ do
             isShowInBackpack = true,
             quantity = 100,
             trackedQuantity = nil,
-            iconFileID = 7890, -- Random FileID
+            iconFileID = 463446,
             maxQuantity = 500,
             canEarnPerWeek = false,
             quantityEarnedThisWeek = 0,
-            isTradeable = true,
+            isTradeable = false,
             quality = Enum.ItemQuality.Rare, -- Random quality
             maxWeeklyQuantity = 0,
             totalEarned = 0,
@@ -1032,7 +1009,7 @@ do
             isShowInBackpack = false,
             quantity = 0,
             trackedQuantity = nil,
-            iconFileID = 2345, -- Random FileID
+            iconFileID = 0,
             maxQuantity = 0,
             canEarnPerWeek = false,
             quantityEarnedThisWeek = 0,
@@ -1052,11 +1029,11 @@ do
             isShowInBackpack = true,
             quantity = 50,
             trackedQuantity = nil,
-            iconFileID = 3456, -- Random FileID
+            iconFileID = 236246,
             maxQuantity = 100,
             canEarnPerWeek = true,
             quantityEarnedThisWeek = 25,
-            isTradeable = true,
+            isTradeable = false,
             quality = Enum.ItemQuality.Rare, -- Random quality
             maxWeeklyQuantity = 200,
             totalEarned = 0,
@@ -1072,11 +1049,11 @@ do
             isShowInBackpack = true,
             quantity = 1000,
             trackedQuantity = nil,
-            iconFileID = 7890, -- Random FileID
+            iconFileID = 513195,
             maxQuantity = 5000,
             canEarnPerWeek = true,
             quantityEarnedThisWeek = 250,
-            isTradeable = true,
+            isTradeable = false,
             quality = Enum.ItemQuality.Epic, -- Random quality
             maxWeeklyQuantity = 2000,
             totalEarned = 0,
@@ -1092,11 +1069,11 @@ do
             isShowInBackpack = true,
             quantity = 20,
             trackedQuantity = nil,
-            iconFileID = 1234, -- Random FileID
+            iconFileID = 134481,
             maxQuantity = 100,
             canEarnPerWeek = false,
             quantityEarnedThisWeek = 0,
-            isTradeable = true,
+            isTradeable = false,
             quality = Enum.ItemQuality.Rare, -- Random quality
             maxWeeklyQuantity = 0,
             totalEarned = 0,
@@ -1104,7 +1081,7 @@ do
             useTotalEarnedForMaxQty = false
         },
         {
-            name = "Player vs Player",
+            name = "Player vs. Player",
             description = "Added in 10.0.0",
             isHeader = true,
             isHeaderExpanded = false,
@@ -1112,7 +1089,7 @@ do
             isShowInBackpack = false,
             quantity = 0,
             trackedQuantity = nil,
-            iconFileID = 9012, -- Random FileID
+            iconFileID = 0,
             maxQuantity = 0,
             canEarnPerWeek = false,
             quantityEarnedThisWeek = 0,
@@ -1132,11 +1109,11 @@ do
             isShowInBackpack = true,
             quantity = 500,
             trackedQuantity = nil,
-            iconFileID = 2345, -- Random FileID
+            iconFileID = 1455894,
             maxQuantity = 1000,
             canEarnPerWeek = true,
             quantityEarnedThisWeek = 250,
-            isTradeable = true,
+            isTradeable = false,
             quality = Enum.ItemQuality.Rare, -- Random quality
             maxWeeklyQuantity = 500,
             totalEarned = 0,
@@ -1152,11 +1129,11 @@ do
             isShowInBackpack = true,
             quantity = 2000,
             trackedQuantity = nil,
-            iconFileID = 3456, -- Random FileID
+            iconFileID = 1523630,
             maxQuantity = 5000,
             canEarnPerWeek = true,
             quantityEarnedThisWeek = 1000,
-            isTradeable = true,
+            isTradeable = false,
             quality = Enum.ItemQuality.Epic, -- Random quality
             maxWeeklyQuantity = 2000,
             totalEarned = 0,
@@ -1172,7 +1149,7 @@ do
             isShowInBackpack = false,
             quantity = 0,
             trackedQuantity = nil,
-            iconFileID = 9012, -- Random FileID
+            iconFileID = 0,
             maxQuantity = 0,
             canEarnPerWeek = false,
             quantityEarnedThisWeek = 0,
@@ -1192,11 +1169,11 @@ do
             isShowInBackpack = true,
             quantity = 100,
             trackedQuantity = nil,
-            iconFileID = 2345, -- Random FileID
+            iconFileID = 4381149,
             maxQuantity = 500,
             canEarnPerWeek = false,
             quantityEarnedThisWeek = 0,
-            isTradeable = true,
+            isTradeable = false,
             quality = Enum.ItemQuality.Rare, -- Random quality
             maxWeeklyQuantity = 0,
             totalEarned = 0,
@@ -1212,11 +1189,11 @@ do
             isShowInBackpack = true,
             quantity = 2000,
             trackedQuantity = nil,
-            iconFileID = 3456, -- Random FileID
+            iconFileID = 3743738,
             maxQuantity = 10000,
             canEarnPerWeek = true,
             quantityEarnedThisWeek = 1000,
-            isTradeable = true,
+            isTradeable = false,
             quality = Enum.ItemQuality.Epic, -- Random quality
             maxWeeklyQuantity = 5000,
             totalEarned = 0,
@@ -1232,11 +1209,11 @@ do
             isShowInBackpack = true,
             quantity = 500,
             trackedQuantity = nil,
-            iconFileID = 9012, -- Random FileID
+            iconFileID = 3743739,
             maxQuantity = 1000,
             canEarnPerWeek = false,
             quantityEarnedThisWeek = 0,
-            isTradeable = true,
+            isTradeable = false,
             quality = Enum.ItemQuality.Rare, -- Random quality
             maxWeeklyQuantity = 0,
             totalEarned = 0,
@@ -1252,11 +1229,11 @@ do
             isShowInBackpack = true,
             quantity = 100,
             trackedQuantity = nil,
-            iconFileID = 2345, -- Random FileID
+            iconFileID = 463447,
             maxQuantity = 500,
             canEarnPerWeek = true,
             quantityEarnedThisWeek = 50,
-            isTradeable = true,
+            isTradeable = false,
             quality = Enum.ItemQuality.Epic, -- Random quality
             maxWeeklyQuantity = 200,
             totalEarned = 0,
@@ -1272,7 +1249,7 @@ do
             isShowInBackpack = false,
             quantity = 0,
             trackedQuantity = nil,
-            iconFileID = 3456, -- Random FileID
+            iconFileID = 0,
             maxQuantity = 0,
             canEarnPerWeek = false,
             quantityEarnedThisWeek = 0,
@@ -1292,11 +1269,11 @@ do
             isShowInBackpack = true,
             quantity = 10000,
             trackedQuantity = nil,
-            iconFileID = 5678, -- Random FileID
+            iconFileID = 2032600,
             maxQuantity = 50000,
             canEarnPerWeek = true,
             quantityEarnedThisWeek = 5000,
-            isTradeable = true,
+            isTradeable = false,
             quality = Enum.ItemQuality.Rare, -- Random quality
             maxWeeklyQuantity = 10000,
             totalEarned = 0,
@@ -1312,7 +1289,7 @@ do
             isShowInBackpack = false,
             quantity = 0,
             trackedQuantity = nil,
-            iconFileID = 7890, -- Random FileID
+            iconFileID = 0,
             maxQuantity = 0,
             canEarnPerWeek = false,
             quantityEarnedThisWeek = 0,
@@ -1332,11 +1309,11 @@ do
             isShowInBackpack = true,
             quantity = 5000,
             trackedQuantity = nil,
-            iconFileID = 1234, -- Random FileID
+            iconFileID = 1377394,
             maxQuantity = 10000,
             canEarnPerWeek = true,
             quantityEarnedThisWeek = 2500,
-            isTradeable = true,
+            isTradeable = false,
             quality = Enum.ItemQuality.Rare, -- Random quality
             maxWeeklyQuantity = 5000,
             totalEarned = 0,
@@ -1352,11 +1329,11 @@ do
             isShowInBackpack = true,
             quantity = 10,
             trackedQuantity = nil,
-            iconFileID = 5678, -- Random FileID
+            iconFileID = 1604168,
             maxQuantity = 50,
             canEarnPerWeek = false,
             quantityEarnedThisWeek = 0,
-            isTradeable = true,
+            isTradeable = false,
             quality = Enum.ItemQuality.Rare, -- Random quality
             maxWeeklyQuantity = 0,
             totalEarned = 0,
@@ -1372,11 +1349,11 @@ do
             isShowInBackpack = true,
             quantity = 5000,
             trackedQuantity = nil,
-            iconFileID = 9012, -- Random FileID
+            iconFileID = 1397630,
             maxQuantity = 10000,
             canEarnPerWeek = true,
             quantityEarnedThisWeek = 2500,
-            isTradeable = true,
+            isTradeable = false,
             quality = Enum.ItemQuality.Rare, -- Random quality
             maxWeeklyQuantity = 5000,
             totalEarned = 0,
@@ -1392,11 +1369,11 @@ do
             isShowInBackpack = true,
             quantity = 3,
             trackedQuantity = nil,
-            iconFileID = 2345, -- Random FileID
+            iconFileID = 1604167,
             maxQuantity = 10,
             canEarnPerWeek = false,
             quantityEarnedThisWeek = 0,
-            isTradeable = true,
+            isTradeable = false,
             quality = Enum.ItemQuality.Epic, -- Random quality
             maxWeeklyQuantity = 0,
             totalEarned = 0,
@@ -1412,7 +1389,7 @@ do
             isShowInBackpack = false,
             quantity = 0,
             trackedQuantity = nil,
-            iconFileID = 3456, -- Random FileID
+            iconFileID = 0,
             maxQuantity = 0,
             canEarnPerWeek = false,
             quantityEarnedThisWeek = 0,
@@ -1432,7 +1409,7 @@ do
             isShowInBackpack = false,
             quantity = 0,
             trackedQuantity = nil,
-            iconFileID = 9012, -- Random FileID
+            iconFileID = 9012,
             maxQuantity = 0,
             canEarnPerWeek = false,
             quantityEarnedThisWeek = 0,
@@ -1452,7 +1429,7 @@ do
             isShowInBackpack = false,
             quantity = 0,
             trackedQuantity = nil,
-            iconFileID = 2345, -- Random FileID
+            iconFileID = 0,
             maxQuantity = 0,
             canEarnPerWeek = false,
             quantityEarnedThisWeek = 0,
@@ -1472,7 +1449,7 @@ do
             isShowInBackpack = false,
             quantity = 0,
             trackedQuantity = nil,
-            iconFileID = 3456, -- Random FileID
+            iconFileID = 0,
             maxQuantity = 0,
             canEarnPerWeek = false,
             quantityEarnedThisWeek = 0,
@@ -1492,7 +1469,7 @@ do
             isShowInBackpack = false,
             quantity = 0,
             trackedQuantity = nil,
-            iconFileID = 9012, -- Random FileID
+            iconFileID = 0,
             maxQuantity = 0,
             canEarnPerWeek = false,
             quantityEarnedThisWeek = 0,
@@ -1512,11 +1489,11 @@ do
             isShowInBackpack = true,
             quantity = 5000,
             trackedQuantity = nil,
-            iconFileID = 1234, -- Random FileID
+            iconFileID = 1061300,
             maxQuantity = 10000,
             canEarnPerWeek = true,
             quantityEarnedThisWeek = 2500,
-            isTradeable = true,
+            isTradeable = false,
             quality = Enum.ItemQuality.Rare, -- Random quality
             maxWeeklyQuantity = 5000,
             totalEarned = 0,
@@ -1532,11 +1509,11 @@ do
             isShowInBackpack = true,
             quantity = 10000,
             trackedQuantity = nil,
-            iconFileID = 5678, -- Random FileID
+            iconFileID = 1005027,
             maxQuantity = 50000,
             canEarnPerWeek = true,
             quantityEarnedThisWeek = 5000,
-            isTradeable = true,
+            isTradeable = false,
             quality = Enum.ItemQuality.Rare, -- Random quality
             maxWeeklyQuantity = 10000,
             totalEarned = 0,
@@ -1552,11 +1529,11 @@ do
             isShowInBackpack = true,
             quantity = 1000,
             trackedQuantity = nil,
-            iconFileID = 9012, -- Random FileID
+            iconFileID = 900319,
             maxQuantity = 5000,
             canEarnPerWeek = false,
             quantityEarnedThisWeek = 0,
-            isTradeable = true,
+            isTradeable = false,
             quality = Enum.ItemQuality.Rare, -- Random quality
             maxWeeklyQuantity = 0,
             totalEarned = 0,
@@ -1565,11 +1542,17 @@ do
         }
     }
 
-    function Currency:GetCurrencyListSize()
+    local Currency = addon.Currency
+
+    Currency.GetCurrencyListSize = function()
         return #CurrencyInfo
     end
 
-    function Currency:GetCurrencyListInfo(index)
+    Currency.GetCurrencyListInfo = function(index)
         return CurrencyInfo[index]
+    end
+
+    Currency.GetClampedCurrentExpansionLevel = function()
+        return 9
     end
 end
