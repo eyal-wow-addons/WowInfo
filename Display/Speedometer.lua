@@ -1,27 +1,17 @@
 if not MinimapCluster.ZoneTextButton:IsVisible() then return end
 
 local _, addon = ...
-local plugin = addon:NewPlugin("Speedometer", "AceEvent-3.0")
-
-local Tooltip = addon.Tooltip
+local Display = addon:NewDisplay("Speedometer")
+local Speedometer = addon.Speedometer
 
 local SPEED_HEADER = STAT_SPEED .. ":"
 local SPEED_GROUND_LABEL = STAT_MOVEMENT_GROUND_TOOLTIP:gsub("%s.+", "")
 local SPEED_FLIGHT_LABEL = STAT_MOVEMENT_FLIGHT_TOOLTIP:gsub("%s.+", "")
 local SPEED_SWIM_LABEL = STAT_MOVEMENT_SWIM_TOOLTIP:gsub("%s.+", "")
 
-local format = string.format
-local GetUnitSpeed = GetUnitSpeed
-
-local currentUnit = "player"
-
-local function FormatSpeed(speed)
-    return format("%d%%", speed / BASE_MOVEMENT_SPEED * 100 + 0.5)
-end
-
 local function UpdateText()
     MinimapZoneText:SetTextColor(NORMAL_FONT_COLOR:GetRGB())
-    MinimapZoneText:SetText(FormatSpeed(GetUnitSpeed(currentUnit)))
+    MinimapZoneText:SetText(Speedometer:GetFormattedCurrentSpeed())
 end
 
 local function UpdateTextWhenStartMoving()
@@ -33,40 +23,26 @@ local function UpdateTextWhenStopMoving()
     Minimap_Update()
 end
 
-plugin:RegisterEvent("PLAYER_ENTERING_WORLD", function()
-    if UnitInVehicle("player") then
-        currentUnit = "vehicle"
-    end
-    if IsPlayerMoving() or GetUnitSpeed(currentUnit) > 0 then
+Display:RegisterEvent("PLAYER_ENTERING_WORLD", function()
+    if IsPlayerMoving() or Speedometer:GetCurrentSpeed() > 0 then
         UpdateTextWhenStartMoving()
     else
         UpdateTextWhenStopMoving()
     end
 end)
 
-plugin:RegisterEvent("PLAYER_STARTED_MOVING", UpdateTextWhenStartMoving)
-plugin:RegisterEvent("PLAYER_STOPPED_MOVING", UpdateTextWhenStopMoving)
-
-plugin:RegisterEvent("UNIT_ENTERED_VEHICLE", function(event, unit)
-    if unit == "player" then
-        currentUnit = "vehicle"
-    end
-end)
-
-plugin:RegisterEvent("UNIT_EXITED_VEHICLE", function(event, unit)
-    if unit == "player" then
-        currentUnit = "player"
-    end
-end)
+Display:RegisterEvent("PLAYER_STARTED_MOVING", UpdateTextWhenStartMoving)
+Display:RegisterEvent("PLAYER_STOPPED_MOVING", UpdateTextWhenStopMoving)
 
 MinimapCluster.ZoneTextButton:HookScript("OnEnter", function(self)
-    Tooltip:AddEmptyLine()
+    Display:AddEmptyLine()
 
-    local _, runSpeed, flightSpeed, swimSpeed = GetUnitSpeed("player")
-    Tooltip:AddHighlightLine(SPEED_HEADER)
-    Tooltip:AddRightHighlightDoubleLine(SPEED_GROUND_LABEL, FormatSpeed(runSpeed))
-    Tooltip:AddRightHighlightDoubleLine(SPEED_FLIGHT_LABEL, FormatSpeed(flightSpeed))
-    Tooltip:AddRightHighlightDoubleLine(SPEED_SWIM_LABEL, FormatSpeed(swimSpeed))
+    local runSpeedString, flightSpeedString, swimSpeedString = Speedometer:GetFormattedPlayerSpeedInfo()
+    
+    Display:AddHighlightLine(SPEED_HEADER)
+    Display:AddRightHighlightDoubleLine(SPEED_GROUND_LABEL, runSpeedString)
+    Display:AddRightHighlightDoubleLine(SPEED_FLIGHT_LABEL, flightSpeedString)
+    Display:AddRightHighlightDoubleLine(SPEED_SWIM_LABEL, swimSpeedString)
 
-    Tooltip:Show()
+    Display:Show()
 end)

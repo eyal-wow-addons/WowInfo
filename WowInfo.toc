@@ -20,10 +20,10 @@ Core\WidgetUtils.lua
 Core\AceOptions.lua
 Core\Tooltip.lua
 
+Storage\Friends.lua
 Storage\Guild.lua
 Storage\Money.lua
-#Storage\Reputation.lua
-#Storage\Social.lua
+Storage\Reputation.lua
 
 DataAPI\Realm.lua
 DataAPI\Character.lua
@@ -39,6 +39,7 @@ DataAPI\PvP.lua
 DataAPI\Quest.lua
 DataAPI\Reputation.lua
 DataAPI\SavedBosses.lua
+DataAPI\Speedometer.lua
 DataAPI\WeeklyRewards.lua
 DataAPI\FakeAPI.lua
 
@@ -49,12 +50,12 @@ Display\GreatVaultProgress.lua
 Display\DailyReset.lua
 Display\Durability.lua
 Display\Experience.lua
+Display\Friends.lua
 Display\GuildFriends.lua
 Display\Instances.lua
 Display\Money.lua
 Display\PvPStatus.lua
 Display\Reputation.lua
-#Display\Social.lua
-#Display\Speedometer.lua
+Display\Speedometer.lua
 
 #Options.lua
