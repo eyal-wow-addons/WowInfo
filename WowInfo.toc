@@ -5,6 +5,7 @@
 ## IconTexture: Interface\AddOns\WowInfo\Logo
 
 ## X-Curse-Project-ID: 414057
+## X-WoWI-ID: 26589
 ## X-Wago-ID: b6mbvyKP
 
 ## Version: @project-version@
