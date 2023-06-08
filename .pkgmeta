@@ -10,4 +10,5 @@ externals:
   Libs/AceGUI-3.0: https://repos.curseforge.com/wow/ace3/trunk/AceGUI-3.0
 
 ignore:
+  - Libs/LibStub/*
   - Testing/*

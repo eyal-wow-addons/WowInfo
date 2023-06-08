@@ -4,6 +4,9 @@
 ## Notes: Provides game and character information.
 ## IconTexture: Interface\AddOns\WowInfo\Logo
 
+## X-Curse-Project-ID: 414057
+## X-Wago-ID: b6mbvyKP
+
 ## Version: @project-version@
 ## SavedVariables: WowInfoDB
 

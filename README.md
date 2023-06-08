@@ -1,4 +1,6 @@
-WowInfo is a collection of enhancements to World of Warcraft that provides the following features:
+WowInfo is a World of Warcraft addon that provides game and character information:
+
+To open the options you can type `/wi`, `/wowi` or `/wowinfo`.
 
 * **Collections**: Shows total mounts, pets and toys as well as their collect achievements progress respectively.
     * Appears when hovering over the Collections button.
@@ -50,5 +52,3 @@ WowInfo is a collection of enhancements to World of Warcraft that provides the f
     * Appears on the Minimap's title when the character moves.
     * Supports running, flying and swimming speed.
     * When flying/swimming straight up it wouldn't show the speed because the game doesn't provide altitude information and I don't want the speed to show all the time.
-
-To open the options you can type `/wi`, `/wowi` or `/wowinfo`.
