@@ -53,7 +53,7 @@ local function GetFactionDisplayInfoByID(factionID)
 end
 
 local function GetFactionID(index)
-    return select(14, GetFactionInfo(i))
+    return select(14, GetFactionInfo(index))
 end
 
 function Reputation:IterableTrackedFactions()
@@ -64,7 +64,7 @@ function Reputation:IterableTrackedFactions()
         while i <= n do
             local factionID = GetFactionID(i)
             local factionName, standing, isCapped, repValue, repMax, hasParagonRewardPending = GetFactionDisplayInfoByID(factionID)
-            if Reputation.db:HasFactionsTracked() and Reputation.db:IsSelectedFaction(factionID) or (Reputation.db:GetAlwaysShowParagon() and hasParagonRewardPending) then
+            if Reputation.storage:HasFactionsTracked() and Reputation.storage:IsSelectedFaction(factionID) or (Reputation.storage:GetAlwaysShowParagon() and hasParagonRewardPending) then
                 return factionName, standing, isCapped, STANDING_PROGRESS_FORMAT:format(repValue, repMax)
             end
             i = i + 1

@@ -1,5 +1,5 @@
 local _, addon = ...
-local GuildDB = addon:NewStorage("Guild")
+local Storage, DB = addon:NewStorage("Guild")
 
 local defaults = {
     profile = {
@@ -7,14 +7,14 @@ local defaults = {
     }
 }
 
-function GuildDB:OnInitialize()
-    self:RegisterDB(defaults)
+function Storage:OnInitialize()
+    DB = self:RegisterDB(defaults)
 end
 
-function GuildDB:GetMaxOnlineFriends()
-    return self.options.profile.maxOnlineFriends
+function Storage:GetMaxOnlineFriends()
+    return DB.profile.maxOnlineFriends
 end
 
-function GuildDB:SetMaxOnlineFriends(value)
-    self.options.profile.maxOnlineFriends = tonumber(value)
+function Storage:SetMaxOnlineFriends(value)
+    DB.profile.maxOnlineFriends = tonumber(value)
 end

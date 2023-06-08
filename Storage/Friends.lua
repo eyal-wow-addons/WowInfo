@@ -1,7 +1,7 @@
 if not QuickJoinToastButton:IsVisible() then return end
 
 local _, addon = ...
-local FriendsDB = addon:NewStorage("Friends")
+local Storage, DB = addon:NewStorage("Friends")
 
 local defaults = {
     profile = {
@@ -9,14 +9,14 @@ local defaults = {
     }
 }
 
-function FriendsDB:OnInitialize()
-    self:RegisterDB(defaults)
+function Storage:OnInitialize()
+    DB = self:RegisterDB(defaults)
 end
 
-function FriendsDB:GetMaxOnlineFriends()
-    return self.options.profile.maxOnlineFriends
+function Storage:GetMaxOnlineFriends()
+    return DB.profile.maxOnlineFriends
 end
 
-function FriendsDB:SetMaxOnlineFriends(value)
-    self.options.profile.maxOnlineFriends = tonumber(value)
+function Storage:SetMaxOnlineFriends(value)
+    DB.profile.maxOnlineFriends = tonumber(value)
 end

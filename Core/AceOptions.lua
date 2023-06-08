@@ -34,6 +34,8 @@ local function ConvertToAceOptionsTable(source, argsfix)
         if type(v) ~= "table" then
             if tonumber(k) then
                 tinsert(dest, k, v)
+            elseif k == "handler" then
+                dest.handler.options = nil
             -- Fixes the position of the tooltip
             elseif k == "desc" and type(v) == "string" and dest.type == "toggle" and not dest.descStyle then
                 dest[k] = function()

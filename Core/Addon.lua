@@ -21,6 +21,12 @@ frame:SetScript("OnEvent", function(self, eventName, ...)
         end
     elseif eventName == "PLAYER_LOGIN" then
         for _, object in ipairs(Objects) do
+            local callback = object.OnBeforeConfig
+            if callback then
+                callback(object)
+            end
+        end
+        for _, object in ipairs(Objects) do
             local callback = object.OnConfig
             if callback then
                 callback(object)
@@ -131,27 +137,27 @@ do
 
         --Mixin(object, ...)
 
-        local db = addon[name .. "DB"]
+        local storage = addon[name .. "Storage"]
 
-        if db then
-            object.db = db
+        if storage then
+            object.storage = storage
         end
 
         return object
     end
 
     function addon:NewStorage(name)
-        local db = New(name .. "DB")
+        local storage = New(name .. "Storage")
         
-        function db:RegisterDB(defaults)
-            db.options = addon.DB:RegisterNamespace(name, defaults)
+        function storage:RegisterDB(defaults)
+            return addon.DB:RegisterNamespace(name, defaults)
         end
 
-        return db
+        return storage
     end
 
     function addon:GetStorage(name)
-        return addon[name .. "DB"]
+        return addon[name .. "Storage"]
     end
 end
 

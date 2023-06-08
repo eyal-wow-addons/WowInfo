@@ -1,9 +1,5 @@
 local _, addon = ...
 
-if not addon.debug then
-    return
-end
-
 local GuildRosterData = {
     {
         name = "Shadowstrike",

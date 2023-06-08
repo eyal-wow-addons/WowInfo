@@ -1,7 +1,7 @@
 if not MainMenuBarBackpackButton:IsVisible() then return end
 
 local _, addon = ...
-local MoneyDB = addon:NewStorage("Money")
+local Storage, DB = addon:NewStorage("Money")
 local Character = addon.Character
 
 local defaults = {
@@ -12,10 +12,8 @@ local defaults = {
     }
 }
 
-local moneyStore
-
-function MoneyDB:OnInitialize()
-    self:RegisterDB(defaults)
+function Storage:OnConfig()
+    DB = self:RegisterDB(defaults)
 
     if not addon.DB.global.Money then
         addon.DB.global.Money = {}
@@ -27,18 +25,18 @@ function MoneyDB:OnInitialize()
         addon.DB.global.Money[englishFaction] = {}
     end
 
-    moneyStore = addon.DB.global.Money[englishFaction]
+    DB.__data = addon.DB.global.Money[englishFaction]
 end
 
-function MoneyDB:UpdateForCharacter(character, money)
-    moneyStore[character] = money
+function Storage:UpdateForCharacter(character, money)
+    DB.__data[character] = money
 end
 
-function MoneyDB:IterableMoneyInfo()
-    return pairs(moneyStore)
+function Storage:IterableMoneyInfo()
+    return pairs(DB.__data)
 end
 
-function MoneyDB:Reset()
+function Storage:Reset()
     for key, value in pairs(addon.DB.global.Money) do
         if type(value) ~= "table" then
             addon.DB.global.Money[key] = nil
@@ -51,29 +49,29 @@ function MoneyDB:Reset()
 
     self:UpdateForCharacter(Character:GetFullName(), GetMoney())
 
-    MoneyDB:TriggerEvent("WOWINFO_MONEY_DB_RESET")
+    Storage:TriggerEvent("WOWINFO_MONEY_DB_RESET")
 end
 
-function MoneyDB:SetMinMoneyAmount(value)
-    self.options.profile.minMoneyAmount = tonumber(value)
+function Storage:SetMinMoneyAmount(value)
+    DB.profile.minMoneyAmount = tonumber(value)
 end
 
-function MoneyDB:GetMinMoneyAmount()
-    return self.options.profile.minMoneyAmount or 0
+function Storage:GetMinMoneyAmount()
+    return DB.profile.minMoneyAmount or 0
 end
 
-function MoneyDB:IsConnectedRealmsNamesHidden()
-    return self.options.profile.hideConnectedRealmsNames
+function Storage:IsConnectedRealmsNamesHidden()
+    return DB.profile.hideConnectedRealmsNames
 end
 
-function MoneyDB:ToggleConnectedRealmsNames()
-    self.options.profile.hideConnectedRealmsNames = not self.options.profile.hideConnectedRealmsNames
+function Storage:ToggleConnectedRealmsNames()
+    DB.profile.hideConnectedRealmsNames = not DB.profile.hideConnectedRealmsNames
 end
 
-function MoneyDB:CanShowAllCharacters()
-    return self.options.profile.showAllCharacters
+function Storage:CanShowAllCharacters()
+    return DB.profile.showAllCharacters
 end
 
-function MoneyDB:ToggleShowAllCharacters()
-    self.options.profile.showAllCharacters = not self.options.profile.showAllCharacters
+function Storage:ToggleShowAllCharacters()
+    DB.profile.showAllCharacters = not DB.profile.showAllCharacters
 end

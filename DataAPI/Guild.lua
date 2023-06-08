@@ -61,7 +61,7 @@ function Guild:IterableGuildRosterInfo(index)
 end
 
 function Guild:IterableOnlineFriendsInfo()
-    local maxOnlineGuildFriends = Guild.db:GetMaxOnlineFriends()
+    local maxOnlineGuildFriends = Guild.storage:GetMaxOnlineFriends()
     local onlineGuildFriendsCounter = 0
     local i = 0
     return function()

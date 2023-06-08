@@ -8,7 +8,7 @@ for i, v in ipairs(realms) do
     realmsMap[v] = true
 end
 
-function Realm:OnConfig()
+function Realm:OnBeforeConfig()
     local _, realm = UnitFullName("player")
     myRealm = realm
 end

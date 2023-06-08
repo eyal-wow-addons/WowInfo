@@ -25,13 +25,13 @@ Money:RegisterEvents(
     "WOWINFO_MONEY_DB_RESET", function()
         local money = GetMoney()
 
-        Money.db:UpdateForCharacter(Character:GetFullName(), money)
+        Money.storage:UpdateForCharacter(Character:GetFullName(), money)
 
         totalMoney = 0
 
         table.wipe(moneyInfo)
 
-        for character, money in Money.db:IterableMoneyInfo() do
+        for character, money in Money.storage:IterableMoneyInfo() do
             local isCharacterOnCurrentRealm = character:find(Character:GetRealm())
             if money > 0 and (IsCharacterOnConnectedRealm(character, true) or isCharacterOnCurrentRealm) then
                 table.insert(moneyInfo, {character, money})
@@ -53,7 +53,7 @@ function Money:IterableMoneyInfo()
             local characterString = value[1]
             local isCharacterOnCurrentRealm = characterString:find(Character:GetRealm())
 
-            if IsCharacterOnConnectedRealm(characterString, false) and Money.db:IsConnectedRealmsNamesHidden() then
+            if IsCharacterOnConnectedRealm(characterString, false) and Money.storage:IsConnectedRealmsNamesHidden() then
                 characterString = characterString:gsub(REALM_PATTERN, "*")
             elseif isCharacterOnCurrentRealm then
                 characterString = characterString:gsub(REALM_PATTERN, "")
@@ -69,7 +69,7 @@ function Money:IterableMoneyInfo()
                 characterString = GetClassColoredTextForUnit("player", characterString)
             end
 
-            if isCharacterCurrentPlayer or fraction > Money.db:GetMinMoneyAmount() or Money.db:CanShowAllCharacters()  then
+            if isCharacterCurrentPlayer or fraction > Money.storage:GetMinMoneyAmount() or Money.storage:CanShowAllCharacters()  then
                 return characterString, GetMoneyString(money, true)
             end
 

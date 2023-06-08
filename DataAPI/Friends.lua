@@ -64,14 +64,11 @@ function Friends:IterableWoWFriendsInfo()
     local i = 0
     local n = C_FriendList.GetNumFriends()
     return function()
-        maxOnlineFriends = self.db:GetMaxOnlineFriends()
-
+        maxOnlineFriends = self.storage:GetMaxOnlineFriends()
         if maxOnlineFriends == 0 then 
             return 
         end
-
         i = i + 1
-
         while i <= n do
             if connectedFriendsCounter >= maxOnlineFriends then
                 return
@@ -114,7 +111,6 @@ function Friends:IterableWoWFriendsInfo()
 
                 return WrapTextInColor(friendString, classColor), WrapTextInColor(zoneString, zoneColors)
             end
-
             i = i + 1
         end
     end
@@ -125,14 +121,11 @@ function Friends:IterableBattleNetFriendsInfo()
     local i = 0
     local n = BNGetNumFriends()
     return function()
-        maxOnlineFriends = self.db:GetMaxOnlineFriends()
-
+        maxOnlineFriends = self.storage:GetMaxOnlineFriends()
         if maxOnlineFriends == 0 then
             return
         end
-
         i = i + 1
-
         while i <= n do
             if connectedFriendsCounter >= maxOnlineFriends then
                 return
@@ -206,8 +199,7 @@ function Friends:IterableBattleNetFriendsInfo()
                     end
                 end
             end
+            i = i + 1
         end
-
-        i = i + 1
     end
 end

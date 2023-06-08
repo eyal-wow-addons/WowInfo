@@ -1,10 +1,9 @@
 local _, addon = ...
-local options = addon:NewOptions("AceEvent-3.0")
-
+local Options = addon:NewObject("Options")
 local MoneyDB = addon:GetStorage("Money")
-local GuildFriendsDB = addon:GetDB("GuildFriends")
-local SocialDB = addon:GetDB("Social")
-local ReputationDB = addon:GetDB("Reputation")
+local GuildDB = addon:GetStorage("Guild")
+local FriendsDB = addon:GetStorage("Friends")
+local ReputationDB = addon:GetStorage("Reputation")
 
 local function CreateReputationOptions()
     local args = {}
@@ -23,7 +22,6 @@ local function CreateReputationOptions()
             self.handler:ToggleAlwaysShowParagon()
         end
     })
-
 
     local parentName
     for i = 1, GetNumFactions() do
@@ -103,10 +101,10 @@ local function BuildOptions()
                     descStyle = "hidden",
                     width = "full",
                     get = function(self)
-                        return self.handler:IsConnectedRealmsNamesHidden()
+                        return MoneyDB:IsConnectedRealmsNamesHidden()
                     end,
                     set = function(self)
-                        self.handler:ToggleConnectedRealmsNames()
+                        MoneyDB:ToggleConnectedRealmsNames()
                     end
                 },
                 {
@@ -115,10 +113,10 @@ local function BuildOptions()
                     descStyle = "hidden",
                     width = "full",
                     get = function(self)
-                        return self.handler:CanShowAllCharacters()
+                        return MoneyDB:CanShowAllCharacters()
                     end,
                     set = function(self)
-                        self.handler:ToggleShowAllCharacters()
+                        MoneyDB:ToggleShowAllCharacters()
                     end
                 },
                 {
@@ -129,10 +127,10 @@ local function BuildOptions()
                     type = "input",
                     name = "",
                     get = function(self)
-                        return tostring(self.handler:GetMinMoneyAmount())
+                        return tostring(MoneyDB:GetMinMoneyAmount())
                     end,
                     set = function(self, value)
-                        self.handler:SetMinMoneyAmount(value)
+                        MoneyDB:SetMinMoneyAmount(value)
                     end,
                     validate = function(info, value)
                         if value ~= nil and value ~= "" and (not tonumber(value) or tonumber(value) >= 2^31) then
@@ -141,7 +139,7 @@ local function BuildOptions()
                         return true
                     end,
                     disabled = function(self)
-                        return self.handler:CanShowAllCharacters()
+                        return MoneyDB:CanShowAllCharacters()
                     end
                 },
                 {
@@ -153,7 +151,7 @@ local function BuildOptions()
                     descStyle = "hidden",
                     width = "double",
                     func = function(self)
-                        self.handler:Reset()
+                        MoneyDB:Reset()
                     end
                 }
             }
@@ -164,7 +162,7 @@ local function BuildOptions()
         type = "group",
         name = "Guild & Communities",
         inline = true,
-        handler = GuildFriendsDB,
+        handler = GuildDB,
         args = {
             {
                 type = "range",
@@ -175,10 +173,10 @@ local function BuildOptions()
                 min = 0,
                 max = 50,
                 get = function(self)
-                    return self.handler:GetMaxOnlineGuildFriends()
+                    return self.handler:GetMaxOnlineFriends()
                 end,
                 set = function(self, value)
-                    self.handler:SetMaxOnlineGuildFriends(value)
+                    self.handler:SetMaxOnlineFriends(value)
                 end
             },
         }
@@ -189,7 +187,7 @@ local function BuildOptions()
             type = "group",
             name = "Social",
             inline = true,
-            handler = SocialDB,
+            handler = FriendsDB,
             args = {
                 {
                     type = "range",
@@ -219,7 +217,7 @@ local function BuildOptions()
     BuildOptions = function() end 
 end
 
-function options:OnInitialize()
+function Options:OnInitialize()
     SLASH_WOWINFO1 = "/wowinfo"
     SLASH_WOWINFO2 = "/wowi"
     SLASH_WOWINFO2 = "/wi"

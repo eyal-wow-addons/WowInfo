@@ -13,12 +13,12 @@ Libs\AceConfig-3.0\AceConfig-3.0.xml
 Libs\AceDB-3.0\AceDB-3.0.xml
 Libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
 
-Addon.lua
-Main.lua
-
+Core\Addon.lua
 Core\WidgetUtils.lua
 Core\AceOptions.lua
 Core\Tooltip.lua
+
+Main.lua
 
 Storage\Friends.lua
 Storage\Guild.lua
@@ -41,7 +41,6 @@ DataAPI\Reputation.lua
 DataAPI\SavedBosses.lua
 DataAPI\Speedometer.lua
 DataAPI\WeeklyRewards.lua
-DataAPI\FakeAPI.lua
 
 Display\Collections.lua
 Display\ConnectedRealms.lua
@@ -58,4 +57,4 @@ Display\PvPStatus.lua
 Display\Reputation.lua
 Display\Speedometer.lua
 
-#Options.lua
+Options.lua

@@ -1,5 +1,4 @@
 local _, addon = ...
-addon.debug = true
 
 function addon:OnInitialize()
     addon.DB = LibStub("AceDB-3.0"):New("WowInfoDB", {}, true)

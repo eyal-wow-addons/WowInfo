@@ -3,7 +3,7 @@ local Character = addon:NewObject("Character")
 
 local charName, charRealm1, charRealm2, charFullName
 
-function Character:OnConfig()
+function Character:OnBeforeConfig()
     charName, charRealm1 = UnitName("player"), GetRealmName()
     charRealm2 = select(2, UnitFullName("player"))
     charFullName = string.join(" - ", charName, charRealm1)
