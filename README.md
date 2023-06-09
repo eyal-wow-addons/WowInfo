@@ -37,7 +37,7 @@ To open the options you can type `/wi`, `/wowi` or `/wowinfo`.
     * Supports connected realms.
     * Can be configured via the options.
 
-* **PvPS Status**: Shows the progress of honor level, conquest bar and the current arena/rbg rating.
+* **PvP Status**: Shows the progress of honor level, conquest bar and the current arena/rbg rating.
     * Appears when hovering over Looking for Group button.
 
 * **Reputation**: Shows the reputation status for tracked factions.
