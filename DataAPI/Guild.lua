@@ -36,6 +36,9 @@ function Guild:IterableGuildRosterInfo(index)
     local i = index or 0
     local n = Guild.GetNumGuildMembers()
     return function()
+        if not onlineFriendsLookupTable then
+            return
+        end
         i = i + 1
         if i <= n then
             local isFriend = false
