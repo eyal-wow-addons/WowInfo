@@ -9,27 +9,33 @@ local function GetGreatVaultProgressString(activityInfo)
     local thresholdString, progressString
     
     if activityInfo.type == Enum.WeeklyRewardChestThresholdType.Raid then
-        thresholdString = WEEKLY_REWARDS_THRESHOLD_RAID
+        if activityInfo.raidString then
+			thresholdString = activityInfo.raidString
+		else
+			thresholdString = WEEKLY_REWARDS_THRESHOLD_RAID
+		end
     elseif activityInfo.type == Enum.WeeklyRewardChestThresholdType.MythicPlus then
         thresholdString = WEEKLY_REWARDS_THRESHOLD_MYTHIC
     elseif activityInfo.type == Enum.WeeklyRewardChestThresholdType.RankedPvP then
         thresholdString = WEEKLY_REWARDS_THRESHOLD_PVP
     end
 
-    thresholdString = thresholdString:format(activityInfo.threshold)
+    if thresholdString then
+        thresholdString = thresholdString:format(activityInfo.threshold)
 
-    if activityInfo.index == 1 and activityInfo.progress > activityInfo.minThreshold then
-        thresholdString = WrapTextInColorCode(thresholdString, GREAT_VAULT_UNLOCKED_1ST_REWARD_COLOR)
-    elseif activityInfo.index == 2 and activityInfo.progress > activityInfo.minThreshold then
-        thresholdString = WrapTextInColorCode(thresholdString, GREAT_VAULT_UNLOCKED_2ND_REWARD_COLOR)
-    elseif activityInfo.index == 3 and activityInfo.progress > activityInfo.minThreshold then
-        thresholdString = WrapTextInColorCode(thresholdString, GREAT_VAULT_UNLOCKED_3RD_REWARD_COLOR)
-    end
+        if activityInfo.index == 1 and activityInfo.progress > activityInfo.minThreshold then
+            thresholdString = WrapTextInColorCode(thresholdString, GREAT_VAULT_UNLOCKED_1ST_REWARD_COLOR)
+        elseif activityInfo.index == 2 and activityInfo.progress > activityInfo.minThreshold then
+            thresholdString = WrapTextInColorCode(thresholdString, GREAT_VAULT_UNLOCKED_2ND_REWARD_COLOR)
+        elseif activityInfo.index == 3 and activityInfo.progress > activityInfo.minThreshold then
+            thresholdString = WrapTextInColorCode(thresholdString, GREAT_VAULT_UNLOCKED_3RD_REWARD_COLOR)
+        end
 
-    if activityInfo.progress > 0 then
-        progressString = WrapTextInColorCode(activityInfo.progress, "ffffffff")
-    else
-        progressString = activityInfo.progress
+        if activityInfo.progress > 0 then
+            progressString = WrapTextInColorCode(activityInfo.progress, "ffffffff")
+        else
+            progressString = activityInfo.progress
+        end
     end
 
     return thresholdString, progressString
