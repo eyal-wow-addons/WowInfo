@@ -57,7 +57,7 @@ Display\Friends.lua
 Display\GuildFriends.lua
 Display\Instances.lua
 Display\Money.lua
-Display\PvPStatus.lua
+Display\PvP.lua
 Display\Reputation.lua
 Display\Speedometer.lua
 
