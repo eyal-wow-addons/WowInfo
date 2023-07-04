@@ -67,10 +67,15 @@ function PvP:IterableArenaProgressInfo()
             local name = CONQUEST_SIZE_STRINGS[i]
             local bracketIndex = CONQUEST_BRACKET_INDEXES[i]
             local rating, _, _, _, _, weeklyPlayed, weeklyWon = GetPersonalRatedInfo(bracketIndex)
+            local ratingString, weeklyStatusString
             if rating > 0 then
-                return RATED_PVP_LABEL_FORMAT:format(name, rating), RATED_PVP_WEEKLY_STATUS_FORMAT:format(weeklyPlayed, weeklyWon, weeklyPlayed - weeklyWon)
+                ratingString = RATED_PVP_LABEL_FORMAT:format(name, rating)
+                weeklyStatusString = RATED_PVP_WEEKLY_STATUS_FORMAT:format(weeklyPlayed, weeklyWon, weeklyPlayed - weeklyWon)
+            else
+                ratingString = GRAY_FONT_COLOR:WrapTextInColorCode(name)
+                weeklyStatusString = GRAY_FONT_COLOR:WrapTextInColorCode(0)
             end
-            i = i + 1
+            return ratingString, weeklyStatusString
         end
     end
 end
