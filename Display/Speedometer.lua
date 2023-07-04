@@ -34,7 +34,7 @@ end)
 Display:RegisterEvent("PLAYER_STARTED_MOVING", UpdateTextWhenStartMoving)
 Display:RegisterEvent("PLAYER_STOPPED_MOVING", UpdateTextWhenStopMoving)
 
-MinimapCluster.ZoneTextButton:HookScript("OnEnter", function(self)
+MinimapCluster.ZoneTextButton:HookScript("OnEnter", function()
     Display:AddEmptyLine()
 
     local runSpeedString, flightSpeedString, swimSpeedString = Speedometer:GetFormattedPlayerSpeedInfo()
