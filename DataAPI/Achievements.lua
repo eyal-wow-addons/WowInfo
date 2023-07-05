@@ -1,7 +1,11 @@
 local _, addon = ...
 local Achievements = addon:NewObject("Achievements")
 
-local ACHIEVEMENT_LABEL_FORMAT = "- %s: |cffffffff%d|r / |cff20ff20%d|r"
+local ACHIEVEMENTUI_SUMMARYCATEGORIES = {92, 96, 97, 95, 168, 169, 201, 155, 15117, 15246}
+local ACHIEVEMENTUI_GUILDSUMMARYCATEGORIES = {15088, 15077, 15078, 15079, 15080, 15089}
+
+local COLLECTIONS_LABEL_FORMAT = "- %s: |cffffffff%d|r / |cff20ff20%d|r"
+local PROGRESS_FORMAT = "%s / %s"
 
 -- I've checked Blizzard's code and it seems like GetNextAchievement returns completed as the 2nd return value
 -- however, it seems to returns nil for achievements I've completed with one faction but not the other,
@@ -35,13 +39,35 @@ local function FindAchievementInfo(baseAchievementID)
     return name, currAmount, reqAmount
 end
 
+-- This is similar to AchievementFrame_GetCategoryTotalNumAchievements from Blizzard_AchievementUI
+local function GetCategoryTotalNumAchievements(categoryId, guildOnly)
+    local categories = guildOnly and GetGuildCategoryList() or GetCategoryList()
+
+	-- Not recursive because we only have one deep and this saves time.
+	local totalAchievements, totalCompleted = 0, 0;
+	local numAchievements, numCompleted = GetCategoryNumAchievements(categoryId, true);
+	totalAchievements = totalAchievements + numAchievements;
+	totalCompleted = totalCompleted + numCompleted;
+
+	for _, id in ipairs(categories) do
+        local _, parentId = GetCategoryInfo(id);
+		if parentId == categoryId then
+			numAchievements, numCompleted = GetCategoryNumAchievements(id, true);
+			totalAchievements = totalAchievements + numAchievements;
+			totalCompleted = totalCompleted + numCompleted;
+		end
+	end
+
+	return totalAchievements, totalCompleted;
+end
+
 do
     local MOUNTS_BASE_ACHIEVEMENT_ID = 2143 -- Leading the Cavalry
 
     function Achievements:GetMountAchievementString()
         local achievementName, achievementCurrAmount, achievementReqAmount = FindAchievementInfo(MOUNTS_BASE_ACHIEVEMENT_ID)
         if achievementName then
-            return ACHIEVEMENT_LABEL_FORMAT:format(achievementName, achievementCurrAmount, achievementReqAmount)
+            return COLLECTIONS_LABEL_FORMAT:format(achievementName, achievementCurrAmount, achievementReqAmount)
         end
         return nil
     end
@@ -53,7 +79,7 @@ do
     function Achievements:GetPetsAchievementString()
         local achievementName, achievementCurrAmount, achievementReqAmount = FindAchievementInfo(PETS_BASE_ACHIEVEMENT_ID)
         if achievementName then
-            return ACHIEVEMENT_LABEL_FORMAT:format(achievementName, achievementCurrAmount, achievementReqAmount)
+            return COLLECTIONS_LABEL_FORMAT:format(achievementName, achievementCurrAmount, achievementReqAmount)
         end
         return nil
     end
@@ -65,8 +91,30 @@ do
     function Achievements:GetToysAchievementString()
         local achievementName, achievementCurrAmount, achievementReqAmount = FindAchievementInfo(TOYBOX_BASE_ACHIEVEMENT_ID)
         if achievementName then
-            return ACHIEVEMENT_LABEL_FORMAT:format(achievementName, achievementCurrAmount, achievementReqAmount)
+            return COLLECTIONS_LABEL_FORMAT:format(achievementName, achievementCurrAmount, achievementReqAmount)
         end
         return nil
     end
 end
+
+function Achievements:GetSummaryProgressString(guildOnly)
+    local total, completed = GetNumCompletedAchievements(guildOnly)
+    return ACHIEVEMENTS_COMPLETED, PROGRESS_FORMAT:format(BreakUpLargeNumbers(completed), BreakUpLargeNumbers(total))
+end
+
+function Achievements:IterableCategoriesSummaryInfo(guildOnly)
+    local categories = guildOnly and ACHIEVEMENTUI_GUILDSUMMARYCATEGORIES or ACHIEVEMENTUI_SUMMARYCATEGORIES
+    local i = 0
+    local n = #categories
+    return function()
+        i = i + 1
+        if i <= n then
+            local categoryId = categories[i]
+            local categoryName = GetCategoryInfo(categoryId)
+            local total, completed = GetCategoryTotalNumAchievements(categoryId, guildOnly)
+            return categoryName, PROGRESS_FORMAT:format(BreakUpLargeNumbers(completed), BreakUpLargeNumbers(total))
+        end
+    end
+end
+
+

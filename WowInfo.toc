@@ -46,6 +46,7 @@ DataAPI\SavedBosses.lua
 DataAPI\Speedometer.lua
 DataAPI\WeeklyRewards.lua
 
+Display\Achievements.lua
 Display\Collections.lua
 Display\ConnectedRealms.lua
 Display\Currency.lua
