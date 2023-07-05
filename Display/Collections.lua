@@ -9,7 +9,7 @@ Display:RegisterHookScript(CollectionsMicroButton, "OnEnter", function()
     local totalMountsString = Collections:GetTotalMountsString()
     if totalMountsString  then
         local achievementString = Achievements:GetMountAchievementString()
-        Display:AddLine(totalMountsString)
+        Display:AddHighlightLine(totalMountsString)
         if achievementString then
             Display:AddLine(achievementString)
         end
@@ -19,7 +19,7 @@ Display:RegisterHookScript(CollectionsMicroButton, "OnEnter", function()
     if totalPetsString then
         local achievementString = Achievements:GetPetsAchievementString()
         Display:AddEmptyLine()
-        Display:AddLine(totalPetsString)
+        Display:AddHighlightLine(totalPetsString)
         if achievementString then
             Display:AddLine(achievementString)
         end
@@ -29,7 +29,7 @@ Display:RegisterHookScript(CollectionsMicroButton, "OnEnter", function()
     if totalToysString then
         local achievementString = Achievements:GetToysAchievementString()
         Display:AddEmptyLine()
-        Display:AddLine(totalToysString)
+        Display:AddHighlightLine(totalToysString)
         if achievementString then
             Display:AddLine(achievementString)
         end
