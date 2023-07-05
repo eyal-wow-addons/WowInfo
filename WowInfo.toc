@@ -40,7 +40,7 @@ DataAPI\Friends.lua
 DataAPI\Guild.lua
 DataAPI\Money.lua
 DataAPI\PvP.lua
-DataAPI\Quest.lua
+DataAPI\Quests.lua
 DataAPI\Reputation.lua
 DataAPI\SavedBosses.lua
 DataAPI\Speedometer.lua
@@ -59,6 +59,7 @@ Display\GuildFriends.lua
 Display\Instances.lua
 Display\Money.lua
 Display\PvP.lua
+Display\QuestLog.lua
 Display\Reputation.lua
 Display\Speedometer.lua
 
