@@ -63,7 +63,7 @@ function PvP:IterableArenaProgressInfo()
     local n = #CONQUEST_SIZE_STRINGS
     return function()
         i = i + 1
-        while i <= n do
+        if i <= n then
             local name = CONQUEST_SIZE_STRINGS[i]
             local bracketIndex = CONQUEST_BRACKET_INDEXES[i]
             local rating, _, _, _, _, weeklyPlayed, weeklyWon = GetPersonalRatedInfo(bracketIndex)
