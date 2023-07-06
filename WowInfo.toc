@@ -35,6 +35,7 @@ DataAPI\Achievements.lua
 DataAPI\Collections.lua
 DataAPI\Currency.lua
 DataAPI\Durability.lua
+DataAPI\EncounterJournal.lua
 DataAPI\Experience.lua
 DataAPI\Friends.lua
 DataAPI\Guild.lua
@@ -58,6 +59,7 @@ Display\Friends.lua
 Display\GuildFriends.lua
 Display\Instances.lua
 Display\Money.lua
+Display\MonthlyActivities.lua
 Display\PvP.lua
 Display\QuestLog.lua
 Display\Reputation.lua
