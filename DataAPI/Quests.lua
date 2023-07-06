@@ -3,11 +3,13 @@ local Quests = addon:NewObject("Quests")
 
 local EMPTY_CHAPTERS = {}
 
-local QuestResetTimeSecondsFormatter = CreateFromMixins(SecondsFormatterMixin)
-QuestResetTimeSecondsFormatter:Init(SECONDS_PER_MIN, SecondsFormatter.Abbreviation.Truncate, false)
+do
+    local QuestResetTimeSecondsFormatter = CreateFromMixins(SecondsFormatterMixin)
+    QuestResetTimeSecondsFormatter:Init(SECONDS_PER_MIN, SecondsFormatter.Abbreviation.Truncate, false)
 
-function Quests:GetResetTimeString()
-    return QuestResetTimeSecondsFormatter:Format(GetQuestResetTime())
+    function Quests:GetResetTimeString()
+        return QuestResetTimeSecondsFormatter:Format(GetQuestResetTime())
+    end
 end
 
 function Quests:IterableQuestInfo()
