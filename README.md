@@ -1,54 +1,118 @@
+# WowInfo
+
 WowInfo is a World of Warcraft addon that provides game and character information:
 
 To open the options you can type `/wi`, `/wowi` or `/wowinfo`.
 
-* **Collections**: Shows total mounts, pets and toys as well as their collect achievements progress respectively.
-    * Appears when hovering over the Collections button.
+![Options](Screenshots/Options.png)
 
-* **Connected Realm**: Shows the realms you are connected to.
-    * Appears when hovering over the Game Menu button.
-    * When the realm is not part of a connected realm it shouldn't show any information about it.
+## Character Info
 
-* **Currency**: Shows the currency for the current expansion.
-    * Appears when hovering over the Character Info button.
+Appears when hovering over the `Character Info` button.
 
-* **Daily Reset**: Shows the daily reset.
-    * Appears when hovering over the Clock.
+* Shows the currency for the current expansion.
+* Shows the progress of the great vault.
+* Shows the durability of equipped items as well as bags.
+* Shows the reputation status for tracked factions.
 
-* **Durability**: Shows the durability of equipped items as well as bags.
-    * Appears when hovering over the Character Info button.
+![Character Info](Screenshots/CharacterMicroButton.png)
 
-* **Experience**: Shows the experience of the current character.
-    * Appears when hovering over the Experience bar.
+## Achievements
 
-* **Great Vault Progress**: Shows the progress of the great vault.
-    * Appears when hovering over the Character Info button.
+Appears when hovering over the `Achievements` button.
 
-* **Guild Friends**: Shows your logged friends.
-    * Appears when hovering over Guild & Communities button.
-    * Can be configured via the options.
+* Shows a summary of the player and guild achievements.
 
-* **Instances**: Shows the progress of saved dungeons and raids.
-    * Appears when hovering over Looking for Group button.
+![Achievements](Screenshots/AchievementMicroButton.png)
 
-* **Money**: Shows the money of the character.
-    * Appears when hovering over the Backpack bag.
-    * Supports multiple characters.
-    * Supports connected realms.
-    * Can be configured via the options.
+## Quest Log
 
-* **PvP Status**: Shows the progress of honor level, conquest bar and the current arena/rbg rating.
-    * Appears when hovering over Looking for Group button.
+Appears when hovering over the `Quest Log` button.
 
-* **Reputation**: Shows the reputation status for tracked factions.
-    * Appears when hovering over Character Info button.
-    * Can be configured via the options.
+* Shows a summary of completed, incompleted and total quests in the quest log.
 
-* **Social**: Shows your friends status.
-    * Appears when hovering over Social button.
-    * Can be configured via the options.
+![Quest Log](Screenshots/QuestLogMicroButton.png)
 
-* **Speedometer**: Shows your speed on the Minimap.
-    * Appears on the Minimap's title when the character moves.
-    * Supports running, flying and swimming speed.
-    * When flying/swimming straight up it wouldn't show the speed because the game doesn't provide altitude information and I don't want the speed to show all the time.
+## Guild & Communities
+
+Appears when hovering over the `Guild & Communities` button.
+
+* Shows your guild friends when they are online
+
+![Guild & Communities](Screenshots/GuildMicroButton.png)
+
+## Group Finder
+
+Appears when hovering over the `Group Finder` button.
+
+* Shows the progress of saved dungeons and raids.
+* Shows the progress of honor level, conquest bar and the current arena/rbg rating.
+
+![Group Finder](Screenshots/LFDMicroButton.png)
+
+## Collections
+
+Appears when hovering over the `Collections` button.
+
+* Shows total mounts, pets and toys as well as their collect achievements progress respectively.
+
+![Collections](Screenshots/CollectionsMicroButton.png)
+
+## Adventure's Guide
+
+Appears when hovering over the `Adventure's Guide` button.
+
+* Shows a summary of the traveler's log progress and reward for the current month.
+
+![Adventure's Guide](Screenshots/EJMicroButton.png)
+
+## Game Menu
+
+Appears when hovering over the `Game Menu` button.
+
+* Shows the connected realms you are connected to, if any.
+
+![Game Menu](Screenshots/GameMenuMicroButton.png)
+
+## Backpack
+
+Appears when hovering over the Backpack bag.
+
+* Shows the money of the character.
+  * Supports multiple characters.
+  * Supports connected realms.
+  * Supports all factions.
+
+![Backpack](Screenshots/Backpack.png)
+
+## Clock
+
+Appears when hovering over the `Clock`.
+
+* Shows the reset time for the daily quests.
+
+![Clock](Screenshots/Clock.png)
+
+## Status Bar
+
+Appears when hovering over the `Status Bar`.
+
+* Shows the experience of the current character.
+
+![Status Bar](Screenshots/MainStatusTrackingBar.png)
+
+## Social
+
+Appears when hovering over `Social` button.
+
+* Shows your friends status.
+
+![Social](Screenshots/QuickJoinToastButton.png)
+
+## Minimap
+
+Shows the player's speed and status on the `Minimap`s zone text when the character moves.
+
+![Minimap's Tooltip](Screenshots/Minimap1.png)
+
+![Minimap](Screenshots/Minimap2.png)

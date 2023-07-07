@@ -11,4 +11,6 @@ externals:
 
 ignore:
   - Libs/LibStub/*
+  - Screenshots/*
   - Testing/*
+  - README.md
