@@ -2,7 +2,6 @@ if not MainMenuBarBackpackButton:IsVisible() then return end
 
 local _, addon = ...
 local Storage, DB = addon:NewStorage("Money")
-local Character = addon.Character
 
 local defaults = {
     profile = {
@@ -28,12 +27,28 @@ function Storage:OnConfig()
     DB.__data = addon.DB.global.Money[englishFaction]
 end
 
-function Storage:UpdateForCharacter(character, money)
-    DB.__data[character] = money
-end
+do
+    Storage:RegisterEvents(
+        "PLAYER_LOGIN",
+        "PLAYER_MONEY",
+        "PLAYER_TRADE_MONEY",  
+        "SEND_MAIL_MONEY_CHANGED", 
+        "SEND_MAIL_COD_CHANGED", 
+        "TRADE_MONEY_CHANGED",
+        "WOWINFO_MONEY_DB_RESET", function()
+            DB.__data[addon.Character:GetFullName()] = GetMoney()
+        end)
 
-function Storage:IterableMoneyInfo()
-    return pairs(DB.__data)
+    function Storage:GetMoneyInfoByCharacter(charName)
+        local money
+        charName, money = next(DB.__data, charName)
+        while charName do
+            if money > 0 and (addon.Character:IsOnConnectedRealm(charName, true) or addon.Character:IsOnCurrentRealm(charName)) then
+                return charName, money
+            end
+            charName, money = next(DB.__data, charName)
+        end
+    end
 end
 
 function Storage:Reset()
@@ -43,11 +58,11 @@ function Storage:Reset()
         end
     end
 
-    for character in self:IterableMoneyInfo() do
-        self:UpdateForCharacter(character, nil)
+    for charName in pairs(DB.__data) do
+        DB.__data[charName] = nil
     end
 
-    self:UpdateForCharacter(Character:GetFullName(), GetMoney())
+    DB.__data[addon.Character:GetFullName()] = GetMoney()
 
     Storage:TriggerEvent("WOWINFO_MONEY_DB_RESET")
 end

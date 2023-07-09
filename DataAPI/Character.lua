@@ -1,6 +1,8 @@
 local _, addon = ...
 local Character = addon:NewObject("Character")
 
+local REALM_PATTERN = "% - (.+)"
+
 local charName, charRealm1, charRealm2, charFullName
 
 function Character:OnBeforeConfig()
@@ -19,4 +21,24 @@ end
 
 function Character:GetFullName()
     return charFullName
+end
+
+function Character:IsSame(name)
+    return name == self:GetFullName()
+end
+
+function Character:IsOnCurrentRealm(name)
+    return name:find(self:GetRealm())
+end
+
+function Character:IsOnConnectedRealm(name, includeOwn)
+    return addon.Realm:IsRealmConnectedRealm(name:match(REALM_PATTERN), includeOwn)
+end
+
+function Character:RemoveRealm(name)
+    return name:gsub(REALM_PATTERN, "")
+end
+
+function Character:ShortConnectedRealm(name)
+    return name:gsub(REALM_PATTERN, "*")
 end
