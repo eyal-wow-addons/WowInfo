@@ -1,6 +1,8 @@
 local _, addon = ...
 local Reputation = addon:NewObject("Reputation")
 
+local RENOWN_LEVEL_LABEL = "%s (" .. RENOWN_LEVEL_LABEL .. " %d)"
+local ICON_AVAILABLE_REWARD = " |TInterface\\RaidFrame\\ReadyCheck-Ready:0|t"
 local STANDING_PROGRESS_FORMAT = "%s / %s"
 
 local function GetFactionDisplayInfoByID(factionID)
@@ -32,7 +34,28 @@ local function GetFactionDisplayInfoByID(factionID)
                 standingColor = LIGHTBLUE_FONT_COLOR
                 if not tooLowLevelForParagon and hasRewardPending then
                     hasParagonRewardPending = true
-                    factionName = factionName .. " |TInterface\\RaidFrame\\ReadyCheck-Ready:0|t"
+                    factionName = factionName .. ICON_AVAILABLE_REWARD
+                end
+            elseif C_Reputation.IsMajorFaction(factionID) then
+                local majorFactionData = C_MajorFactions.GetMajorFactionData(factionID)
+                local rewards = C_MajorFactions.GetRenownRewardsForLevel(factionID, majorFactionData.renownLevel)
+                repMin, repMax = 0, majorFactionData.renownLevelThreshold
+                isCapped = C_MajorFactions.HasMaximumRenown(factionID)
+                repValue = isCapped and majorFactionData.renownLevelThreshold or majorFactionData.renownReputationEarned or 0
+                standingColor = BLUE_FONT_COLOR
+                factionName = RENOWN_LEVEL_LABEL:format(factionName, majorFactionData.renownLevel)
+                if #rewards > 0 then
+                    local rewardInfo = rewards[1]
+                    if rewardInfo.itemID
+                        or rewardInfo.mountID
+                        or rewardInfo.spellID
+                        or rewardInfo.titleMaskID
+                        or rewardInfo.transmogID
+                        or rewardInfo.transmogSetID
+                        or rewardInfo.garrFollowerID
+                        or rewardInfo.transmogIllusionSourceID then
+                        factionName = factionName .. ICON_AVAILABLE_REWARD
+                    end
                 end
             else
                 if (standingID == MAX_REPUTATION_REACTION) then
