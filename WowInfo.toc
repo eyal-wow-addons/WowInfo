@@ -24,6 +24,7 @@ Core\Tooltip.lua
 
 Main.lua
 
+Storage\Currency.lua
 Storage\Friends.lua
 Storage\Guild.lua
 Storage\Money.lua

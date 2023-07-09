@@ -1,5 +1,6 @@
 local _, addon = ...
 local Currency = addon:NewObject("Currency")
+local Character = addon.Character
 
 Currency.GetCurrencyListSize = C_CurrencyInfo.GetCurrencyListSize
 Currency.GetCurrencyListInfo = C_CurrencyInfo.GetCurrencyListInfo
@@ -15,7 +16,7 @@ function Currency:OnInitialize()
     end
 end
 
-function Currency:IterableCurrencyInfo(categoryName)
+local function IterableCurrencyByCategory(categoryName)
     local isHeaderCategoryFound = false
     local i = 0
     local n = Currency.GetCurrencyListSize()
@@ -43,11 +44,11 @@ function Currency:IterableCurrencyInfo(categoryName)
     end
 end
 
-function Currency:IterableLatestExpansionCurrencyInfo()
+function Currency:IterableLatestExpansionInfo()
     local expansionLevel = currentExpansionLevel + 1
     local categoryName
     while expansionLevel > 0 do
-        categoryName = self:IterableCurrencyInfo(expansions[expansionLevel])()
+        categoryName = IterableCurrencyByCategory(expansions[expansionLevel])()
         if not categoryName then
             -- If we didn't find a header for the latest expansion available
             -- then try the expansion before that
@@ -56,9 +57,30 @@ function Currency:IterableLatestExpansionCurrencyInfo()
             break
         end
     end
-    return self:IterableCurrencyInfo(expansions[expansionLevel])
+    return IterableCurrencyByCategory(expansions[expansionLevel])
 end
 
-function Currency:IterablePvPCurrencyInfo()
-    return self:IterableCurrencyInfo(PLAYER_V_PLAYER)
+function Currency:IterablePvPInfo()
+    return IterableCurrencyByCategory(PLAYER_V_PLAYER)
+end
+
+function Currency:IterableCharactersCurrencyInfoByCurrencyID(currencyID)
+    local charName, data
+    return function()
+        charName, data = Currency.storage:GetCurrencyInfoByCharacter(charName)
+        while charName do
+            for id, quantity in pairs(data) do
+                if id == currencyID then
+                    local charDisplayName = charName
+                    if Character:IsOnConnectedRealm(charName, false) then
+                        charDisplayName = Character:ShortConnectedRealm(charDisplayName)
+                    else
+                        charDisplayName = Character:RemoveRealm(charDisplayName)
+                    end
+                    return charDisplayName, quantity
+                end
+            end
+            charName, data = Currency.storage:GetCurrencyInfoByCharacter(charName)
+        end
+    end
 end
