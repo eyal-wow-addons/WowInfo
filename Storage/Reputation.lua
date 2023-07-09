@@ -19,10 +19,11 @@ function Storage:OnConfig()
     end
 
     local rep = addon.DB.global.Reputation
-    local charFullName = addon.Character:GetFullName()
+    local charName = addon.Character:GetFullName()
 
-    rep[charFullName] = rep[charFullName] or {}
-    DB.__data = rep[charFullName]
+    rep[charName] = rep[charName] or {}
+    
+    DB.__data = rep[charName]
 end
 
 function Storage:GetAlwaysShowParagon()
