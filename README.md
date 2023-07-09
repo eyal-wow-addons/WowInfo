@@ -8,7 +8,7 @@ To open the options you can type `/wi`, `/wowi` or `/wowinfo`.
 
 ## Currency Tab
 
-When hovering one of the currency tokens in the `Currency Tab`, it should show the amount for additional characters that has it.
+When hovering over a currency token in the `Currency Tab`, it should show the amount for characters that has it available.
 
 ![Currency](Screenshots/Currency.png)
 
@@ -82,7 +82,7 @@ When hovering over the `Clock`, it should show the reset time for the daily ques
 
 ## Status Bar Tooltip
 
-When hovering over the `Status Bar` / `Experience Bar`, it should show the experience of the current character.
+When hovering over the `Status Bar` / `Experience Bar`, it should show extended information regarding the experience progress of the current character.
 
 ![Status Bar](Screenshots/MainStatusTrackingBar.png)
 
