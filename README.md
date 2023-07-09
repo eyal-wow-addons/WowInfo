@@ -6,106 +6,89 @@ To open the options you can type `/wi`, `/wowi` or `/wowinfo`.
 
 ![Options](Screenshots/Options.png)
 
+## Currency Tab
+
+When hovering one of the currency tokens in the `Currency Tab`, it should show the amount for additional characters that has it.
+
+![Currency](Screenshots/Currency.png)
+
 ## Character Info
 
-Appears when hovering over the `Character Info` button.
+When hovering over the `Character Info` button, it should show the following information:
 
-* Shows the currency for the current expansion.
-* Shows the progress of the great vault.
-* Shows the durability of equipped items as well as bags.
-* Shows the reputation status for tracked factions.
+* The currency for the current expansion.
+* The progress of the great vault.
+* The durability of equipped items as well as bags.
+* The reputation status for tracked factions, you can choose what factions to track in the options.
 
 ![Character Info](Screenshots/CharacterMicroButton.png)
 
 ## Achievements
 
-Appears when hovering over the `Achievements` button.
-
-* Shows a summary of the player and guild achievements.
+When hovering over the `Achievements` button, it should show a summary of the player and guild achievements.
 
 ![Achievements](Screenshots/AchievementMicroButton.png)
 
-## Quest Log
+## Quest Log Tooltip
 
-Appears when hovering over the `Quest Log` button.
-
-* Shows a summary of completed, incompleted and total quests in the quest log.
+When hovering over the `Quest Log` button, it should show a summary of completed, incompleted and total quests in the quest log as well as the campaign progress.
 
 ![Quest Log](Screenshots/QuestLogMicroButton.png)
 
-## Guild & Communities
+## Guild & Communities Tooltip
 
-Appears when hovering over the `Guild & Communities` button.
-
-* Shows your guild friends when they are online
+When hovering over the `Guild & Communities` button, it should show your guild friends when they are online.
 
 ![Guild & Communities](Screenshots/GuildMicroButton.png)
 
-## Group Finder
+## Group Finder Tooltip
 
-Appears when hovering over the `Group Finder` button.
+When hovering over the `Group Finder` button, it should show the following information:
 
-* Shows the progress of saved dungeons and raids.
-* Shows the progress of honor level, conquest bar and the current arena/rbg rating.
+* The progress of saved dungeons and raids.
+* The progress of honor level, conquest bar and the current arena/rbg rating.
 
 ![Group Finder](Screenshots/LFDMicroButton.png)
 
-## Collections
+## Collections Tooltip
 
-Appears when hovering over the `Collections` button.
-
-* Shows total mounts, pets and toys as well as their collect achievements progress respectively.
+When hovering over the `Collections` button, it should show total mounts, pets and toys as well as their collect achievements progress respectively.
 
 ![Collections](Screenshots/CollectionsMicroButton.png)
 
-## Adventure's Guide
+## Adventure's Guide Tooltip
 
-Appears when hovering over the `Adventure's Guide` button.
-
-* Shows a summary of the traveler's log progress and reward for the current month.
+When hovering over the `Adventure's Guide` button, it should show a summary of the traveler's log progress and reward for the current month.
 
 ![Adventure's Guide](Screenshots/EJMicroButton.png)
 
-## Game Menu
+## Game Menu Tooltip
 
-Appears when hovering over the `Game Menu` button.
-
-* Shows the connected realms you are connected to, if any.
+When hovering over the `Game Menu` button, it should show the connected realms you are connected to, if any.
 
 ![Game Menu](Screenshots/GameMenuMicroButton.png)
 
-## Backpack
+## Backpack Tooltip
 
-Appears when hovering over the Backpack bag.
-
-* Shows the money of the character.
-  * Supports multiple characters.
-  * Supports connected realms.
-  * Supports all factions.
+When hovering over the `Backpack` bag, it should show the money for all characters.
 
 ![Backpack](Screenshots/Backpack.png)
 
-## Clock
+## Clock Tooltip
 
-Appears when hovering over the `Clock`.
-
-* Shows the reset time for the daily quests.
+When hovering over the `Clock`, it should show the reset time for the daily quests.
 
 ![Clock](Screenshots/Clock.png)
 
-## Status Bar
+## Status Bar Tooltip
 
-Appears when hovering over the `Status Bar`.
-
-* Shows the experience of the current character.
+When hovering over the `Status Bar` / `Experience Bar`, it should show the experience of the current character.
 
 ![Status Bar](Screenshots/MainStatusTrackingBar.png)
 
-## Social
+## Social Tooltip
 
-Appears when hovering over `Social` button.
-
-* Shows your friends status.
+When hovering over `Social`, it should show your friends status when they are online, afk or dnd.
 
 ![Social](Screenshots/QuickJoinToastButton.png)
 
@@ -116,3 +99,10 @@ Shows the player's speed and status on the `Minimap`s zone text when the charact
 ![Minimap's Tooltip](Screenshots/Minimap1.png)
 
 ![Minimap](Screenshots/Minimap2.png)
+
+# Side Notes
+
+* Features that tracks data on multiple characters require to login and logout once for each character for the addon to display it.
+* Feedback is always welcome.
+
+### Enjoy!

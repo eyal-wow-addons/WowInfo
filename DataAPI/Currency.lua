@@ -65,22 +65,25 @@ function Currency:IterablePvPInfo()
 end
 
 function Currency:IterableCharactersCurrencyInfoByCurrencyID(currencyID)
+    local charDisplayName
     local charName, data
     return function()
-        charName, data = Currency.storage:GetCurrencyInfoByCharacter(charName)
+        charName, data = Currency.storage:GetCharacterCurrencyInfo(charName)
         while charName do
-            for id, quantity in pairs(data) do
-                if id == currencyID then
-                    local charDisplayName = charName
-                    if Character:IsOnConnectedRealm(charName, false) then
-                        charDisplayName = Character:ShortConnectedRealm(charDisplayName)
-                    else
-                        charDisplayName = Character:RemoveRealm(charDisplayName)
+            if Character:IsOnCurrentRealm(charName) or Character:IsOnConnectedRealm(charName) then
+                for id, quantity in pairs(data) do
+                    if id == currencyID then
+                        charDisplayName = charName
+                        if Character:IsOnConnectedRealm(charName) then
+                            charDisplayName = Character:ShortConnectedRealm(charDisplayName)
+                        else
+                            charDisplayName = Character:RemoveRealm(charDisplayName)
+                        end
+                        return charDisplayName, quantity
                     end
-                    return charDisplayName, quantity
                 end
             end
-            charName, data = Currency.storage:GetCurrencyInfoByCharacter(charName)
+            charName, data = Currency.storage:GetCharacterCurrencyInfo(charName)
         end
     end
 end

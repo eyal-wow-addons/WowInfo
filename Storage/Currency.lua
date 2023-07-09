@@ -28,6 +28,10 @@ function Storage:OnConfig()
     end
 end
 
+local ACCOUNT_WIDE_CURRENCY = {
+    [2032] = true -- Trader's Tender
+}
+
 local function IterableCurrencyInfo()
     local i = 0
     local n = C_CurrencyInfo.GetCurrencyListSize()
@@ -37,7 +41,10 @@ local function IterableCurrencyInfo()
             local info = C_CurrencyInfo.GetCurrencyListInfo(i)
             if not info.isHeader and not info.isTradeable then
                 local link = C_CurrencyInfo.GetCurrencyListLink(i)
-                return C_CurrencyInfo.GetCurrencyIDFromLink(link), info.quantity
+                local currencyId = C_CurrencyInfo.GetCurrencyIDFromLink(link)
+                if not ACCOUNT_WIDE_CURRENCY[currencyId] then
+                    return currencyId, info.quantity
+                end
             end
             i = i + 1
         end
@@ -68,7 +75,7 @@ Storage:RegisterEvents(
         end
     end)
 
-function Storage:GetCurrencyInfoByCharacter(charName)
+function Storage:GetCharacterCurrencyInfo(charName)
     return next(DB.__data, charName)
 end
 

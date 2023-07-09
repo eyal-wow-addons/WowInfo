@@ -27,27 +27,29 @@ function Storage:OnConfig()
     DB.__data = addon.DB.global.Money[englishFaction]
 end
 
-do
-    Storage:RegisterEvents(
-        "PLAYER_LOGIN",
-        "PLAYER_MONEY",
-        "PLAYER_TRADE_MONEY",  
-        "SEND_MAIL_MONEY_CHANGED", 
-        "SEND_MAIL_COD_CHANGED", 
-        "TRADE_MONEY_CHANGED",
-        "WOWINFO_MONEY_DB_RESET", function()
-            DB.__data[addon.Character:GetFullName()] = GetMoney()
-        end)
+Storage:RegisterEvents(
+    "PLAYER_LOGIN",
+    "PLAYER_MONEY",
+    "PLAYER_TRADE_MONEY",  
+    "SEND_MAIL_MONEY_CHANGED", 
+    "SEND_MAIL_COD_CHANGED", 
+    "TRADE_MONEY_CHANGED", function()
+        DB.__data[addon.Character:GetFullName()] = GetMoney()
+    end)
 
-    function Storage:GetMoneyInfoByCharacter(charName)
-        local money
-        charName, money = next(DB.__data, charName)
-        while charName do
-            if money > 0 and (addon.Character:IsOnConnectedRealm(charName, true) or addon.Character:IsOnCurrentRealm(charName)) then
-                return charName, money
-            end
-            charName, money = next(DB.__data, charName)
+function Storage:GetPlayerMoneyInfo()
+    local charName = addon.Character:GetFullName()
+    return charName, DB.__data[charName]
+end
+
+function Storage:GetCharacterMoneyInfo(charName)
+    local money
+    charName, money = next(DB.__data, charName)
+    while charName do
+        if money >= 0 and (addon.Character:IsOnCurrentRealm(charName) or addon.Character:IsOnConnectedRealm(charName)) then
+            return charName, money
         end
+        charName, money = next(DB.__data, charName)
     end
 end
 
@@ -63,8 +65,6 @@ function Storage:Reset()
     end
 
     DB.__data[addon.Character:GetFullName()] = GetMoney()
-
-    Storage:TriggerEvent("WOWINFO_MONEY_DB_RESET")
 end
 
 function Storage:SetMinMoneyAmount(value)
