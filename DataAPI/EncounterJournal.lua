@@ -1,7 +1,6 @@
 local _, addon = ...
 local EncounterJournal = addon:NewObject("EncounterJournal")
 
-local MONTHLY_ACTIVITIES_ITEM_FORMAT = "|T%s:0|t %s"
 local MONTHLY_ACTIVITIES_PROGRESS_FORMAT = "%s / %s"
 
 local MONTHLY_ACTIVITIES_MONTH_NAMES = {
@@ -23,7 +22,7 @@ local function AreMonthlyActivitiesRestricted()
 	return IsTrialAccount() or IsVeteranTrialAccount();
 end
 
-local function HasPendingReward(pendingRewards, thresholdOrderIndex)
+local function HasPendingReward(activitiesInfo, pendingRewards, thresholdOrderIndex)
     for _, reward in pairs(pendingRewards) do
         if reward.activityMonthID == activitiesInfo.activePerksMonth and reward.thresholdOrderIndex == thresholdOrderIndex then
             return true
@@ -71,7 +70,7 @@ do
         local itemReward, pendingReward
         local thresholdMax = 0
         for _, thresholdInfo in pairs(activitiesInfo.thresholds) do
-            thresholdInfo.pendingReward = HasPendingReward(pendingRewards, thresholdInfo.thresholdOrderIndex)
+            thresholdInfo.pendingReward = HasPendingReward(activitiesInfo, pendingRewards, thresholdInfo.thresholdOrderIndex)
             if thresholdInfo.requiredContributionAmount > thresholdMax then
                 thresholdMax = thresholdInfo.requiredContributionAmount
                 itemReward = thresholdInfo.itemReward and Item:CreateFromItemID(thresholdInfo.itemReward) or nil
