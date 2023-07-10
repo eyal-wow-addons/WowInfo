@@ -2,7 +2,7 @@ local _, addon = ...
 local Display = addon:NewDisplay("PvPSummary")
 local PvP = addon.PvP
 
-local PVP_SUMMARY_LABEL = "PvP Summary:"
+local PVP_SUMMARY_LABEL = "PvP Progress:"
 local RATED_PVP_LABEL = "Rated PvP"
 
 Display:RegisterHookScript(LFDMicroButton, "OnEnter", function()
