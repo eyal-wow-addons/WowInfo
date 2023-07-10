@@ -31,7 +31,7 @@ When hovering over the `Achievements` button, it should show a summary of the pl
 
 ## Quest Log Tooltip
 
-When hovering over the `Quest Log` button, it should show a summary of completed, incompleted and total quests in the quest log as well as the campaign progress.
+When hovering over the `Quest Log` button, it should show a summary of completed, incompleted and total quests, the campaign and zone story progress.
 
 ![Quest Log](Screenshots/QuestLogMicroButton.png)
 
