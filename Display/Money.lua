@@ -18,7 +18,7 @@ Display:RegisterHookScript(MainMenuBarBackpackButton, "OnEnter", function()
     end
 
     Display:AddEmptyLine()
-    Display:AddRightHighlightDoubleLine(TOTAL_MONEY_LABEL, Money:GetTotalMoneyString())
+    Display:AddHighlightDoubleLine(TOTAL_MONEY_LABEL, Money:GetTotalMoneyString())
     Display:AddEmptyLine()
 
     Display:Show()
