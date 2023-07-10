@@ -51,14 +51,14 @@ hooksecurefunc(GameTooltip, "SetCurrencyToken", function(_, index)
     local link = C_CurrencyInfo.GetCurrencyListLink(index)
     local currencyID = link and C_CurrencyInfo.GetCurrencyIDFromLink(link)
     if currencyID then
-        local counter = 1
+        local isLabelAdded
         for charDisplayName, quantity in Currency:IterableCharactersCurrencyInfoByCurrencyID(currencyID) do
-            if counter == 1 then
+            if not isLabelAdded then
                 Display:AddEmptyLine()
                 Display:AddHighlightLine(CHARACTERS_CURRENCY_LABEL)
+                isLabelAdded = true
             end
             Display:AddLine(CHARACTERS_CURRENCY_FORMAT:format(charDisplayName, quantity))
-            counter = counter + 1
         end
         Display:Show()
     end

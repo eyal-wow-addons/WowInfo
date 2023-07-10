@@ -5,13 +5,13 @@ local Reputation = addon.Reputation
 local REPUTATION_LABEL = "Reputation:"
 
 Display:RegisterHookScript(CharacterMicroButton, "OnEnter", function()
-    local isTitleAdded
+    local isLabelAdded
 
     for factionName, standing, isCapped, progressString in Reputation:IterableTrackedFactions() do
-        if not isTitleAdded then
+        if not isLabelAdded then
             Display:AddEmptyLine()
             Display:AddHighlightLine(REPUTATION_LABEL)
-            isTitleAdded = true
+            isLabelAdded = true
         end
         if isCapped then
             Display:AddRightHighlightDoubleLine(factionName, standing)
@@ -20,7 +20,5 @@ Display:RegisterHookScript(CharacterMicroButton, "OnEnter", function()
         end
     end
 
-    if isTitleAdded then
-        Display:Show()
-    end
+    Display:Show()
 end)

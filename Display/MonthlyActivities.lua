@@ -6,10 +6,10 @@ local MONTHLY_ACTIVITIES_LABEL = MONTHLY_ACTIVITIES_TAB .. ":"
 local MONTHLY_ACTIVITIES_PROGRESSED = MONTHLY_ACTIVITIES_PROGRESSED .. ":"
 
 local itemTextureSettings = {
-    width = 14,
-    height = 14,
-    verticalOffset = 0,
-    margin = { right = 2, top = 2, bottom = 2 },
+    width = 20,
+    height = 20,
+    verticalOffset = 3,
+    margin = { right = 5, bottom = 5 },
 }
 
 Display:RegisterHookScript(EJMicroButton, "OnEnter", function(self)
