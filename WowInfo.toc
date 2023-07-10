@@ -41,6 +41,7 @@ DataAPI\Experience.lua
 DataAPI\Friends.lua
 DataAPI\Guild.lua
 DataAPI\Money.lua
+DataAPI\Professions.lua
 DataAPI\PvP.lua
 DataAPI\Quests.lua
 DataAPI\Reputation.lua
@@ -65,5 +66,6 @@ Display\PvPSummary.lua
 Display\QuestLog.lua
 Display\Reputation.lua
 Display\Speedometer.lua
+Display\SpellBook.lua
 
 Options.lua
