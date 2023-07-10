@@ -50,17 +50,17 @@ When hovering over the `Group Finder` button, it should show the following infor
 
 ![Group Finder](Screenshots/LFDMicroButton.png)
 
-## Collections Tooltip
-
-When hovering over the `Collections` button, it should show total mounts, pets and toys as well as their collect achievements progress respectively.
-
-![Collections](Screenshots/CollectionsMicroButton.png)
-
 ## Adventure's Guide Tooltip
 
 When hovering over the `Adventure's Guide` button, it should show a summary of the traveler's log progress and reward for the current month.
 
 ![Adventure's Guide](Screenshots/EJMicroButton.png)
+
+## Collections Tooltip
+
+When hovering over the `Collections` button, it should show total mounts, pets and toys as well as their collect achievements progress respectively.
+
+![Collections](Screenshots/CollectionsMicroButton.png)
 
 ## Game Menu Tooltip
 
