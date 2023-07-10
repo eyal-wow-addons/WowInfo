@@ -58,10 +58,10 @@ Display\Durability.lua
 Display\Experience.lua
 Display\Friends.lua
 Display\GuildFriends.lua
-Display\Instances.lua
 Display\Money.lua
 Display\MonthlyActivities.lua
-Display\PvP.lua
+Display\PvESummary.lua
+Display\PvPSummary.lua
 Display\QuestLog.lua
 Display\Reputation.lua
 Display\Speedometer.lua
