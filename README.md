@@ -6,13 +6,7 @@ To open the options you can type `/wi`, `/wowi` or `/wowinfo`.
 
 ![Options](Screenshots/Options.png)
 
-## Currency Tab
-
-When hovering over a currency token in the `Currency Tab`, it should show the amount for characters that has it available.
-
-![Currency](Screenshots/Currency.png)
-
-## Character Info
+## Character Info Tooltip
 
 When hovering over the `Character Info` button, it should show the following information:
 
@@ -23,7 +17,7 @@ When hovering over the `Character Info` button, it should show the following inf
 
 ![Character Info](Screenshots/CharacterMicroButton.png)
 
-## Achievements
+## Achievements Tooltip
 
 When hovering over the `Achievements` button, it should show a summary of the player and guild achievements.
 
@@ -72,7 +66,7 @@ When hovering over the `Game Menu` button, it should show the connected realms y
 
 When hovering over the `Backpack` bag, it should show the money for all characters.
 
-![Backpack](Screenshots/Backpack.png)
+![Backpack](Screenshots/MainMenuBarBackpackButton.png)
 
 ## Clock Tooltip
 
@@ -91,6 +85,12 @@ When hovering over the `Status Bar` / `Experience Bar`, it should show extended 
 When hovering over `Social`, it should show your friends status when they are online, afk or dnd.
 
 ![Social](Screenshots/QuickJoinToastButton.png)
+
+## Currency Tab
+
+When hovering over a currency token in the `Currency Tab`, it should show the amount for characters that has it available.
+
+![Currency](Screenshots/Currency.png)
 
 ## Minimap
 
