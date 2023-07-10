@@ -1,12 +1,12 @@
 local _, addon = ...
-local Display = addon:NewDisplay("Instances")
+local Display = addon:NewDisplay("PvESummary")
 local SavedBosses = addon.SavedBosses
 
-local INSTANCE_LABEL = "Dungeons & Raids:"
+local PVE_SUMMARY_LABEL = "Dungeons & Raids:"
 
 Display:RegisterHookScript(LFDMicroButton, "OnEnter", function()
     Display:AddEmptyLine()
-    Display:AddHighlightLine(INSTANCE_LABEL)
+    Display:AddHighlightLine(PVE_SUMMARY_LABEL)
 
     local isSaved
 

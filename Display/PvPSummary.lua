@@ -1,13 +1,13 @@
 local _, addon = ...
-local Display = addon:NewDisplay("PvPStatus")
+local Display = addon:NewDisplay("PvPSummary")
 local PvP = addon.PvP
 
+local PVP_SUMMARY_LABEL = "PvP Summary:"
 local RATED_PVP_LABEL = "Rated PvP"
-local PVP_PROGRESS_LABEL = "PvP Progress:"
 
 Display:RegisterHookScript(LFDMicroButton, "OnEnter", function()
     Display:AddEmptyLine()
-    Display:AddHighlightLine(PVP_PROGRESS_LABEL)
+    Display:AddHighlightLine(PVP_SUMMARY_LABEL)
 
     local isActiveSeason, isOffSeason, isPreseason = PvP:GetRatedPvPSeasonStateInfo()
     local honorLevelString, honorProgressString, conquestProgressString = PvP:GetPlayerProgressInfo(isActiveSeason, isOffSeason)
