@@ -17,6 +17,12 @@ When hovering over the `Character Info` button, it should show the following inf
 
 ![Character Info](Screenshots/CharacterMicroButton.png)
 
+## Spellbook Tooltip
+
+When hovering over the `Spellbook` button, it should show a summary of the professions.
+
+![Achievements](Screenshots/SpellbookMicroButton.png)
+
 ## Achievements Tooltip
 
 When hovering over the `Achievements` button, it should show a summary of the player and guild achievements.
