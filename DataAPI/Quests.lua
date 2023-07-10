@@ -2,6 +2,7 @@ local _, addon = ...
 local Quests = addon:NewObject("Quests")
 
 local EMPTY_CHAPTERS = {}
+local STORY_PROGRESS = "|cffffd200" .. STORY_PROGRESS .. "|n|cffffffff" .. STORY_CHAPTERS .. "|r|n|n"
 
 do
     local QuestResetTimeSecondsFormatter = CreateFromMixins(SecondsFormatterMixin)
@@ -39,23 +40,25 @@ function Quests:GetTotalQuests()
 end
 
 function Quests:GetCampaignInfo()
-    local questInfo = C_QuestLog.GetInfo(1)
-    local campaignID = questInfo.campaignID
-    if questInfo.isHeader and campaignID then
-        local chapterIDs = EMPTY_CHAPTERS
-        local completedChapters = 0
-        local state = C_CampaignInfo.GetState(campaignID)
-        local progressString
-        if state == Enum.CampaignState.InProgress then
-            chapterIDs = C_CampaignInfo.GetChapterIDs(campaignID)
-            for _, chapterID in ipairs(chapterIDs) do
-                if C_QuestLine.IsComplete(chapterID) then
-                    completedChapters = completedChapters + 1
+    for i = 1, C_QuestLog.GetNumQuestLogEntries() do
+        local questInfo = C_QuestLog.GetInfo(i)
+        local campaignID = questInfo.campaignID
+        if campaignID and questInfo.isHeader and not questInfo.useMinimalHeader then
+            local chapterIDs = EMPTY_CHAPTERS
+            local completedChapters = 0
+            local state = C_CampaignInfo.GetState(campaignID)
+            local progressString
+            if state == Enum.CampaignState.InProgress then
+                chapterIDs = C_CampaignInfo.GetChapterIDs(campaignID)
+                for _, chapterID in ipairs(chapterIDs) do
+                    if C_QuestLine.IsComplete(chapterID) then
+                        completedChapters = completedChapters + 1
+                    end
                 end
+                progressString = CAMPAIGN_PROGRESS_CHAPTERS_TOOLTIP:format(completedChapters, #chapterIDs)
             end
-            progressString = CAMPAIGN_PROGRESS_CHAPTERS_TOOLTIP:format(completedChapters, #chapterIDs)
+            return campaignID, questInfo.title, state == Enum.CampaignState.Complete, progressString, chapterIDs
         end
-        return questInfo.title, campaignID, chapterIDs, progressString
     end
 end
 
@@ -74,6 +77,45 @@ function Quests:IterableCampaignChaptersInfo(campaignID, chapterIDs)
             local chapterInfo = C_CampaignInfo.GetCampaignChapterInfo(chapterID)
             local isCompleted = C_QuestLine.IsComplete(chapterID)
             return chapterInfo.name, chapterID == currentChapterID, isCompleted
+        end
+    end
+end
+
+function Quests:GetZoneStoryInfo()
+    local mapID = C_Map.GetBestMapForUnit("player")
+    if mapID then
+        local storyAchievementID, storyMapID = C_QuestLog.GetZoneStoryInfo(mapID)
+        if storyAchievementID then
+            local mapInfo = C_Map.GetMapInfo(storyMapID)
+            local numCriteria = GetAchievementNumCriteria(storyAchievementID)
+            local completedCriteria = 0
+            for i = 1, numCriteria do
+                local _, _, completed = GetAchievementCriteriaInfo(storyAchievementID, i)
+                if completed then
+                    completedCriteria = completedCriteria + 1;
+                end
+            end
+            return storyAchievementID, mapInfo.name, numCriteria == completedCriteria, STORY_PROGRESS:format(completedCriteria, numCriteria)
+        end
+    end
+end
+
+function Quests:IterableZoneStoryChaptersInfo(storyAchievementID)
+    local numCriteria = GetAchievementNumCriteria(storyAchievementID)
+    local currentCriteria
+    local i = 0
+    local n = numCriteria or 0
+    return function()
+        if not storyAchievementID then
+            return
+        end
+        i = i + 1
+        if i <= n then
+            local title, _, completed = GetAchievementCriteriaInfo(storyAchievementID, i)
+            if not currentCriteria and not completed then
+                currentCriteria = i
+            end
+            return title, currentCriteria == i, completed
         end
     end
 end
