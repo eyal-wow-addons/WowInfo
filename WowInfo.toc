@@ -66,6 +66,6 @@ Display\PvPSummary.lua
 Display\QuestLog.lua
 Display\Reputation.lua
 Display\Speedometer.lua
-Display\SpellBook.lua
+Display\Spellbook.lua
 
 Options.lua
