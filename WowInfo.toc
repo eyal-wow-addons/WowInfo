@@ -1,4 +1,4 @@
-## Interface: 100100
+## Interface: 100105
 ## Author: Eyal Alon
 ## Title: Wow|cff40a5f7Info|r
 ## Notes: Provides game and character information.
