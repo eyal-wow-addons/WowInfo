@@ -48,7 +48,7 @@ function Quests:GetCampaignInfo()
             local completedChapters = 0
             local state = C_CampaignInfo.GetState(campaignID)
             local progressString
-            if state == Enum.CampaignState.InProgress then
+            if state == Enum.CampaignState.InProgress or state == Enum.CampaignState.Stalled then
                 chapterIDs = C_CampaignInfo.GetChapterIDs(campaignID)
                 for _, chapterID in ipairs(chapterIDs) do
                     if C_QuestLine.IsComplete(chapterID) then
@@ -56,6 +56,8 @@ function Quests:GetCampaignInfo()
                     end
                 end
                 progressString = CAMPAIGN_PROGRESS_CHAPTERS_TOOLTIP:format(completedChapters, #chapterIDs)
+            elseif state == Enum.CampaignState.Invalid then
+                campaignID = nil
             end
             return campaignID, questInfo.title, state == Enum.CampaignState.Complete, progressString, chapterIDs
         end
@@ -63,13 +65,14 @@ function Quests:GetCampaignInfo()
 end
 
 function Quests:IterableCampaignChaptersInfo(campaignID, chapterIDs)
-    local state = C_CampaignInfo.GetState(campaignID)
-    local currentChapterID = C_CampaignInfo.GetCurrentChapterID(campaignID)
+    local currentChapterID
     local i = 0
     local n = chapterIDs and #chapterIDs or 0
     return function()
-        if state ~= Enum.CampaignState.InProgress then
+        if not campaignID then
             return
+        elseif not currentChapterID then
+            currentChapterID = C_CampaignInfo.GetCurrentChapterID(campaignID)
         end
         i = i + 1
         if i <= n then
