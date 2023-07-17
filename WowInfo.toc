@@ -1,14 +1,15 @@
 ## Interface: 100105
-## Author: Eyal Alon
+
 ## Title: Wow|cff40a5f7Info|r
 ## Notes: Provides game and character information.
 ## IconTexture: Interface\AddOns\WowInfo\Logo
+## Version: @project-version@
+## Author: Eyal Alon
 
 ## X-Curse-Project-ID: 414057
 ## X-WoWI-ID: 26589
 ## X-Wago-ID: b6mbvyKP
 
-## Version: @project-version@
 ## SavedVariables: WowInfoDB
 
 Libs\LibStub.lua
