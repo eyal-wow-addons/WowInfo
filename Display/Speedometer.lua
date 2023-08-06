@@ -1,7 +1,7 @@
-if not MinimapCluster.ZoneTextButton:IsVisible() then return end
-
 local _, addon = ...
 local Display = addon:NewDisplay("Speedometer")
+local LDB = LibStub("LibDataBroker-1.1")
+local Timer = addon.Timer
 local Speedometer = addon.Speedometer
 
 local SPEED_HEADER = STAT_SPEED .. ":"
@@ -9,18 +9,29 @@ local SPEED_GROUND_LABEL = STAT_MOVEMENT_GROUND_TOOLTIP:gsub("%s.+", "")
 local SPEED_FLIGHT_LABEL = STAT_MOVEMENT_FLIGHT_TOOLTIP:gsub("%s.+", "")
 local SPEED_SWIM_LABEL = STAT_MOVEMENT_SWIM_TOOLTIP:gsub("%s.+", "")
 
+local dataobj, timer
+
 local function UpdateText()
-    MinimapZoneText:SetTextColor(NORMAL_FONT_COLOR:GetRGB())
-    MinimapZoneText:SetText(Speedometer:GetFormattedCurrentSpeed())
+    if MinimapCluster.ZoneTextButton:IsVisible() then
+        MinimapZoneText:SetTextColor(NORMAL_FONT_COLOR:GetRGB())
+        MinimapZoneText:SetText(Speedometer:GetFormattedCurrentSpeed())
+    end
 end
 
 local function UpdateTextWhenStartMoving()
-    MinimapCluster.ZoneTextButton:SetScript("OnUpdate", UpdateText)
+    if MinimapCluster.ZoneTextButton:IsVisible() then
+        MinimapCluster.ZoneTextButton:SetScript("OnUpdate", UpdateText)
+    end
+    timer:Start(0)
 end
 
 local function UpdateTextWhenStopMoving()
-    MinimapCluster.ZoneTextButton:SetScript("OnUpdate", nil)
-    Minimap_Update()
+    if MinimapCluster.ZoneTextButton:IsVisible() then
+        MinimapCluster.ZoneTextButton:SetScript("OnUpdate", nil)
+        Minimap_Update()
+    end
+    timer:Cancel()
+    dataobj.text = "Standing"
 end
 
 Display:RegisterEvent("PLAYER_ENTERING_WORLD", function()
@@ -31,8 +42,18 @@ Display:RegisterEvent("PLAYER_ENTERING_WORLD", function()
     end
 end)
 
+function Display:OnInitialize()
+    timer = Timer:Create(function()
+        dataobj.text = Speedometer:GetFormattedCurrentSpeed()
+    end)
+end
+
 Display:RegisterEvent("PLAYER_STARTED_MOVING", UpdateTextWhenStartMoving)
 Display:RegisterEvent("PLAYER_STOPPED_MOVING", UpdateTextWhenStopMoving)
+
+dataobj = LDB:NewDataObject("Speedometer", {
+    type = "data source"
+})
 
 MinimapCluster.ZoneTextButton:HookScript("OnEnter", function()
     Display:AddEmptyLine()

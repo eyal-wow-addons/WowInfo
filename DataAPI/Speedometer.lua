@@ -45,13 +45,13 @@ function Speedometer:GetFormattedCurrentSpeed()
     local currentSpeed, isGliding = self:GetCurrentSpeed()
 
     if isGliding then
-        status = "Gliding"
+        status = "Glide"
     elseif IsFlying() then
-        status = "Flying"
+        status = "Fly"
     elseif IsSwimming() then
-        status = "Swimming"
+        status = "Swim"
     elseif currentSpeed > 0 then
-        status = "Moving"
+        status = "Move"
     end
 
     return FormatSpeed(currentSpeed, status)
