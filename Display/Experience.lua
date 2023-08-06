@@ -1,3 +1,5 @@
+if not MainStatusTrackingBarContainer.bars[4]:IsVisible() then return end
+
 local _, addon = ...
 local Display = addon:NewDisplay("Experience")
 local Experience = addon.Experience
