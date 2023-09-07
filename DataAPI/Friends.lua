@@ -17,6 +17,8 @@ local FRIENDS_ACTIVE_ZONE_COLOR = CreateColor(0.3, 1.0, 0.3)
 local FRIENDS_INACTIVE_ZONE_COLOR = CreateColor(0.65, 0.65, 0.65)
 local FRIENDS_GROUPED_TABLE = {"|cffaaaaaa*|r", ""}
 
+local connectedFriendsCounter = 0
+
 function Friends:GetOnlineFriendsInfo()
     local numWoWTotal = self.GetNumFriends()
     local numBNetTotal = self.BNGetNumFriends()
@@ -52,8 +54,6 @@ function Friends:GetNumOnlineFriendsInfo()
     local numBNetTotal, numBNetOnline = BNGetNumFriends()
     return numWoWTotal, numWoWOnline, numBNetTotal, numBNetOnline
 end
-
-local connectedFriendsCounter = 0
 
 function Friends:ResetConnectedFriendsCounter()
     connectedFriendsCounter = 0
