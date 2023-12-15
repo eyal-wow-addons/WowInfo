@@ -1,7 +1,46 @@
 local _, addon = ...
+local Timer = addon.Timer
 local Speedometer = addon:NewObject("Speedometer")
 
+local IsPlayerMoving = IsPlayerMoving
+local GetUnitSpeed = GetUnitSpeed
+local GetGlidingInfo = C_PlayerInfo.GetGlidingInfo
+
 local currentUnit = "player"
+local timer
+
+local function FormatSpeed(currentSpeed, status)
+    local speedPercentage = Round(currentSpeed / BASE_MOVEMENT_SPEED * 100)
+    if status and currentSpeed == 0 then
+        return status
+    elseif status then
+        return format("%s at %d%%", status, speedPercentage)
+    else
+        return format("%d%%", speedPercentage)
+    end
+end
+
+local function StartMoving()
+    Speedometer:TriggerEvent("SPEEDOMETER_PLAYER_STARTED_MOVING", Speedometer:GetFormattedCurrentSpeed())
+end
+
+local function StopMoving()
+    Speedometer:TriggerEvent("SPEEDOMETER_PLAYER_STOPPED_MOVING", "Standing")
+end
+
+function Speedometer:OnBeforeConfig()
+    timer = Timer:Create(function()
+        if IsPlayerMoving() then
+            StartMoving()
+        else
+            StopMoving()
+        end
+    end)
+    timer:Start(0.5)
+end
+
+Speedometer:RegisterEvent("PLAYER_STARTED_MOVING", StartMoving)
+Speedometer:RegisterEvent("PLAYER_STOPPED_MOVING", StopMoving)
 
 Speedometer:RegisterEvent("PLAYER_ENTERING_WORLD", function()
     if UnitInVehicle("player") then
@@ -21,22 +60,13 @@ Speedometer:RegisterEvent("UNIT_EXITED_VEHICLE", function(_, unit)
     end
 end)
 
-local function FormatSpeed(speed, status)
-    speed = Round(speed / BASE_MOVEMENT_SPEED * 100)
-    if status then
-        return format("%s at %d%%", status, speed)
-    else
-        return format("%d%%", speed)
-    end
-end
-
 function Speedometer:GetFormattedPlayerSpeedInfo()
     local _, runSpeed, flightSpeed, swimSpeed = GetUnitSpeed("player")
     return FormatSpeed(runSpeed), FormatSpeed(flightSpeed), FormatSpeed(swimSpeed)
 end
 
 function Speedometer:GetCurrentSpeed()
-    local isGliding, _, forwardSpeed = C_PlayerInfo.GetGlidingInfo()
+    local isGliding, _, forwardSpeed = GetGlidingInfo()
     return isGliding and forwardSpeed or GetUnitSpeed(currentUnit), isGliding
 end
 
@@ -50,7 +80,9 @@ function Speedometer:GetFormattedCurrentSpeed()
         status = "Fly"
     elseif IsSwimming() then
         status = "Swim"
-    elseif currentSpeed > 0 then
+    elseif IsPlayerMoving() and currentSpeed == 0 then
+        status = "Moving"
+    elseif IsPlayerMoving() then
         status = "Move"
     end
 
