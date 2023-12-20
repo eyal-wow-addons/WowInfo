@@ -15,7 +15,7 @@ Display:RegisterHookScript(CharacterMicroButton, "OnEnter", function()
         end
 
         Display:AddGrayDoubleLine(WeeklyRewards:GetGreatVaultRaidProgressString())
-        Display:AddGrayDoubleLine(WeeklyRewards:GetGreatVaultMythicPlusProgressString())
+        Display:AddGrayDoubleLine(WeeklyRewards:GetGreatVaultActivitiesProgressString())
         Display:AddGrayDoubleLine(WeeklyRewards:GetGreatVaultPvPProgressString())
 
         Display:Show()
