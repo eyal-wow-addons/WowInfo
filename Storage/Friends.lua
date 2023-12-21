@@ -1,5 +1,3 @@
-if not QuickJoinToastButton:IsVisible() then return end
-
 local _, addon = ...
 local Storage, DB = addon:NewStorage("Friends")
 

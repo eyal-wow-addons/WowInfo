@@ -21,7 +21,7 @@ function Storage:OnConfig()
 
     DB.__data = addon.DB.global.Currency[englishFaction]
     DB.__character_data = DB.__data[charName]
-    
+
     if not DB.__character_data then
         DB.__character_data = {}
         DB.__data[charName] = DB.__character_data
@@ -77,6 +77,18 @@ Storage:RegisterEvents(
 
 function Storage:GetCharacterCurrencyInfo(charName)
     return next(DB.__data, charName)
+end
+
+function Storage:Reset()
+    for key, value in pairs(addon.DB.global.Currency) do
+        if type(value) ~= "table" then
+            addon.DB.global.Currency[key] = nil
+        end
+    end
+
+    for charName in pairs(DB.__data) do
+        DB.__data[charName] = nil
+    end
 end
 
 
