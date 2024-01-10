@@ -1,5 +1,3 @@
-if not MainStatusTrackingBarContainer.bars[4]:IsVisible() then return end
-
 local _, addon = ...
 local Display = addon:NewDisplay("Experience")
 local Experience = addon.Experience
@@ -17,10 +15,11 @@ Display:RegisterHookScript(MainStatusTrackingBarContainer.bars[4], "OnEnter", fu
     Display:AddHighlightLine(EXP_LABEL)
     Display:AddRightHighlightDoubleLine(EXP_CURRENT_LABEL, currentProgressString)
 
+    Display:AddRightHighlightDoubleLine(EXP_TNL_LABEL_FORMAT:format(UnitLevel("player") + 1), nextLevelProgressString)
+
     if exhaustionString then
         Display:AddRightHighlightDoubleLine(EXP_RESTED_LABEL, exhaustionString)
     end
 
-    Display:AddRightHighlightDoubleLine(EXP_TNL_LABEL_FORMAT:format(UnitLevel("player") + 1), nextLevelProgressString)
     Display:Show()
 end)

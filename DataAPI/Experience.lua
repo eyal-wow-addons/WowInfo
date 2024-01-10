@@ -17,6 +17,6 @@ function Experience:GetPlayerProgressInfo()
 
     local tnl = xpMax - xp
     local nextLevelProgressString = TNL_PROGRESS_LABEL_FORMAT:format(AbbreviateNumbers(tnl), FormatPercentage(tnl / xpMax, true))
-    
+
     return currentProgressString, exhaustionString, nextLevelProgressString
 end
