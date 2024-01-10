@@ -20,27 +20,27 @@ local function FormatSpeed(currentSpeed, status)
     end
 end
 
-local function StartMoving()
+local function StartedMoving()
     Speedometer:TriggerEvent("SPEEDOMETER_PLAYER_STARTED_MOVING", Speedometer:GetFormattedCurrentSpeed())
 end
 
-local function StopMoving()
+local function StoppedMoving()
     Speedometer:TriggerEvent("SPEEDOMETER_PLAYER_STOPPED_MOVING", "Standing")
 end
 
 function Speedometer:OnBeforeConfig()
     timer = Timer:Create(function()
         if IsPlayerMoving() then
-            StartMoving()
+            StartedMoving()
         else
-            StopMoving()
+            StoppedMoving()
         end
     end)
     timer:Start(0.5)
 end
 
-Speedometer:RegisterEvent("PLAYER_STARTED_MOVING", StartMoving)
-Speedometer:RegisterEvent("PLAYER_STOPPED_MOVING", StopMoving)
+Speedometer:RegisterEvent("PLAYER_STARTED_MOVING", StartedMoving)
+Speedometer:RegisterEvent("PLAYER_STOPPED_MOVING", StoppedMoving)
 
 Speedometer:RegisterEvent("PLAYER_ENTERING_WORLD", function()
     if UnitInVehicle("player") then

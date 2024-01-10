@@ -11,14 +11,14 @@ local function UpdateText()
     end
 end
 
-local function UpdateTextWhenStartMoving(_, status)
+local function UpdateTextWhenStartedMoving(_, status)
     if MinimapCluster.ZoneTextButton:IsVisible() then
         MinimapCluster.ZoneTextButton:SetScript("OnUpdate", UpdateText)
     end
     dataobj.text = status
 end
 
-local function UpdateTextWhenStopMoving(_, status)
+local function UpdateTextWhenStoppedMoving(_, status)
     if MinimapCluster.ZoneTextButton:IsVisible() then
         MinimapCluster.ZoneTextButton:SetScript("OnUpdate", nil)
         Minimap_Update()
@@ -29,8 +29,8 @@ local function UpdateTextWhenStopMoving(_, status)
     dataobj.text = status
 end
 
-Speedometer:RegisterEvent("SPEEDOMETER_PLAYER_STARTED_MOVING", UpdateTextWhenStartMoving)
-Speedometer:RegisterEvent("SPEEDOMETER_PLAYER_STOPPED_MOVING", UpdateTextWhenStopMoving)
+Speedometer:RegisterEvent("SPEEDOMETER_PLAYER_STARTED_MOVING", UpdateTextWhenStartedMoving)
+Speedometer:RegisterEvent("SPEEDOMETER_PLAYER_STOPPED_MOVING", UpdateTextWhenStoppedMoving)
 
 dataobj = LDB:NewDataObject("Speedometer", {
     type = "data source"
