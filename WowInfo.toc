@@ -1,4 +1,4 @@
-## Interface: 100200
+## Interface: 100205
 
 ## Title: Wow|cff40a5f7Info|r
 ## Notes: Provides game and character information.
@@ -13,12 +13,14 @@
 ## SavedVariables: WowInfoDB
 
 Libs\LibStub.lua
+Libs\CallbackHandler-1.0.lua
 Libs\LibDataBroker-1.1.lua
 Libs\AceGUI-3.0\AceGUI-3.0.xml
 Libs\AceConfig-3.0\AceConfig-3.0.xml
 Libs\AceDB-3.0\AceDB-3.0.xml
 Libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
 
+Core\Constants.lua
 Core\Addon.lua
 Core\WidgetUtils.lua
 Core\AceOptions.lua

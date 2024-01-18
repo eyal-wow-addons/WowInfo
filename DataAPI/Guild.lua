@@ -42,7 +42,7 @@ function Guild:IterableGuildRosterInfo(index)
         i = i + 1
         if i <= n then
             local isFriend = false
-            local name, _, _, _, _, zone, _, _, online, status, class, _, _, isMobile = Guild.GetGuildRosterInfo(i)
+            local name, _, _, _, _, zone, _, _, online, status, className, _, _, isMobile = Guild.GetGuildRosterInfo(i)
 
             name = Ambiguate(name, "guild")
 
@@ -58,7 +58,7 @@ function Guild:IterableGuildRosterInfo(index)
                 isFriend = true
             end
 
-            return i, isFriend, name, zone, online, status, class, isMobile
+            return i, isFriend, name, zone, online, status, className, isMobile
         end
     end
 end
@@ -71,7 +71,7 @@ function Guild:IterableOnlineFriendsInfo()
         if maxOnlineGuildFriends <= 0 then
             return
         end
-        for index, isFriend, name, zone, online, status, class, isMobile in self:IterableGuildRosterInfo(i) do
+        for index, isFriend, name, zone, online, status, className, isMobile in self:IterableGuildRosterInfo(i) do
             if onlineGuildFriendsCounter >= maxOnlineGuildFriends then
                 return
             end
@@ -86,8 +86,9 @@ function Guild:IterableOnlineFriendsInfo()
                     onlineGuildFriendsCounter = onlineGuildFriendsCounter + 1
                 end
                 if zone then
-                    local color = RAID_CLASS_COLORS[class]
-                    return name .. status, WrapTextInColor(zone, color)
+                    className = addon.CLASS_NAMES[className]
+                    local classColor = RAID_CLASS_COLORS[className]
+                    return name .. status, WrapTextInColor(zone, classColor)
                 else
                     return name
                 end

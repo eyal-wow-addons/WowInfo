@@ -60,7 +60,7 @@ function Friends:ResetConnectedFriendsCounter()
 end
 
 function Friends:IterableWoWFriendsInfo()
-    local maxOnlineFriends, friendInfo, name, class, status, zoneColors, grouped, classColor, friendString, zoneString
+    local maxOnlineFriends, friendInfo, name, className, status, zoneColors, grouped, classColor, friendString, zoneString
     local i = 0
     local n = C_FriendList.GetNumFriends()
     return function()
@@ -80,7 +80,7 @@ function Friends:IterableWoWFriendsInfo()
                 connectedFriendsCounter = connectedFriendsCounter + 1
 
                 name = friendInfo.name
-                class = friendInfo.className
+                className = friendInfo.className
                 status = ""
 
                 if friendInfo.dnd then
@@ -95,17 +95,19 @@ function Friends:IterableWoWFriendsInfo()
                     zoneColors = FRIENDS_INACTIVE_ZONE_COLOR
                 end
 
-                for k, v in pairs(LOCALIZED_CLASS_NAMES_MALE) do 
-                    if class == v then class = k end 
-                end
-
                 if UnitInParty(name) or UnitInRaid(name) then
                     grouped = 1
                 else
                     grouped = 2
                 end
 
-                classColor = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[class]
+                if className then
+                    className = addon.CLASS_NAMES[className]
+                    classColor = RAID_CLASS_COLORS[className]
+                else
+                    classColor = NORMAL_FONT_COLOR
+                end
+
                 friendString = FRIENDS_WOW_LABEL_FORMAT:format(name, FRIENDS_GROUPED_TABLE[grouped], friendInfo.level, status) 
                 zoneString = friendInfo.area
 
@@ -117,7 +119,7 @@ function Friends:IterableWoWFriendsInfo()
 end
 
 function Friends:IterableBattleNetFriendsInfo()
-    local maxOnlineFriends, status, friendAccountInfo, accountInfo, accountName, clientProgram, characterName, zoneName, realmName, class, level, grouped, zoneColors, realmColors, zoneString, realmString
+    local maxOnlineFriends, status, friendAccountInfo, accountInfo, accountName, clientProgram, characterName, zoneName, realmName, className, characterLevel, grouped, zoneColors, realmColors, zoneString, realmString
     local i = 0
     local n = BNGetNumFriends()
     return function()
@@ -146,8 +148,8 @@ function Friends:IterableBattleNetFriendsInfo()
                 if characterName and clientProgram == BNET_CLIENT_WOW then
                     clientProgram = accountInfo.gameAccountInfo.richPresence == BNET_FRIEND_TOOLTIP_WOW_CLASSIC and BNET_FRIEND_TOOLTIP_WOW_CLASSIC or clientProgram
 
-                    class =  accountInfo.gameAccountInfo.className
-                    level =  accountInfo.gameAccountInfo.characterLevel or 0
+                    className =  accountInfo.gameAccountInfo.className
+                    characterLevel =  accountInfo.gameAccountInfo.characterLevel or 0
 
                     if accountInfo.gameAccountInfo.isGameAFK then
                         status = 1
@@ -180,13 +182,10 @@ function Friends:IterableBattleNetFriendsInfo()
                         end
                         realmString = WrapTextInColor(realmName, realmColors)
                     end
-
-                    if class then
-                        for k, v in pairs(LOCALIZED_CLASS_NAMES_MALE) do
-                            if class == v then class = k end
-                        end
-                        local classColors = class and (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[class].colorStr
-                        return FRIENDS_BNET_CLIENT_LABEL_FORMAT:format(accountName, classColors or FRIENDS_BNET_NO_CLASS_COLOR, characterName, FRIENDS_GROUPED_TABLE[grouped], classColors or FRIENDS_BNET_NO_CLASS_COLOR, level, FRIENDS_BNET_STATUS_TABLE[status]), zoneString, realmString, clientProgram
+                    if className then
+                        className = addon.CLASS_NAMES[className]
+                        local classColors = className and RAID_CLASS_COLORS[className].colorStr
+                        return FRIENDS_BNET_CLIENT_LABEL_FORMAT:format(accountName, classColors or FRIENDS_BNET_NO_CLASS_COLOR, characterName, FRIENDS_GROUPED_TABLE[grouped], classColors or FRIENDS_BNET_NO_CLASS_COLOR, characterLevel, FRIENDS_BNET_STATUS_TABLE[status]), zoneString, realmString, clientProgram
                     else
                         return accountName, zoneString, realmString, clientProgram
                     end
