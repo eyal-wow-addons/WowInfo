@@ -77,6 +77,8 @@ function Guild:IterableOnlineFriendsInfo()
             end
             i = index
             if isFriend then
+                local classColor = RAID_CLASS_COLORS[className]
+                name = WrapTextInColor(name, classColor)
                 if not online then
                     zone = nil
                     if isMobile then
@@ -86,9 +88,7 @@ function Guild:IterableOnlineFriendsInfo()
                     onlineGuildFriendsCounter = onlineGuildFriendsCounter + 1
                 end
                 if zone then
-                    className = addon.CLASS_NAMES[className]
-                    local classColor = RAID_CLASS_COLORS[className]
-                    return name .. status, WrapTextInColor(zone, classColor)
+                    return name .. status, WrapTextInColor(zone, WHITE_FONT_COLOR)
                 else
                     return name
                 end
