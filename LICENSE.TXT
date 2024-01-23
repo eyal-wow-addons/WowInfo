@@ -1,6 +1,6 @@
 Custom License for WowInfo:
 
-    Copyright (c) 2023 Eyal Alon
+    Copyright (c) 2024 Eyal Alon
 
     The codebase and associated resources (the "AddOn")
         excluding third-party content is copyrighted
