@@ -33,11 +33,11 @@ function Tooltip:AddIndentedLine(text, ...)
 end
 
 function Tooltip:AddHighlightLine(text)
-    self:AddLine(text, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b)
+    self:AddLine(text, HIGHLIGHT_FONT_COLOR:GetRGB())
 end
 
 function Tooltip:AddGrayLine(text)
-    self:AddLine(text, GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b)
+    self:AddLine(text, GRAY_FONT_COLOR:GetRGB())
 end
 
 function Tooltip:AddIndentedDoubleLine(textLeft, ...)
@@ -48,18 +48,30 @@ function Tooltip:AddLeftHighlightDoubleLine(textLeft, textRight, r, g, b)
     self:AddDoubleLine(textLeft, textRight, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b, r, g, b)
 end
 
+function Tooltip:AddRightRedDoubleLine(textLeft, textRight, r, g, b)
+    self:AddDoubleLine(textLeft, textRight, r, g, b, RED_FONT_COLOR:GetRGB())
+end
+
+function Tooltip:AddRightYellowDoubleLine(textLeft, textRight, r, g, b)
+    self:AddDoubleLine(textLeft, textRight, r, g, b, YELLOW_FONT_COLOR:GetRGB())
+end
+
+function Tooltip:AddRightOrangeDoubleLine(textLeft, textRight, r, g, b)
+    self:AddDoubleLine(textLeft, textRight, r, g, b, ORANGE_FONT_COLOR:GetRGB())
+end
+
 function Tooltip:AddRightHighlightDoubleLine(textLeft, textRight, r, g, b)
-    self:AddDoubleLine(textLeft, textRight, r, g, b, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b)
+    self:AddDoubleLine(textLeft, textRight, r, g, b, HIGHLIGHT_FONT_COLOR:GetRGB())
 end
 
 function Tooltip:AddHighlightDoubleLine(textLeft, textRight)
-    self:AddDoubleLine(textLeft, textRight, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b)
+    self:AddDoubleLine(textLeft, textRight, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b, HIGHLIGHT_FONT_COLOR:GetRGB())
 end
 
 function Tooltip:AddGrayDoubleLine(textLeft, textRight)
-    self:AddDoubleLine(textLeft, textRight, GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b, GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b)
+    self:AddDoubleLine(textLeft, textRight, GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b, GRAY_FONT_COLOR:GetRGB())
 end
 
 function Tooltip:AddLeftGrayDoubleLine(textLeft, textRight)
-    self:AddDoubleLine(textLeft, textRight, nil, nil, nil, GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b)
+    self:AddDoubleLine(textLeft, textRight, nil, nil, nil, GRAY_FONT_COLOR:GetRGB())
 end
