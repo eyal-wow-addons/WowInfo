@@ -25,7 +25,7 @@ local function IterableCurrencyByCategory(categoryName)
         while i <= n do
             local info = Currency.GetCurrencyListInfo(i)
             if not info.isHeader and isHeaderCategoryFound then
-                return info.name, info.isHeader, info.iconFileID, info.quantity
+                return info.name, info.isHeader, info.iconFileID, info.quantity, info.maxQuantity
             elseif info.name == categoryName then
                 local nextInfo = Currency.GetCurrencyListInfo(i + 1)
                 -- Check whether the header has children
