@@ -1,6 +1,5 @@
 local _, addon = ...
 local PvP = addon:NewObject("PvP")
-local Achievements = addon.Achievements
 
 local NO_ARENA_SEASON = 0
 
