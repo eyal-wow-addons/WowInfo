@@ -16,11 +16,16 @@ Display:RegisterHookScript(EJMicroButton, "OnEnter", function(self)
     local thresholdProgressString, itemReward, pendingReward, monthString, timeString = EncounterJournal:GetMonthlyActivitiesInfo()
 
     if thresholdProgressString then
-        if itemReward and not itemReward:IsItemDataCached() then
-            self.itemDataLoadedCancelFunc = itemReward:ContinueOnItemLoad(GenerateClosure(self.OnEnter, self))
+        if itemReward and not Display.itemDataLoadedCancelFunc then
+            Display.itemDataLoadedCancelFunc = function()
+                local itemName = itemReward:GetItemName()
+                local itemColor = itemReward:GetItemQualityColor() or HIGHLIGHT_FONT_COLOR
+                Display:AddHighlightLine(MONTHLY_ACTIVITIES_PROGRESSED)
+                Display:AddRightHighlightDoubleLine(itemName, thresholdProgressString, itemColor.r, itemColor.g, itemColor.b)
+                Display:AddTexture(itemReward:GetItemIcon(), itemTextureSettings)
+                Display:Show()
+            end
         end
-    
-        self.itemDataLoadedCancelFunc = nil
         
         Display:AddEmptyLine()
         Display:AddHighlightDoubleLine(MONTHLY_ACTIVITIES_LABEL, monthString)
@@ -29,11 +34,7 @@ Display:RegisterHookScript(EJMicroButton, "OnEnter", function(self)
         Display:AddEmptyLine()
 
         if itemReward then
-            local itemName = itemReward:GetItemName()
-            local itemColor = itemReward:GetItemQualityColor() or HIGHLIGHT_FONT_COLOR
-            Display:AddHighlightLine(MONTHLY_ACTIVITIES_PROGRESSED)
-            Display:AddRightHighlightDoubleLine(itemName, thresholdProgressString, itemColor.r, itemColor.g, itemColor.b)
-            Display:AddTexture(itemReward:GetItemIcon(), itemTextureSettings)
+            itemReward:ContinueWithCancelOnItemLoad(Display.itemDataLoadedCancelFunc)
         else
             Display:AddRightHighlightDoubleLine(MONTHLY_ACTIVITIES_POINTS, thresholdProgressString)
         end
@@ -49,9 +50,9 @@ end)
 
 Display:RegisterHookScript(EJMicroButton, "OnLeave", function(self)
     Display:Hide()
-	if self.itemDataLoadedCancelFunc then
-		self.itemDataLoadedCancelFunc()
-		self.itemDataLoadedCancelFunc = nil
+	if Display.itemDataLoadedCancelFunc then
+		Display.itemDataLoadedCancelFunc()
+		Display.itemDataLoadedCancelFunc = nil
 	end
 end)
 
