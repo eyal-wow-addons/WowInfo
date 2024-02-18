@@ -60,14 +60,16 @@ function PvP:GetPlayerProgressInfo(isActiveSeason, isOffSeason)
 end
 
 local function GetSeasonTierInfo(bracketTierID)
-    local tierID, nextTierID = C_PvP.GetSeasonBestInfo()
     local tierInfo = C_PvP.GetPvpTierInfo(bracketTierID)
-    local nextTierName
-    if tierID == bracketTierID and nextTierID then
-        local nextTierInfo = C_PvP.GetPvpTierInfo(nextTierID)
-        nextTierName = TOOLTIP_PVP_NEXT_RANK:format(PVPUtil.GetTierName(nextTierInfo.pvpTierEnum))
+    local tierID, nextTierID = C_PvP.GetSeasonBestInfo()
+    if tierInfo then
+        local nextTierName
+        if tierID == bracketTierID and nextTierID then
+            local nextTierInfo = C_PvP.GetPvpTierInfo(nextTierID)
+            nextTierName = TOOLTIP_PVP_NEXT_RANK:format(PVPUtil.GetTierName(nextTierInfo.pvpTierEnum))
+        end
+        return PVPUtil.GetTierName(tierInfo.pvpTierEnum), tierInfo.tierIconID, nextTierName
     end
-    return PVPUtil.GetTierName(tierInfo.pvpTierEnum), tierInfo.tierIconID, nextTierName
 end
 
 function PvP:IterableArenaProgressInfo()
@@ -92,7 +94,7 @@ function PvP:IterableArenaProgressInfo()
     end
 end
 
-function PvP:GetSeasonRewardInfo()
+function PvP:GetSeasonItemRewardInfo()
 	local achievementID = C_PvP.GetPVPSeasonRewardAchievementID()
 
 	if achievementID then
@@ -120,9 +122,10 @@ function PvP:GetSeasonRewardInfo()
     if criteriaString and not completed then
         local rewardItemID = C_AchievementInfo.GetRewardItemID(achievementID)
         if rewardItemID then
-            local itemName, _, quality, _, _, _, _, _, _, itemTexture = GetItemInfo(rewardItemID)
-            local itemQualityColor = quality and BAG_ITEM_QUALITY_COLORS[quality] or HIGHLIGHT_FONT_COLOR
-            return itemQualityColor:WrapTextInColorCode(itemName), itemTexture, FormatPercentage(quantity / reqQuantity)
+            local itemReward = Item:CreateFromItemID(rewardItemID)
+            if itemReward then
+                return itemReward, FormatPercentage(quantity / reqQuantity)
+            end
         end
     end
 end

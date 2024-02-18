@@ -35,16 +35,33 @@ Display:RegisterHookScript(LFDMicroButton, "OnEnter", function()
             end
         end
 
-        local itemName, itemTexture, progress = PvP:GetSeasonRewardInfo()
+        local itemReward, progress = PvP:GetSeasonItemRewardInfo()
 
-        if itemName then
-            Display:AddEmptyLine()
-            Display:AddRightHighlightDoubleLine(itemName, progress)
-            Display:AddTexture(itemTexture, itemTextureSettings)
+        if itemReward then
+            if not Display.itemDataLoadedCancelFunc then
+                Display.itemDataLoadedCancelFunc = function()
+                    local itemQuality = itemReward:GetItemQuality()
+                    local itemQualityColor = itemQuality and BAG_ITEM_QUALITY_COLORS[itemQuality] or HIGHLIGHT_FONT_COLOR
+                    local itemName, itemIcon = itemQualityColor:WrapTextInColorCode(itemReward:GetItemName()), itemReward:GetItemIcon()
+                    Display:AddEmptyLine()
+                    Display:AddRightHighlightDoubleLine(itemName, progress)
+                    Display:AddTexture(itemIcon, itemTextureSettings)
+                    Display:Show()
+                end
+            end
+            itemReward:ContinueWithCancelOnItemLoad(Display.itemDataLoadedCancelFunc)
         end
     elseif isPreseason then
         Display:AddLine(PLAYER_V_PLAYER_PRE_SEASON)
     end
 
     Display:Show()
+end)
+
+Display:RegisterHookScript(LFDMicroButton, "OnLeave", function(self)
+    Display:Hide()
+	if Display.itemDataLoadedCancelFunc then
+		Display.itemDataLoadedCancelFunc()
+		Display.itemDataLoadedCancelFunc = nil
+	end
 end)
