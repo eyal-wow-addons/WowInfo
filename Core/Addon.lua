@@ -2,6 +2,7 @@ local addonName, addon = ...
 
 local Objects = {}
 local Callbacks = {}
+local Addons = {}
 Callbacks["PLAYER_LOGIN"] = {}
 
 local frame = CreateFrame("Frame")
@@ -10,14 +11,14 @@ frame:RegisterEvent("ADDON_LOADED")
 frame:SetScript("OnEvent", function(self, eventName, ...)
     if eventName == "ADDON_LOADED" then
         local arg1 = ...
-        if arg1 == addonName then
-            for _, object in ipairs(Objects) do
+        if arg1 == addonName or Addons[arg1] then
+            for i, object in ipairs(Objects) do
                 local callback = object.OnInitialize
                 if callback then
                     callback(object)
+                    object.OnInitialize = nil
                 end
             end
-            self:UnregisterEvent(eventName)
         end
     elseif eventName == "PLAYER_LOGIN" then
         for _, object in ipairs(Objects) do
@@ -158,6 +159,13 @@ do
 
     function addon:GetStorage(name)
         return addon[name .. "Storage"]
+    end
+
+    WowInfo = {}
+
+    function WowInfo:NewAddon(name, tbl)
+        Addons[name] = tbl
+        return setmetatable(tbl, { __index = addon })
     end
 end
 
