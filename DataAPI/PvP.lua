@@ -13,6 +13,10 @@ local STANDING_FORMAT = "%s / %s"
 local RATED_PVP_LABEL_FORMAT = "%s: |cff00ff00%d|r"
 local RATED_PVP_WEEKLY_STATUS_FORMAT = "%d (|cff00ff00%d|r + |cffff0000%d|r)"
 
+PvP:RegisterEvent("PLAYER_LOGIN", function()
+    RequestRatedInfo()
+end)
+
 do
     local ratedPvPDisabled
 
@@ -60,14 +64,13 @@ end
 
 local function GetSeasonTierInfo(bracketTierID)
     local tierInfo = C_PvP.GetPvpTierInfo(bracketTierID)
-    local tierID, nextTierID = C_PvP.GetSeasonBestInfo()
     if tierInfo then
-        local nextTierName
-        if tierID == bracketTierID and nextTierID then
-            local nextTierInfo = C_PvP.GetPvpTierInfo(nextTierID)
-            nextTierName = TOOLTIP_PVP_NEXT_RANK:format(PVPUtil.GetTierName(nextTierInfo.pvpTierEnum))
+        local ascendTierInfo = tierInfo.ascendTier and C_PvP.GetPvpTierInfo(tierInfo.ascendTier)
+        local ascendTierName
+        if ascendTierInfo then
+            ascendTierName = PVPUtil.GetTierName(ascendTierInfo.pvpTierEnum)
         end
-        return PVPUtil.GetTierName(tierInfo.pvpTierEnum), tierInfo.tierIconID, nextTierName
+        return PVPUtil.GetTierName(tierInfo.pvpTierEnum), tierInfo.tierIconID, ascendTierName
     end
 end
 

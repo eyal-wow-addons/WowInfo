@@ -4,6 +4,7 @@ local PvP = addon.PvP
 
 local PVP_SUMMARY_LABEL = "PvP Progress:"
 local RATED_PVP_LABEL = "Rated PvP"
+local RATED_PVP_NEXT_RANK = "%s > %s"
 
 local itemTextureSettings = {
     width = 20,
@@ -30,7 +31,7 @@ Display:RegisterHookScript(LFDMicroButton, "OnEnter", function()
         for ratingString, weeklyStatusString, tierName, tierIcon, nextTierName in PvP:IterableArenaProgressInfo() do
             Display:AddRightHighlightDoubleLine(ratingString, weeklyStatusString)
             if tierName and IsShiftKeyDown() then
-                Display:AddDoubleLine(tierName, nextTierName)
+                Display:AddLine(RATED_PVP_NEXT_RANK:format(tierName, nextTierName))
                 Display:AddTexture(tierIcon, itemTextureSettings)
             end
         end
