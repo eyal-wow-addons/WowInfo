@@ -12,9 +12,9 @@
 
 ## SavedVariables: WowInfoDB
 
-Libs\LibStub.lua
-Libs\CallbackHandler-1.0.lua
-Libs\LibDataBroker-1.1.lua
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
 Libs\AceDB-3.0\AceDB-3.0.xml
 
 Core\Constants.lua

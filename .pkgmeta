@@ -3,14 +3,22 @@ package-as: WowInfo
 enable-nolib-creation: no
 
 externals:
-  Libs/LibStub: https://repos.wowace.com/wow/libstub/trunk
-  Libs/AceConfig-3.0: https://repos.curseforge.com/wow/ace3/trunk/AceConfig-3.0
+  Libs/LibStub: https://repos.curseforge.com/wow/libstub/trunk
+  Libs/CallbackHandler-1.0: https://repos.curseforge.com/wow/callbackhandler/trunk
+  Libs/LibDataBroker-1.1: https://repos.curseforge.com/wow/libdatabroker-1-1
   Libs/AceDB-3.0: https://repos.curseforge.com/wow/ace3/trunk/AceDB-3.0
-  Libs/AceDBOptions-3.0: https://repos.curseforge.com/wow/ace3/trunk/AceDBOptions-3.0
-  Libs/AceGUI-3.0: https://repos.curseforge.com/wow/ace3/trunk/AceGUI-3.0
+  Addons/WowInfo_Options: https://github.com/eyal-wow-addons/WowInfo_Options
 
 ignore:
-  - Libs/LibStub/*
+  - Libs/LibStub.lua
+  - Libs/LibStub/**/*
+  - Libs/**/LibStub/*
+  - Libs/**/*.toc
+  - Libs/**/*.textile
   - Screenshots/*
   - Testing/*
   - README.md
+
+move-folders:
+  WowInfo/Libs/CallbackHandler-1.0/CallbackHandler-1.0: WowInfo/Libs/CallbackHandler-1.0
+  WowInfo/AddOns/WowInfo_Options: WowInfo_Options
