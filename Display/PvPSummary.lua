@@ -43,11 +43,15 @@ Display:RegisterHookScript(LFDMicroButton, "OnEnter", function()
                 Display.itemDataLoadedCancelFunc = function()
                     local itemQuality = itemReward:GetItemQuality()
                     local itemQualityColor = itemQuality and BAG_ITEM_QUALITY_COLORS[itemQuality] or HIGHLIGHT_FONT_COLOR
-                    local itemName, itemIcon = itemQualityColor:WrapTextInColorCode(itemReward:GetItemName()), itemReward:GetItemIcon()
-                    Display:AddEmptyLine()
-                    Display:AddRightHighlightDoubleLine(itemName, progress)
-                    Display:AddTexture(itemIcon, itemTextureSettings)
-                    Display:Show()
+                    local itemName = itemReward:GetItemName()
+                    local itemIcon = itemReward:GetItemIcon()
+                    if itemName and itemIcon then
+                        itemName = itemQualityColor:WrapTextInColorCode(itemName)
+                        Display:AddEmptyLine()
+                        Display:AddRightHighlightDoubleLine(itemName, progress)
+                        Display:AddTexture(itemIcon, itemTextureSettings)
+                        Display:Show()
+                    end
                 end
             end
             itemReward:ContinueWithCancelOnItemLoad(Display.itemDataLoadedCancelFunc)

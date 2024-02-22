@@ -20,10 +20,12 @@ Display:RegisterHookScript(EJMicroButton, "OnEnter", function(self)
             Display.itemDataLoadedCancelFunc = function()
                 local itemName = itemReward:GetItemName()
                 local itemColor = itemReward:GetItemQualityColor() or HIGHLIGHT_FONT_COLOR
-                Display:AddHighlightLine(MONTHLY_ACTIVITIES_PROGRESSED)
-                Display:AddRightHighlightDoubleLine(itemName, thresholdProgressString, itemColor.r, itemColor.g, itemColor.b)
-                Display:AddTexture(itemReward:GetItemIcon(), itemTextureSettings)
-                Display:Show()
+                if itemName then
+                    Display:AddHighlightLine(MONTHLY_ACTIVITIES_PROGRESSED)
+                    Display:AddRightHighlightDoubleLine(itemName, thresholdProgressString, itemColor.r, itemColor.g, itemColor.b)
+                    Display:AddTexture(itemReward:GetItemIcon(), itemTextureSettings)
+                    Display:Show()
+                end
             end
         end
         
