@@ -1,6 +1,6 @@
 local addonName, addon = ...
 
-local ADDON_LOAD_FAILED = YELLOW_FONT_COLOR:WrapTextInColorCode("<%s> " .. ADDON_LOAD_FAILED .. ".")
+local ADDON_LOAD_FAILED = "<< %s >> " .. ADDON_LOAD_FAILED
 
 local function TryLoadAddOn(name)
 	local loaded, reason = LoadAddOn(name)
@@ -8,7 +8,9 @@ local function TryLoadAddOn(name)
         LoadAddOn(name)
     elseif reason then
         local _, title = GetAddOnInfo(addonName)
-        print(ADDON_LOAD_FAILED:format(title, name, _G["ADDON_" .. reason]))
+        title = NORMAL_FONT_COLOR:WrapTextInColorCode(title)
+        local state = RED_FONT_COLOR:WrapTextInColorCode(_G["ADDON_" .. reason])
+        print(YELLOW_FONT_COLOR:WrapTextInColorCode(ADDON_LOAD_FAILED:format(title, name, state)))
         return false
 	end
     return true
