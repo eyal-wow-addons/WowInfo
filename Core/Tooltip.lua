@@ -40,6 +40,27 @@ function Tooltip:AddGrayLine(text)
     self:AddLine(text, GRAY_FONT_COLOR:GetRGB())
 end
 
+function Tooltip:AddGreenLine(text)
+    self:AddLine(text, GREEN_FONT_COLOR:GetRGB())
+end
+
+function Tooltip:AddTitleLine(text, addEmptyLine)
+    local numLines = self:NumLines()
+    for i = 1, numLines do
+        local line = _G["GameTooltipTextLeft" .. i]
+        if line then
+            local lineText = line:GetText()
+            if lineText == text then
+                return
+            end
+        end
+    end
+    if addEmptyLine then
+        self:AddEmptyLine()
+    end
+    self:AddLine(text, HIGHLIGHT_FONT_COLOR:GetRGB())
+end
+
 function Tooltip:AddIndentedDoubleLine(textLeft, ...)
     self:AddDoubleLine("  " .. textLeft, ...)
 end
