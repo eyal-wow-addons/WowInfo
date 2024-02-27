@@ -48,6 +48,7 @@ DataAPI\Quests.lua
 DataAPI\Reputation.lua
 DataAPI\SavedBosses.lua
 DataAPI\Speedometer.lua
+DataAPI\Talents.lua
 DataAPI\WeeklyRewards.lua
 
 Display\Achievements.lua
@@ -68,3 +69,4 @@ Display\QuestLog.lua
 Display\Reputation.lua
 Display\Speedometer.lua
 Display\Spellbook.lua
+Display\Talents.lua
