@@ -67,10 +67,10 @@ end
 
 Storage:RegisterEvents(
     "PLAYER_LOGIN",
-    "PLAYER_LOGOUT", function(event)
-        if event == "PLAYER_LOGIN" then
+    "PLAYER_LOGOUT", function(_, eventName)
+        if eventName == "PLAYER_LOGIN" then
             ClearCurrencyData()
-        elseif event == "PLAYER_LOGOUT" then
+        elseif eventName == "PLAYER_LOGOUT" then
             StoreCurrencyData()
         end
     end)

@@ -37,7 +37,7 @@ do
         end
     end
 
-    PvP:RegisterEvent("PVP_TYPES_ENABLED", function(_, _, ratedBattlegrounds, ratedArenas)
+    PvP:RegisterEvent("PVP_TYPES_ENABLED", function(_, _, _, ratedBattlegrounds, ratedArenas)
         ratedPvPDisabled = not ratedBattlegrounds and not ratedArenas
     end)
 

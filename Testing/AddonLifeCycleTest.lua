@@ -31,11 +31,11 @@ end)
 
 AddonLifeCycleTest:RegisterEvents(
     "PLAYER_LOGIN",
-    "PLAYER_MONEY", function(eventName)
+    "PLAYER_MONEY", function(self, eventName)
         print("<AddonLifeCycleTest> RegisterEvents:" .. eventName)
         AddonLifeCycleTest:TriggerEvent("CUSTOM_EVENT", "Hey!")
     end)
 
-AddonLifeCycleTest:RegisterEvent("CUSTOM_EVENT", function(eventName, arg1)
+AddonLifeCycleTest:RegisterEvent("CUSTOM_EVENT", function(self, eventName, arg1)
     print(("<AddonLifeCycleTest> RegisterEvent:%s %s"):format(eventName, arg1))
 end)

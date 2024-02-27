@@ -11,14 +11,14 @@ local function UpdateText()
     end
 end
 
-local function UpdateTextWhenStartedMoving(_, status)
+local function UpdateTextWhenStartedMoving(_, _, status)
     if MinimapCluster.ZoneTextButton:IsVisible() then
         MinimapCluster.ZoneTextButton:SetScript("OnUpdate", UpdateText)
     end
     dataobj.text = status
 end
 
-local function UpdateTextWhenStoppedMoving(_, status)
+local function UpdateTextWhenStoppedMoving(_, _, status)
     if MinimapCluster.ZoneTextButton:IsVisible() then
         MinimapCluster.ZoneTextButton:SetScript("OnUpdate", nil)
         Minimap_Update()

@@ -48,13 +48,13 @@ Speedometer:RegisterEvent("PLAYER_ENTERING_WORLD", function()
     end
 end)
 
-Speedometer:RegisterEvent("UNIT_ENTERED_VEHICLE", function(_, unit)
+Speedometer:RegisterEvent("UNIT_ENTERED_VEHICLE", function(_, _, unit)
     if unit == "player" then
         currentUnit = "vehicle"
     end
 end)
 
-Speedometer:RegisterEvent("UNIT_EXITED_VEHICLE", function(_, unit)
+Speedometer:RegisterEvent("UNIT_EXITED_VEHICLE", function(_, _, unit)
     if unit == "player" then
         currentUnit = "player"
     end

@@ -35,7 +35,7 @@ end
 
 Durability:RegisterEvents(
     "UPDATE_INVENTORY_DURABILITY",
-    "PLAYER_EQUIPMENT_CHANGED", function(eventName)
+    "PLAYER_EQUIPMENT_CHANGED", function()
         local inventory, inventoryMax = 0, 0
         local bags, bagsMax = 0, 0
 

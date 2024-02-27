@@ -88,15 +88,21 @@ function Callbacks:UnregisterEvent(eventName, callback)
     end
     local callbacks = Callbacks[eventName]
     if callbacks then
-        for i, registeredCallbacks in ipairs(callbacks) do
-            if registeredCallbacks == callback then
-                Callbacks[eventName][i] = nil
+        for i = #callbacks, 1, -1 do
+            local registeredCallback = callbacks[i]
+            if not callback or registeredCallback == callback then
+                table.remove(Callbacks[eventName], i)
+                if callback then
+                    break
+                end
             end
         end
         if #Callbacks[eventName] == 0 then
             if C_EventUtils.IsEventValid(eventName) then
                 frame:UnregisterEvent(eventName)
             end
+            Callbacks[eventName] = nil
+        elseif not callback then
             Callbacks[eventName] = nil
         end
     end
@@ -106,7 +112,7 @@ function Callbacks:TriggerEvent(eventName, ...)
     local callbacks = Callbacks[eventName]
     if callbacks then
         for _, callback in ipairs(callbacks) do
-            callback(eventName, ...)
+            callback(self, eventName, ...)
         end
     end
 end
