@@ -4,9 +4,7 @@ local Display = addon:NewDisplay("Achievements")
 local Achievements = addon.Achievements
 
 Display:RegisterHookScript(AchievementMicroButton, "OnEnter", function()
-    Display:AddEmptyLine()
-
-    Display:AddHighlightLine(L["Summary:"])
+    Display:AddTitleLine(L["Summary:"])
     Display:AddRightHighlightDoubleLine(Achievements:GetSummaryProgressString())
     Display:AddEmptyLine()
 
@@ -15,8 +13,7 @@ Display:RegisterHookScript(AchievementMicroButton, "OnEnter", function()
     end
 
     if IsInGuild() then
-        Display:AddEmptyLine()
-        Display:AddHighlightLine(L["Guild:"])
+        Display:AddTitleLine(L["Guild:"])
         Display:AddRightHighlightDoubleLine(Achievements:GetSummaryProgressString(true))
         Display:AddEmptyLine()
 
