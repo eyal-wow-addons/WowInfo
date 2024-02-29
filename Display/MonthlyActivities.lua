@@ -3,13 +3,6 @@ local L = addon.L
 local Display = addon:NewDisplay("MonthlyActivities")
 local EncounterJournal = addon.EncounterJournal
 
-local itemTextureSettings = {
-    width = 20,
-    height = 20,
-    verticalOffset = 3,
-    margin = { right = 5, bottom = 5 },
-}
-
 Display:RegisterHookScript(EJMicroButton, "OnEnter", function(self)
     local thresholdProgressString, itemReward, pendingReward, monthString, timeString = EncounterJournal:GetMonthlyActivitiesInfo()
 
@@ -21,7 +14,7 @@ Display:RegisterHookScript(EJMicroButton, "OnEnter", function(self)
                 if itemName then
                     Display:AddHighlightLine(L["Traveler's Log Progress:"])
                     Display:AddRightHighlightDoubleLine(itemName, thresholdProgressString, itemColor.r, itemColor.g, itemColor.b)
-                    Display:AddTexture(itemReward:GetItemIcon(), itemTextureSettings)
+                    Display:AddIcon(itemReward:GetItemIcon())
                     Display:Show()
                 end
             end

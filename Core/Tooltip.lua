@@ -7,6 +7,13 @@ local EMPTY = " "
 local GameTooltip = GameTooltip
 local HIGHLIGHT_FONT_COLOR = HIGHLIGHT_FONT_COLOR
 
+local ICON_TEXTURE_SETTINGS = {
+    width = 20,
+    height = 20,
+    verticalOffset = 3,
+    margin = { right = 5, bottom = 5 },
+}
+
 local Tooltip_Redirect = function(t, k)
     return Tooltip[k]
 end
@@ -100,4 +107,8 @@ end
 
 function Tooltip:AddLeftGrayDoubleLine(textLeft, textRight)
     self:AddDoubleLine(textLeft, textRight, nil, nil, nil, GRAY_FONT_COLOR:GetRGB())
+end
+
+function Tooltip:AddIcon(texture)
+    self:AddTexture(texture, ICON_TEXTURE_SETTINGS)
 end

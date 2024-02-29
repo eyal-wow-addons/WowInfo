@@ -5,13 +5,6 @@ local Talents = addon.Talents
 
 local TALENTS_LOADOUT_SHARED_ACTION_BARS = "%s*"
 
-local itemTextureSettings = {
-    width = 20,
-    height = 20,
-    verticalOffset = 3,
-    margin = { right = 5, bottom = 5 },
-}
-
 Talents:RegisterEvent("TALENTS_SHOW_LOADOUTS", function()
     Display:AddTitleLine(L["Loadouts:"], true)
 end)
@@ -56,7 +49,7 @@ Display:RegisterHookScript(TalentMicroButton, "OnEnter", function()
 
     for name, icon in Talents:IteratablePvPTalents() do
         Display:AddLine(name)
-        Display:AddTexture(icon, itemTextureSettings)
+        Display:AddIcon(icon)
     end
 
     Display:Show()

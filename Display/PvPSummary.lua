@@ -5,13 +5,6 @@ local PvP = addon.PvP
 
 local PVP_RATED_NEXT_RANK = "%s > %s"
 
-local itemTextureSettings = {
-    width = 20,
-    height = 20,
-    verticalOffset = 3,
-    margin = { right = 5, bottom = 5 },
-}
-
 Display:RegisterHookScript(LFDMicroButton, "OnEnter", function()
     Display:AddTitleLine(L["PvP Progress:"])
 
@@ -29,7 +22,7 @@ Display:RegisterHookScript(LFDMicroButton, "OnEnter", function()
             Display:AddRightHighlightDoubleLine(ratingString, weeklyStatusString)
             if tierName and IsShiftKeyDown() then
                 Display:AddLine(PVP_RATED_NEXT_RANK:format(tierName, nextTierName))
-                Display:AddTexture(tierIcon, itemTextureSettings)
+                Display:AddIcon(tierIcon)
             end
         end
 
@@ -46,7 +39,7 @@ Display:RegisterHookScript(LFDMicroButton, "OnEnter", function()
                         itemName = itemQualityColor:WrapTextInColorCode(itemName)
                         Display:AddEmptyLine()
                         Display:AddRightHighlightDoubleLine(itemName, progress)
-                        Display:AddTexture(itemIcon, itemTextureSettings)
+                        Display:AddIcon(itemIcon)
                         Display:Show()
                     end
                 end
