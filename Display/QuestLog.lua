@@ -1,10 +1,7 @@
 local _, addon = ...
+local L = addon.L
 local Display = addon:NewDisplay("QuestLog")
 local Quests = addon.Quests
-
-local TOTAL_QUESTS_LABEL = "Total Quests"
-local COMPLETED_QUESTS_LABEL = "Completed"
-local INCOMPLETED_QUESTS_LABEL = "Incompleted"
 
 local function AddCampaign(id, title, isCompleted, progressString, chaptersIterator, ...)
     if id then
@@ -23,7 +20,7 @@ local function AddCampaign(id, title, isCompleted, progressString, chaptersItera
                 end
             end
         else
-            Display:AddLeftHighlightDoubleLine(title, CRITERIA_COMPLETED, GREEN_FONT_COLOR.r, GREEN_FONT_COLOR.g, GREEN_FONT_COLOR.b)
+            Display:AddLeftHighlightDoubleLine(title, L["Completed"], GREEN_FONT_COLOR.r, GREEN_FONT_COLOR.g, GREEN_FONT_COLOR.b)
         end
     end
 end
@@ -34,10 +31,9 @@ Display:RegisterHookScript(QuestLogMicroButton, "OnEnter", function()
     local storyAchievementID, storyTitle, isStoryCompleted, storyProgressString = Quests:GetZoneStoryInfo()
 
     if quests > 0 then
-        Display:AddEmptyLine()
-        Display:AddHighlightDoubleLine(TOTAL_QUESTS_LABEL, quests)
-        Display:AddRightHighlightDoubleLine(COMPLETED_QUESTS_LABEL, completedQuests)
-        Display:AddRightHighlightDoubleLine(INCOMPLETED_QUESTS_LABEL, incompletedQuests)
+        Display:AddTitleDoubleLine(L["Total Quests"], quests)
+        Display:AddRightHighlightDoubleLine(L["Completed"], completedQuests)
+        Display:AddRightHighlightDoubleLine(L["Incompleted"], incompletedQuests)
     end
 
     AddCampaign(campaignID, campaignTitle, isCampaignCompleted, campaignProgressString, Quests.IterableCampaignChaptersInfo, campaignChapterIDs)

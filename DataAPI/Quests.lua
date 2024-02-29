@@ -1,8 +1,8 @@
 local _, addon = ...
+local L = addon.L
 local Quests = addon:NewObject("Quests")
 
 local EMPTY_CHAPTERS = {}
-local STORY_PROGRESS = "|cffffd200" .. STORY_PROGRESS .. "|n|cffffffff" .. STORY_CHAPTERS .. "|r|n|n"
 
 do
     local QuestResetTimeSecondsFormatter = CreateFromMixins(SecondsFormatterMixin)
@@ -55,7 +55,7 @@ function Quests:GetCampaignInfo()
                         completedChapters = completedChapters + 1
                     end
                 end
-                progressString = CAMPAIGN_PROGRESS_CHAPTERS_TOOLTIP:format(completedChapters, #chapterIDs)
+                progressString = L["Campaign Progress: X/Y Chapters"]:format(completedChapters, #chapterIDs)
             elseif state == Enum.CampaignState.Invalid then
                 campaignID = nil
             end
@@ -98,7 +98,7 @@ function Quests:GetZoneStoryInfo()
                     completedCriteria = completedCriteria + 1;
                 end
             end
-            return storyAchievementID, mapInfo.name, numCriteria == completedCriteria, STORY_PROGRESS:format(completedCriteria, numCriteria)
+            return storyAchievementID, mapInfo.name, numCriteria == completedCriteria, L["Story Progress: X/Y Chapters"]:format(completedCriteria, numCriteria)
         end
     end
 end

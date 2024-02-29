@@ -1,7 +1,7 @@
 local _, addon = ...
+local L = addon.L
 local Reputation = addon:NewObject("Reputation")
 
-local RENOWN_LEVEL_LABEL = "%s (" .. RENOWN_LEVEL_LABEL .. " %d)"
 local ICON_AVAILABLE_REWARD = " |TInterface\\RaidFrame\\ReadyCheck-Ready:0|t"
 local STANDING_PROGRESS_FORMAT = "%s / %s"
 
@@ -43,7 +43,7 @@ local function GetFactionDisplayInfoByID(factionID)
                 isCapped = C_MajorFactions.HasMaximumRenown(factionID)
                 repValue = isCapped and majorFactionData.renownLevelThreshold or majorFactionData.renownReputationEarned or 0
                 standingColor = BLUE_FONT_COLOR
-                factionName = RENOWN_LEVEL_LABEL:format(factionName, majorFactionData.renownLevel)
+                factionName = L["S (Renown X)"]:format(factionName, majorFactionData.renownLevel)
                 if #rewards > 0 then
                     local rewardInfo = rewards[1]
                     if rewardInfo.itemID

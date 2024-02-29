@@ -1,13 +1,11 @@
 local _, addon = ...
+local L = addon.L
 local Guild = addon:NewObject("Guild")
 local Friends = addon.Friends
 
 Guild.GuildRoster = C_GuildInfo.GuildRoster
 Guild.GetNumGuildMembers = GetNumGuildMembers
 Guild.GetGuildRosterInfo = GetGuildRosterInfo
-
-local GUILD_MEMBER_AFK = " |cffff0000<AFK>|r"
-local GUILD_MEMBER_DND = " |cffff0000<DND>|r"
 
 local GUILD_ON_MOBILE_ICON_FORMAT = "|TInterface\\ChatFrame\\UI-ChatIcon-ArmoryChat:0|t %s"
 
@@ -47,9 +45,9 @@ function Guild:IterableGuildRosterInfo(index)
             name = Ambiguate(name, "guild")
 
             if status == 1 then
-                status = GUILD_MEMBER_AFK
+                status = L["AFK"]
             elseif status == 2 then
-                status = GUILD_MEMBER_DND
+                status = L["DND"]
             else
                 status = ""
             end

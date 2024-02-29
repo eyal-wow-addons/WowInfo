@@ -1,11 +1,9 @@
 local _, addon = ...
+local L = addon.L
 local Display = addon:NewDisplay("Talents")
 local Talents = addon.Talents
 
-local TALENTS_SPEC_LABEL = "Specialization: %s"
-local TALENTS_LOADOUTS_TITLE = "Loadouts:"
-local TALENTS_LOADOUT_SHARED_ACTION_BARS_FORMAT = "%s*"
-local TALENTS_PVP_TALENTS_TITLE = "PvP Talents:"
+local TALENTS_LOADOUT_SHARED_ACTION_BARS = "%s*"
 
 local itemTextureSettings = {
     width = 20,
@@ -15,11 +13,11 @@ local itemTextureSettings = {
 }
 
 Talents:RegisterEvent("TALENTS_SHOW_LOADOUTS", function()
-    Display:AddTitleLine(TALENTS_LOADOUTS_TITLE, true)
+    Display:AddTitleLine(L["Loadouts:"], true)
 end)
 
 Talents:RegisterEvent("TALENTS_SHOW_PVP_TALENTS", function()
-    Display:AddTitleLine(TALENTS_PVP_TALENTS_TITLE, true)
+    Display:AddTitleLine(L["PvP Talents:"], true)
 end)
 
 Display:RegisterHookScript(TalentMicroButton, "OnEnter", function()
@@ -31,7 +29,7 @@ Display:RegisterHookScript(TalentMicroButton, "OnEnter", function()
 
     if spec then
         Display:AddEmptyLine()
-        Display:AddHighlightLine(TALENTS_SPEC_LABEL:format(spec))
+        Display:AddHighlightLine(L["Specialization: S"]:format(spec))
     end
 
     local starterBuildName, isStarterBuildActive = Talents:GetStarterBuildInfo()
@@ -47,7 +45,7 @@ Display:RegisterHookScript(TalentMicroButton, "OnEnter", function()
     for configInfo, isActive in Talents:IterableLoadoutsInfo() do
         local name = configInfo.name
         if configInfo.usesSharedActionBars then
-            name = TALENTS_LOADOUT_SHARED_ACTION_BARS_FORMAT:format(name)
+            name = TALENTS_LOADOUT_SHARED_ACTION_BARS:format(name)
         end
         if isActive then
             Display:AddGreenLine(name)

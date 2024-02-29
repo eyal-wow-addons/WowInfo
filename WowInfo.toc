@@ -31,6 +31,8 @@ Storage\Guild.lua
 Storage\Money.lua
 Storage\Reputation.lua
 
+Locales\enUS.lua
+
 DataAPI\Realm.lua
 DataAPI\Character.lua
 DataAPI\Achievements.lua

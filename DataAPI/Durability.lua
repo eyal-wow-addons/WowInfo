@@ -1,8 +1,6 @@
 local _, addon = ...
+local L = addon.L
 local Durability = addon:NewObject("Durability")
-
-local NA_LABEL = "N/A"
-local NONE_LABEL = "|cffa0a0a0None|r"
 
 local NUM_BAG_FRAMES = 4
 
@@ -79,11 +77,11 @@ local function GetColoredText(percent)
 end
 
 function Durability:GetInventoryPercentageString()
-    return inventoryPct and GetColoredText(inventoryPct) or NA_LABEL
+    return inventoryPct and GetColoredText(inventoryPct) or L["N/A"]
 end
 
 function Durability:GetBagsPercentageString()
-    return bagsPct and GetColoredText(bagsPct) or NONE_LABEL
+    return bagsPct and GetColoredText(bagsPct) or L["None"]
 end
 
 

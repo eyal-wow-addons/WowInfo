@@ -1,10 +1,9 @@
 local _, addon = ...
+local L = addon.L
 local Display = addon:NewDisplay("PvPSummary")
 local PvP = addon.PvP
 
-local PVP_SUMMARY_LABEL = "PvP Progress:"
-local RATED_PVP_LABEL = "Rated PvP"
-local RATED_PVP_NEXT_RANK = "%s > %s"
+local PVP_RATED_NEXT_RANK = "%s > %s"
 
 local itemTextureSettings = {
     width = 20,
@@ -14,24 +13,22 @@ local itemTextureSettings = {
 }
 
 Display:RegisterHookScript(LFDMicroButton, "OnEnter", function()
-    Display:AddEmptyLine()
-    Display:AddHighlightLine(PVP_SUMMARY_LABEL)
+    Display:AddTitleLine(L["PvP Progress:"])
 
     local isActiveSeason, isOffSeason, isPreseason = PvP:GetRatedPvPSeasonStateInfo()
-    local honorLevelString, honorProgressString, conquestProgressString = PvP:GetPlayerProgressInfo(isActiveSeason, isOffSeason)
+    local honorLevel, honorProgressString, conquestProgressString = PvP:GetPlayerProgressInfo(isActiveSeason, isOffSeason)
 
-    Display:AddRightHighlightDoubleLine(honorLevelString, honorProgressString)
+    Display:AddRightHighlightDoubleLine(L["Honor Level X"]:format(honorLevel), honorProgressString)
 
     if isActiveSeason or isOffSeason then
-        Display:AddRightHighlightDoubleLine(PVP_CONQUEST, conquestProgressString)
+        Display:AddRightHighlightDoubleLine(L["Conquest"], conquestProgressString)
 
-        Display:AddEmptyLine()
-        Display:AddHighlightDoubleLine(RATED_PVP_LABEL, ARENA_WEEKLY_STATS)
+        Display:AddTitleDoubleLine(L["Rated PvP"], L["Weekly Stats"])
 
         for ratingString, weeklyStatusString, tierName, tierIcon, nextTierName in PvP:IterableArenaProgressInfo() do
             Display:AddRightHighlightDoubleLine(ratingString, weeklyStatusString)
             if tierName and IsShiftKeyDown() then
-                Display:AddLine(RATED_PVP_NEXT_RANK:format(tierName, nextTierName))
+                Display:AddLine(PVP_RATED_NEXT_RANK:format(tierName, nextTierName))
                 Display:AddTexture(tierIcon, itemTextureSettings)
             end
         end
@@ -57,7 +54,7 @@ Display:RegisterHookScript(LFDMicroButton, "OnEnter", function()
             itemReward:ContinueWithCancelOnItemLoad(Display.itemDataLoadedCancelFunc)
         end
     elseif isPreseason then
-        Display:AddLine(PLAYER_V_PLAYER_PRE_SEASON)
+        Display:AddLine(L["Player vs. Player (Preseason)"])
     end
 
     Display:Show()

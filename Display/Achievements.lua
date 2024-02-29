@@ -1,14 +1,12 @@
 local _, addon = ...
+local L = addon.L
 local Display = addon:NewDisplay("Achievements")
 local Achievements = addon.Achievements
-
-local ACHIEVEMENT_SUMMARY_CATEGORY = ACHIEVEMENT_SUMMARY_CATEGORY .. ":"
-local ACHIEVEMENTS_GUILD_TAB = ACHIEVEMENTS_GUILD_TAB .. ":"
 
 Display:RegisterHookScript(AchievementMicroButton, "OnEnter", function()
     Display:AddEmptyLine()
 
-    Display:AddHighlightLine(ACHIEVEMENT_SUMMARY_CATEGORY)
+    Display:AddHighlightLine(L["Summary:"])
     Display:AddRightHighlightDoubleLine(Achievements:GetSummaryProgressString())
     Display:AddEmptyLine()
 
@@ -18,7 +16,7 @@ Display:RegisterHookScript(AchievementMicroButton, "OnEnter", function()
 
     if IsInGuild() then
         Display:AddEmptyLine()
-        Display:AddHighlightLine(ACHIEVEMENTS_GUILD_TAB)
+        Display:AddHighlightLine(L["Guild:"])
         Display:AddRightHighlightDoubleLine(Achievements:GetSummaryProgressString(true))
         Display:AddEmptyLine()
 

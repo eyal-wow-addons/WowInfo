@@ -1,11 +1,9 @@
 if not QuickJoinToastButton:IsVisible() then return end
 
 local _, addon = ...
+local L = addon.L
 local Display = addon:NewDisplay("Friends")
 local Friends = addon.Friends
-
-local FRIENDS_WOW_ONLINE_LABEL_FORMAT = "World of Warcraft (%d):"
-local FRIENDS_BNET_ONLINE_LABEL_FORMAT = "Battle.net (%d):"
 
 Display:RegisterHookScript(QuickJoinToastButton, "OnEnter", function()
     local _, numWoWOnline, _, numBNetOnline = Friends:GetNumOnlineFriendsInfo()
@@ -14,8 +12,7 @@ Display:RegisterHookScript(QuickJoinToastButton, "OnEnter", function()
         Friends:ResetConnectedFriendsCounter()
 
         if numWoWOnline > 0 then
-            Display:AddEmptyLine()
-            Display:AddHighlightLine(FRIENDS_WOW_ONLINE_LABEL_FORMAT:format(numWoWOnline))
+            Display:AddTitleLine(L["World of Warcraft (X):"]:format(numWoWOnline))
 
             for friendString, zoneString in Friends:IterableWoWFriendsInfo() do
                 Display:AddDoubleLine(friendString, zoneString)
@@ -23,8 +20,7 @@ Display:RegisterHookScript(QuickJoinToastButton, "OnEnter", function()
         end
 
         if numBNetOnline > 0 then
-            Display:AddEmptyLine()
-            Display:AddHighlightLine(FRIENDS_BNET_ONLINE_LABEL_FORMAT:format(numBNetOnline))
+            Display:AddTitleLine(L["Battle.net (X):"]:format(numBNetOnline))
 
             for accountString, zoneString, realmString, clientProgram in Friends:IterableBattleNetFriendsInfo() do
                 Display:AddRightHighlightDoubleLine(accountString, clientProgram)

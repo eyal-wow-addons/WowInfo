@@ -1,8 +1,8 @@
 local _, addon = ...
 local Professions = addon:NewObject("Professions")
 
-local PROFESIONS_RANK = "%d / %d"
-local PROFESIONS_RANK_WITH_MODIFIER = "%d |cff20ff20+ %d|r / %d";
+local PROFESIONS_RANK_FORMAT = "%d / %d"
+local PROFESIONS_RANK_WITH_MODIFIER_FORMAT = "%d |cff20ff20+ %d|r / %d";
 local PROFESIONS_LABEL_FORMAT = "%s - %s"
 local PROFESIONS_INDICES_MAP = {}
 
@@ -34,9 +34,9 @@ function Professions:IterableProfessionInfo()
                 end
 
                 if rankModifier > 0 then
-                    skillRankString = PROFESIONS_RANK_WITH_MODIFIER:format(rank, rankModifier, maxRank)
+                    skillRankString = PROFESIONS_RANK_WITH_MODIFIER_FORMAT:format(rank, rankModifier, maxRank)
                 else
-                    skillRankString = PROFESIONS_RANK:format(rank, maxRank)
+                    skillRankString = PROFESIONS_RANK_FORMAT:format(rank, maxRank)
                 end
 
                 return PROFESIONS_LABEL_FORMAT:format(name, skillTitle), texture, skillRankString

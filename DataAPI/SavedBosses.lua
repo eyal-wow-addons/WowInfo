@@ -1,9 +1,9 @@
 local _, addon = ...
+local L = addon.L
 local SavedBosses = addon:NewObject("SavedBosses")
 
 local INSTANCE_NAME_FORMAT = "%s (%s)"
 local INSTANCE_PROGRESS_FORMAT = "|cffff0000%d|r / |cff00ff00%d|r"
-local INSTANCE_PROGRESS_CLEARED_STATUS = "Cleared"
 
 function SavedBosses:IterableInstanceInfo()
     RequestRaidInfo()
@@ -19,7 +19,7 @@ function SavedBosses:IterableInstanceInfo()
                 if defeatedBosses < maxBosses then
                     return instanceNameString, false, INSTANCE_PROGRESS_FORMAT:format(defeatedBosses, maxBosses)
                 else
-                    return instanceNameString, true, INSTANCE_PROGRESS_CLEARED_STATUS
+                    return instanceNameString, true, L["Cleared"]
                 end
             end
 

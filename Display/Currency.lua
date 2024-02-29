@@ -1,21 +1,18 @@
 local _, addon = ...
+local L = addon.L
 local Display = addon:NewDisplay("Currency")
 local Currency = addon.Currency
 
 local CURRENCY_ITEM_FORMAT = "|T%s:0|t %s"
-local CURRENCY_SEASON_FORMAT = "%s |cffffffff(%s)"
 local CURRENCY_MAX_FORMAT = "%s |cffffffff/ %s|r"
-
-local CHARACTERS_CURRENCY_LABEL = "Additional Characters:"
-local CHARACTERS_CURRENCY_FORMAT = "%s: |cffffffff%d|r"
+local CURRENCY_QUANTITY_PER_CHARACTER_FORMAT = "%s: |cffffffff%d|r"
 
 local function AddCurrencyInfo(iterator)
     local refreshTooltip
     for name, isHeader, icon, quantity, maxQuantity in iterator() do
         refreshTooltip = true
         if isHeader then
-            Display:AddEmptyLine()
-            Display:AddHighlightLine(("%s Currency:"):format(name))
+            Display:AddTitleLine(L["S Currency:"]:format(name))
         else
             local leftText = CURRENCY_ITEM_FORMAT:format(icon, name)
             local rightText = BreakUpLargeNumbers(quantity)
@@ -66,11 +63,10 @@ hooksecurefunc(GameTooltip, "SetCurrencyToken", function(_, index)
         local isLabelAdded
         for charDisplayName, quantity in Currency:IterableCharactersCurrencyInfoByCurrencyID(currencyID) do
             if not isLabelAdded then
-                Display:AddEmptyLine()
-                Display:AddHighlightLine(CHARACTERS_CURRENCY_LABEL)
+                Display:AddTitleLine(L["Additional Characters:"])
                 isLabelAdded = true
             end
-            Display:AddLine(CHARACTERS_CURRENCY_FORMAT:format(charDisplayName, quantity))
+            Display:AddLine(CURRENCY_QUANTITY_PER_CHARACTER_FORMAT:format(charDisplayName, quantity))
         end
         Display:Show()
     end

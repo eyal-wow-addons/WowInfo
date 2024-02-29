@@ -1,8 +1,7 @@
 local _, addon = ...
+local L = addon.L
 local Display = addon:NewDisplay("Spellbook")
 local Professions = addon.Professions
-
-local PROFESIONS_LABEL = TRADE_SKILLS .. ":"
 
 local itemTextureSettings = {
     width = 20,
@@ -16,8 +15,7 @@ Display:RegisterHookScript(SpellbookMicroButton, "OnEnter", function()
 
     for nameString, icon, progressString in Professions:IterableProfessionInfo() do
         if not isLabelAdded then
-            Display:AddEmptyLine()
-            Display:AddHighlightLine(PROFESIONS_LABEL)
+            Display:AddTitleLine(L["Professions:"])
             isLabelAdded = true
         end
         Display:AddRightHighlightDoubleLine(nameString, progressString)

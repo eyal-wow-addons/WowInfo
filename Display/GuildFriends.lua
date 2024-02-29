@@ -1,19 +1,15 @@
 local _, addon = ...
+local L = addon.L
 local Display = addon:NewDisplay("GuildFriends")
 local Guild = addon.Guild
-
-local GUILD_MEMBERS_LABEL_FORMAT = "|cff20ff20%d|r Members |cff20ff20%d|r Online"
-local GUILD_TOTAL_FRIENDS_LABEL_FORMAT = "Guild Friends (%d):"
 
 Display:RegisterHookScript(GuildMicroButton, "OnEnter", function()
     local numTotalGuildMembers, numOnlineGuildMembers = Guild:GetNumGuildMembers()
     if numTotalGuildMembers > 0 then
-        Display:AddEmptyLine()
-        Display:AddHighlightLine(GUILD_MEMBERS_LABEL_FORMAT:format(numTotalGuildMembers, numOnlineGuildMembers))
+        Display:AddTitleLine(L["X Members Y Online"]:format(numTotalGuildMembers, numOnlineGuildMembers))
         local totalOnlineGuildFriends = Guild:GetTotalOnlineFriends()
         if totalOnlineGuildFriends > 0 then
-            Display:AddEmptyLine()
-            Display:AddHighlightLine(GUILD_TOTAL_FRIENDS_LABEL_FORMAT:format(totalOnlineGuildFriends))
+            Display:AddTitleLine(L["Guild Friends (X):"]:format(totalOnlineGuildFriends))
             for nameString, zoneString in Guild:IterableOnlineFriendsInfo() do
                 if zoneString then
                     Display:AddDoubleLine(nameString, zoneString)

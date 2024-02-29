@@ -1,4 +1,5 @@
 local _, addon = ...
+local L = addon.L
 local Timer = addon.Timer
 local Speedometer = addon:NewObject("Speedometer")
 
@@ -14,7 +15,7 @@ local function FormatSpeed(currentSpeed, status)
     if status and currentSpeed == 0 then
         return status
     elseif status then
-        return format("%s at %d%%", status, speedPercentage)
+        return format(L["S at X%"], status, speedPercentage)
     else
         return format("%d%%", speedPercentage)
     end
@@ -25,7 +26,7 @@ local function StartedMoving()
 end
 
 local function StoppedMoving()
-    Speedometer:TriggerEvent("SPEEDOMETER_PLAYER_STOPPED_MOVING", "Standing")
+    Speedometer:TriggerEvent("SPEEDOMETER_PLAYER_STOPPED_MOVING", L["Standing"])
 end
 
 function Speedometer:OnBeforeConfig()
@@ -75,15 +76,15 @@ function Speedometer:GetFormattedCurrentSpeed()
     local currentSpeed, isGliding = self:GetCurrentSpeed()
 
     if isGliding then
-        status = "Glide"
+        status = L["Glide"] 
     elseif IsFlying() then
-        status = "Fly"
+        status = L["Fly"]
     elseif IsSwimming() then
-        status = "Swim"
+        status = L["Swim"]
     elseif IsPlayerMoving() and currentSpeed == 0 then
-        status = "Moving"
+        status = L["Moving"]
     elseif IsPlayerMoving() then
-        status = "Move"
+        status = L["Move"]
     end
 
     return FormatSpeed(currentSpeed, status)

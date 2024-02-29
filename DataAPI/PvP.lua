@@ -8,7 +8,6 @@ local SEASON_STATE_PRESEASON = 2
 local SEASON_STATE_ACTIVE = 3
 local SEASON_STATE_DISABLED = 4
 
-local HONOR_LEVEL_LABEL = HONOR_LEVEL_LABEL:gsub("%%d", "|cff00ff00%%d|r")
 local STANDING_FORMAT = "%s / %s"
 local RATED_PVP_LABEL_FORMAT = "%s: |cff00ff00%d|r"
 local RATED_PVP_WEEKLY_STATUS_FORMAT = "%d (|cff00ff00%d|r + |cffff0000%d|r)"
@@ -56,10 +55,10 @@ function PvP:GetPlayerProgressInfo(isActiveSeason, isOffSeason)
     
     if isActiveSeason or isOffSeason then
         local currencyInfo = C_CurrencyInfo.GetCurrencyInfo(Constants.CurrencyConsts.CONQUEST_CURRENCY_ID)
-        return HONOR_LEVEL_LABEL:format(honorLevel), STANDING_FORMAT:format(currentHonor, maxHonor), STANDING_FORMAT:format(currencyInfo.totalEarned, currencyInfo.maxQuantity)
+        return honorLevel, STANDING_FORMAT:format(currentHonor, maxHonor), STANDING_FORMAT:format(currencyInfo.totalEarned, currencyInfo.maxQuantity)
     end
 
-    return HONOR_LEVEL_LABEL:format(honorLevel), STANDING_FORMAT:format(currentHonor, maxHonor)
+    return honorLevel, STANDING_FORMAT:format(currentHonor, maxHonor)
 end
 
 local function GetSeasonTierInfo(bracketTierID)

@@ -1,4 +1,5 @@
 local _, addon = ...
+local L = addon.L
 local Friends = addon:NewObject("Friends")
 
 Friends.GetNumFriends = C_FriendList.GetNumFriends
@@ -10,7 +11,7 @@ local FRIENDS_WOW_LABEL_FORMAT = "%s%s %d %s"
 
 local FRIENDS_BNET_CLIENT_LABEL_FORMAT = "%s |cffffffff(|r|c%s%s|r%s |c%s%d|r|cffffffff)|r %s"
 local FRIENDS_BNET_CLIENT_OTHER_LABEL_FORMAT = "%s |cffffffff(|r%s|cffffffff)|r"
-local FRIENDS_BNET_STATUS_TABLE = {"|cffff0000<AFK>|r", "|cffff0000<DND>|r", ""}
+local FRIENDS_BNET_STATUS_TABLE = {L["AFK"], L["DND"], ""}
 local FRIENDS_BNET_NO_CLASS_COLOR = "ffffffff"
 
 local FRIENDS_ACTIVE_ZONE_COLOR = CreateColor(0.3, 1.0, 0.3)

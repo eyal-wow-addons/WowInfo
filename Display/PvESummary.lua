@@ -1,12 +1,10 @@
 local _, addon = ...
+local L = addon.L
 local Display = addon:NewDisplay("PvESummary")
 local SavedBosses = addon.SavedBosses
 
-local PVE_SUMMARY_LABEL = "Dungeons & Raids:"
-
 Display:RegisterHookScript(LFDMicroButton, "OnEnter", function()
-    Display:AddEmptyLine()
-    Display:AddHighlightLine(PVE_SUMMARY_LABEL)
+    Display:AddTitleLine(L["Dungeons & Raids:"])
 
     local isSaved
 
@@ -20,12 +18,12 @@ Display:RegisterHookScript(LFDMicroButton, "OnEnter", function()
     end
 
     for bossName in SavedBosses:IterableWorldBossInfo() do
-        Display:AddDoubleLine(bossName, BOSS_DEAD, nil, nil, nil, RED_FONT_COLOR:GetRGB())
+        Display:AddDoubleLine(bossName, L["Defeated"], nil, nil, nil, RED_FONT_COLOR:GetRGB())
         isSaved = true
     end
 
     if not isSaved then
-        Display:AddLine(NO_RAID_INSTANCES_SAVED)
+        Display:AddLine(L["You are not saved to any instances."])
     end
 
     Display:Show()

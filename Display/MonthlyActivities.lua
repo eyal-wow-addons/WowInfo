@@ -1,9 +1,7 @@
 local _, addon = ...
+local L = addon.L
 local Display = addon:NewDisplay("MonthlyActivities")
 local EncounterJournal = addon.EncounterJournal
-
-local MONTHLY_ACTIVITIES_LABEL = MONTHLY_ACTIVITIES_TAB .. ":"
-local MONTHLY_ACTIVITIES_PROGRESSED = MONTHLY_ACTIVITIES_PROGRESSED .. ":"
 
 local itemTextureSettings = {
     width = 20,
@@ -21,7 +19,7 @@ Display:RegisterHookScript(EJMicroButton, "OnEnter", function(self)
                 local itemName = itemReward:GetItemName()
                 local itemColor = itemReward:GetItemQualityColor() or HIGHLIGHT_FONT_COLOR
                 if itemName then
-                    Display:AddHighlightLine(MONTHLY_ACTIVITIES_PROGRESSED)
+                    Display:AddHighlightLine(L["Traveler's Log Progress:"])
                     Display:AddRightHighlightDoubleLine(itemName, thresholdProgressString, itemColor.r, itemColor.g, itemColor.b)
                     Display:AddTexture(itemReward:GetItemIcon(), itemTextureSettings)
                     Display:Show()
@@ -29,8 +27,7 @@ Display:RegisterHookScript(EJMicroButton, "OnEnter", function(self)
             end
         end
         
-        Display:AddEmptyLine()
-        Display:AddHighlightDoubleLine(MONTHLY_ACTIVITIES_LABEL, monthString)
+        Display:AddTitleDoubleLine(L["Traveler's Log:"], monthString)
         Display:AddEmptyLine()
         Display:AddHighlightDoubleLine(" ", timeString)
         Display:AddEmptyLine()
@@ -38,12 +35,12 @@ Display:RegisterHookScript(EJMicroButton, "OnEnter", function(self)
         if itemReward then
             itemReward:ContinueWithCancelOnItemLoad(Display.itemDataLoadedCancelFunc)
         else
-            Display:AddRightHighlightDoubleLine(MONTHLY_ACTIVITIES_POINTS, thresholdProgressString)
+            Display:AddRightHighlightDoubleLine(L["Travel Points"], thresholdProgressString)
         end
 
         if pendingReward then
             Display:AddEmptyLine()
-            Display:AddHighlightLine(MONTHLY_ACTIVITIES_THRESHOLD_TOOLTIP_PENDING)
+            Display:AddHighlightLine(L["Collect your reward in the Collector's Cache at the Trading Post"])
         end
 
         Display:Show()

@@ -1,35 +1,32 @@
 local _, addon = ...
+local L = addon.L
 local Display = addon:NewDisplay("Collections")
 local Collections = addon.Collections
 local Achievements = addon.Achievements
 
 Display:RegisterHookScript(CollectionsMicroButton, "OnEnter", function()
-    Display:AddEmptyLine()
-
-    local totalMountsString = Collections:GetTotalMountsString()
-    if totalMountsString  then
+    local totalMounts = Collections:GetTotalMounts()
+    if totalMounts  then
         local achievementString = Achievements:GetMountAchievementString()
-        Display:AddHighlightLine(totalMountsString)
+        Display:AddTitleLine(L["Mounts: X"]:format(totalMounts))
         if achievementString then
             Display:AddLine(achievementString)
         end
     end
 
-    local totalPetsString = Collections:GetTotalPetsString()
-    if totalPetsString then
+    local totalPets = Collections:GetTotalPets()
+    if totalPets then
         local achievementString = Achievements:GetPetsAchievementString()
-        Display:AddEmptyLine()
-        Display:AddHighlightLine(totalPetsString)
+        Display:AddTitleLine(L["Pets: X"]:format(totalPets))
         if achievementString then
             Display:AddLine(achievementString)
         end
     end
 
-    local totalToysString = Collections:GetTotalToysString()
-    if totalToysString then
+    local totalLearnedToys, totalToys = Collections:GetTotalToys()
+    if totalLearnedToys then
         local achievementString = Achievements:GetToysAchievementString()
-        Display:AddEmptyLine()
-        Display:AddHighlightLine(totalToysString)
+        Display:AddTitleLine(L["Toys: X / Y"]:format(totalLearnedToys, totalToys))
         if achievementString then
             Display:AddLine(achievementString)
         end

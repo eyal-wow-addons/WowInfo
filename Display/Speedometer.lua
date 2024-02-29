@@ -1,4 +1,5 @@
 local _, addon = ...
+local L = addon.L
 local LDB = LibStub("LibDataBroker-1.1")
 local Speedometer = addon.Speedometer
 
@@ -24,7 +25,7 @@ local function UpdateTextWhenStoppedMoving(_, _, status)
         Minimap_Update()
     end
     if UnitOnTaxi("player") then
-        status = "Taxi"
+        status = L["Taxi"]
     end
     dataobj.text = status
 end
