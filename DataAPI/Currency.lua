@@ -67,12 +67,17 @@ end
 function Currency:IterableCharactersCurrencyInfoByCurrencyID(currencyID)
     local charDisplayName
     local charName, data
+    local hasAltCurrency = false
     return function()
         charName, data = Currency.storage:GetCharacterCurrencyInfo(charName)
         while charName do
             if Character:IsOnCurrentRealm(charName) or Character:IsOnConnectedRealm(charName) then
                 for id, quantity in pairs(data) do
                     if id == currencyID then
+                        if not hasAltCurrency then
+                            Currency:TriggerEvent("CURRENCY_SHOW_ALT_CURRENCY_QUANTITY")
+                            hasAltCurrency = true
+                        end
                         charDisplayName = charName
                         if Character:IsOnConnectedRealm(charName) then
                             charDisplayName = Character:ShortConnectedRealm(charDisplayName)

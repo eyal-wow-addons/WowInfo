@@ -21,6 +21,9 @@ end
 function Realm:IterableConnectedRealms()
     local i = 0
     local n = #realms
+    if n > 0 then
+        self:TriggerEvent("REALM_SHOW_CONNECTED_REALMS")
+    end
     return function ()
         i = i + 1
         if i <= n then

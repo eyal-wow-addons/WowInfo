@@ -82,12 +82,17 @@ end
 function Reputation:IterableTrackedFactions()
     local i = 0
     local n = GetNumFactions()
+    local hasTrackedFactions = false
     return function()
         i = i + 1
         while i <= n do
             local factionID = GetFactionID(i)
             local factionName, standing, isCapped, repValue, repMax, hasParagonRewardPending = GetFactionDisplayInfoByID(factionID)
             if Reputation.storage:HasFactionsTracked() and Reputation.storage:IsSelectedFaction(factionID) or (Reputation.storage:GetAlwaysShowParagon() and hasParagonRewardPending) then
+                if not hasTrackedFactions then
+                    Reputation:TriggerEvent("REPUTATION_SHOW_TRACKED_FACTIONS_PROGRESS")
+                    hasTrackedFactions = true
+                end
                 return factionName, standing, isCapped, STANDING_PROGRESS_FORMAT:format(repValue, repMax)
             end
             i = i + 1

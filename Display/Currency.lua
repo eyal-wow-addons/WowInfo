@@ -56,16 +56,15 @@ Display:RegisterHookScript(CharacterMicroButton, "OnEnter", function()
     end
 end)
 
+Currency:RegisterEvent("CURRENCY_SHOW_ALT_CURRENCY_QUANTITY", function()
+    Display:AddTitleLine(L["Additional Characters:"], true)
+end)
+
 hooksecurefunc(GameTooltip, "SetCurrencyToken", function(_, index)
     local link = C_CurrencyInfo.GetCurrencyListLink(index)
     local currencyID = link and C_CurrencyInfo.GetCurrencyIDFromLink(link)
     if currencyID then
-        local isLabelAdded
         for charDisplayName, quantity in Currency:IterableCharactersCurrencyInfoByCurrencyID(currencyID) do
-            if not isLabelAdded then
-                Display:AddTitleLine(L["Additional Characters:"])
-                isLabelAdded = true
-            end
             Display:AddLine(CURRENCY_QUANTITY_PER_CHARACTER_FORMAT:format(charDisplayName, quantity))
         end
         Display:Show()

@@ -10,14 +10,12 @@ local itemTextureSettings = {
     margin = { right = 5, bottom = 5 },
 }
 
-Display:RegisterHookScript(SpellbookMicroButton, "OnEnter", function()
-    local isLabelAdded
+Professions:RegisterEvent("PROFESSIONS_SHOW_PROGRESS", function()
+    Display:AddTitleLine(L["Professions:"], true)
+end)
 
+Display:RegisterHookScript(SpellbookMicroButton, "OnEnter", function()
     for nameString, icon, progressString in Professions:IterableProfessionInfo() do
-        if not isLabelAdded then
-            Display:AddTitleLine(L["Professions:"])
-            isLabelAdded = true
-        end
         Display:AddRightHighlightDoubleLine(nameString, progressString)
         Display:AddTexture(icon, itemTextureSettings)
     end

@@ -15,11 +15,17 @@ function Professions:IterableProfessionInfo()
     PROFESIONS_INDICES_MAP[5] = cook or -1
     local i = 0
     local n = #PROFESIONS_INDICES_MAP
+    local hasProfessions = false
     return function()
         i = i + 1
         while i <= n do
             local index = PROFESIONS_INDICES_MAP[i]
             if index > -1 then
+                if not hasProfessions then
+                    Professions:TriggerEvent("PROFESSIONS_SHOW_PROGRESS")
+                    hasProfessions = true
+                end
+
                 local skillTitle, skillRankString
                 local name, texture, rank, maxRank, _, _, _, rankModifier, _, _, skillLineName = GetProfessionInfo(index)
 

@@ -3,14 +3,12 @@ local L = addon.L
 local Display = addon:NewDisplay("ConnectedRealms")
 local Realm = addon.Realm
 
+Realm:RegisterEvent("REALM_SHOW_CONNECTED_REALMS", function()
+    Display:AddTitleLine(L["Connected Realms:"], true)
+end)
+
 hooksecurefunc("MainMenuBarPerformanceBarFrame_OnEnter", function()
-    local isLabelAdded
-    
     for isPlayerRealm, realm in Realm:IterableConnectedRealms() do
-        if not isLabelAdded then
-            Display:AddTitleLine(L["Connected Realms:"])
-            isLabelAdded = true
-        end
         if isPlayerRealm then
             realm = GetClassColoredTextForUnit("player", realm)
         end
