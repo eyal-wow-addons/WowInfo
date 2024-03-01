@@ -9,6 +9,7 @@ local SEASON_STATE_ACTIVE = 3
 local SEASON_STATE_DISABLED = 4
 
 local STANDING_FORMAT = "%s / %s"
+local CONQUEST_PROGRESS_FORMAT = "%s (%s)"
 local RATED_PVP_LABEL_FORMAT = "%s: |cff00ff00%d|r"
 local RATED_PVP_WEEKLY_STATUS_FORMAT = "%d (|cff00ff00%d|r + |cffff0000%d|r)"
 
@@ -52,10 +53,32 @@ function PvP:GetPlayerProgressInfo(isActiveSeason, isOffSeason)
     local currentHonor = UnitHonor("player")
     local maxHonor = UnitHonorMax("player")
     local honorLevel = UnitHonorLevel("player")
-    
+
     if isActiveSeason or isOffSeason then
         local currencyInfo = C_CurrencyInfo.GetCurrencyInfo(Constants.CurrencyConsts.CONQUEST_CURRENCY_ID)
-        return honorLevel, STANDING_FORMAT:format(currentHonor, maxHonor), STANDING_FORMAT:format(currencyInfo.totalEarned, currencyInfo.maxQuantity)
+
+        local totalEarned = currencyInfo.totalEarned
+        local maxProgress = currencyInfo.maxQuantity
+		local progress = math.min(totalEarned, maxProgress)
+        local conquestStandingString
+
+        local weeklyProgress = C_WeeklyRewards.GetConquestWeeklyProgress()
+	    local displayType = weeklyProgress.displayType
+        local isAtMax = progress >= maxProgress
+
+        if not isAtMax then
+            conquestStandingString = STANDING_FORMAT:format(progress, maxProgress)
+            if displayType == Enum.ConquestProgressBarDisplayType.Seasonal then
+                conquestStandingString = YELLOW_FONT_COLOR:WrapTextInColorCode(conquestStandingString)
+            else
+                conquestStandingString = BLUE_FONT_COLOR:WrapTextInColorCode(conquestStandingString)
+            end
+            conquestStandingString = CONQUEST_PROGRESS_FORMAT:format(totalEarned, conquestStandingString)
+        else
+            conquestStandingString = GRAY_FONT_COLOR:WrapTextInColorCode(totalEarned)
+        end
+
+        return honorLevel, STANDING_FORMAT:format(currentHonor, maxHonor), conquestStandingString
     end
 
     return honorLevel, STANDING_FORMAT:format(currentHonor, maxHonor)
