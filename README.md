@@ -4,7 +4,7 @@ WowInfo is a comprehensive World of Warcraft addon designed to enhance your gami
 
 To access the addon options, you can use any of the following commands: `/wi`, `/wowi`, or `/wowinfo`.
 
-![Options](Screenshots/Options.png)
+![Options](Screenshots/OptionsMoney.png)
 
 ## Character Info Tooltip
 
@@ -22,6 +22,12 @@ Hover over the `Character Info` button to view essential character details:
 Hover over the `Spellbook` button to see a summary of your professions.
 
 ![Spellbook](Screenshots/SpellbookMicroButton.png)
+
+## Specialization & Talents
+
+Hover over the `Specialization & Talents` button to see the spec, loadouts and PvP talents. 
+
+![Specialization & Talents](Screenshots/TalentMicroButton.png)
 
 ## Achievements Tooltip
 
@@ -97,15 +103,15 @@ Hover over `Social` to see friends' status (online, AFK, or DND).
 
 ## Currency Tab
 
-Hover over a currency token in the `Currency Tab` to see the amount for characters that have it available.
+Hover over a currency token in the `Currency Tab` to see the quantity of your alts. 
 
-![Currency](Screenshots/Currency.png)
+![Alt Currency](Screenshots/AltCurrency.png)
 
 ## Minimap
 
 Displays player speed and status on the `Minimap` zone text when the character moves.
 
-![Minimap](Screenshots/Minimap2.png)
+![Minimap](Screenshots/Minimap.png)
 
 # Side Notes
 
