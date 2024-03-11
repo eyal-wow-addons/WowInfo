@@ -3,7 +3,7 @@ local L = {}
 addon.L = L
 
 L["AFK"] = "|cffff0000<AFK>|r"
-L["Additional Characters:"] = "Additional Characters:"
+L["All Characters (X):"] = "All Characters (%d):"
 L["Bags"] = "Bags"
 L["Battle.net (X):"] = "Battle.net (%d):"
 L["Campaign Progress: X/Y Chapters"] = "|cffffd200Campaign Progress|n|cffffffff%1$d/%2$d Chapters|r|n|n"
