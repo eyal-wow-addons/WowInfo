@@ -1,11 +1,11 @@
 local _, addon = ...
 local L = addon.L
-local SavedBosses = addon:NewObject("SavedBosses")
+local PvE = addon:NewObject("PvE")
 
 local INSTANCE_NAME_FORMAT = "%s (%s)"
 local INSTANCE_PROGRESS_FORMAT = "|cffff0000%d|r / |cff00ff00%d|r"
 
-function SavedBosses:IterableInstanceInfo()
+function PvE:IterableInstanceInfo()
     RequestRaidInfo()
     local i = 0
     local n = GetNumSavedInstances()
@@ -28,7 +28,7 @@ function SavedBosses:IterableInstanceInfo()
     end
 end
 
-function SavedBosses:IterableWorldBossInfo()
+function PvE:IterableSavedWorldBossInfo()
     local i = 0
     local n = GetNumSavedWorldBosses()
     return function()

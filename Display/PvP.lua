@@ -1,6 +1,6 @@
 local _, addon = ...
 local L = addon.L
-local Display = addon:NewDisplay("PvPSummary")
+local Display = addon:NewDisplay("PvP")
 local PvP = addon.PvP
 
 local PVP_RATED_NEXT_RANK = "%s > %s"

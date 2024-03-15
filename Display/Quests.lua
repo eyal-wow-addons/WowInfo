@@ -1,6 +1,6 @@
 local _, addon = ...
 local L = addon.L
-local Display = addon:NewDisplay("QuestLog")
+local Display = addon:NewDisplay("Quests")
 local Quests = addon.Quests
 
 local function AddCampaign(id, title, isCompleted, progressString, chaptersIterator, ...)

@@ -45,10 +45,10 @@ DataAPI\Friends.lua
 DataAPI\Guild.lua
 DataAPI\Money.lua
 DataAPI\Professions.lua
+DataAPI\PvE.lua
 DataAPI\PvP.lua
 DataAPI\Quests.lua
 DataAPI\Reputation.lua
-DataAPI\SavedBosses.lua
 DataAPI\Speedometer.lua
 DataAPI\Talents.lua
 DataAPI\WeeklyRewards.lua
@@ -65,9 +65,9 @@ Display\Friends.lua
 Display\GuildFriends.lua
 Display\Money.lua
 Display\MonthlyActivities.lua
-Display\PvESummary.lua
-Display\PvPSummary.lua
-Display\QuestLog.lua
+Display\PvE.lua
+Display\PvP.lua
+Display\Quests.lua
 Display\Reputation.lua
 Display\Speedometer.lua
 Display\Spellbook.lua
