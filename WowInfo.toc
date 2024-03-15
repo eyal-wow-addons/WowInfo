@@ -57,6 +57,7 @@ Display\Achievements.lua
 Display\Collections.lua
 Display\ConnectedRealms.lua
 Display\Currency.lua
+Display\CurrencyTracker.lua
 Display\GreatVaultProgress.lua
 Display\DailyReset.lua
 Display\Durability.lua
