@@ -21,8 +21,7 @@ Display:RegisterHookScript(TalentMicroButton, "OnEnter", function()
     local spec = Talents:GetSpecString()
 
     if spec then
-        Display:AddEmptyLine()
-        Display:AddHighlightLine(L["Specialization: S"]:format(spec))
+        Display:AddTitleLine(L["Specialization: S"]:format(spec))
     end
 
     local starterBuildName, isStarterBuildActive = Talents:GetStarterBuildInfo()
