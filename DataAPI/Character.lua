@@ -31,8 +31,8 @@ function Character:IsOnCurrentRealm(name)
     return name:find(self:GetRealm())
 end
 
-function Character:IsOnConnectedRealm(name)
-    return addon.Realm:IsRealmConnectedRealm(name:match(REALM_PATTERN))
+function Character:IsOnConnectedRealm(name, includeOwn)
+    return addon.Realm:IsRealmConnectedRealm(name:match(REALM_PATTERN), includeOwn)
 end
 
 function Character:RemoveRealm(name)

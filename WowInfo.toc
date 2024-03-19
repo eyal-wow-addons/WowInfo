@@ -55,7 +55,6 @@ DataAPI\WeeklyRewards.lua
 
 Display\Achievements.lua
 Display\Collections.lua
-Display\ConnectedRealms.lua
 Display\Currency.lua
 Display\CurrencyTracker.lua
 Display\GreatVaultProgress.lua
@@ -69,6 +68,7 @@ Display\MonthlyActivities.lua
 Display\PvE.lua
 Display\PvP.lua
 Display\Quests.lua
+Display\Realms.lua
 Display\Reputation.lua
 Display\Speedometer.lua
 Display\Spellbook.lua
