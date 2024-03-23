@@ -5,8 +5,11 @@ local PvE = addon:NewObject("PvE")
 local INSTANCE_NAME_FORMAT = "%s (%s)"
 local INSTANCE_PROGRESS_FORMAT = "|cffff0000%d|r / |cff00ff00%d|r"
 
-function PvE:IterableInstanceInfo()
+PvE:RegisterEvent("PLAYER_LOGIN", function()
     RequestRaidInfo()
+end)
+
+function PvE:IterableInstanceInfo()
     local i = 0
     local n = GetNumSavedInstances()
     return function()
