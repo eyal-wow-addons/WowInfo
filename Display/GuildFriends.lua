@@ -3,7 +3,11 @@ local L = addon.L
 local Display = addon:NewDisplay("GuildFriends")
 local Guild = addon.Guild
 
-Display:RegisterHookScript(GuildMicroButton, "OnEnter", function()
+Display:RegisterHookScript(GuildMicroButton, "OnEnter", function(self)
+    if not self:IsEnabled() then
+        return
+    end
+    
     local numTotalGuildMembers, numOnlineGuildMembers = Guild:GetNumGuildMembers()
     if numTotalGuildMembers > 0 then
         Display:AddTitleLine(L["X Members Y Online"]:format(numTotalGuildMembers, numOnlineGuildMembers))

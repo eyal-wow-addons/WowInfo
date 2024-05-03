@@ -3,7 +3,11 @@ local L = addon.L
 local Display = addon:NewDisplay("PvE")
 local PvE = addon.PvE
 
-Display:RegisterHookScript(LFDMicroButton, "OnEnter", function()
+Display:RegisterHookScript(LFDMicroButton, "OnEnter", function(self)
+    if not self:IsEnabled() then
+        return
+    end
+
     Display:AddTitleLine(L["Dungeons & Raids:"])
 
     local isSaved

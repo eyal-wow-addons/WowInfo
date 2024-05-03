@@ -4,6 +4,10 @@ local Display = addon:NewDisplay("Achievements")
 local Achievements = addon.Achievements
 
 Display:RegisterHookScript(AchievementMicroButton, "OnEnter", function(self)
+    if not self:IsEnabled() then
+        return
+    end
+
     -- NOTE: Makes sure 'tooltipText' is never nil, otherwise, the tooltip wouldn't show up.
     self.tooltipText = MicroButtonTooltipText(ACHIEVEMENT_BUTTON, "TOGGLEACHIEVEMENT")
 

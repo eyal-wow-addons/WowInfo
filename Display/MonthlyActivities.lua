@@ -4,6 +4,10 @@ local Display = addon:NewDisplay("MonthlyActivities")
 local EncounterJournal = addon.EncounterJournal
 
 Display:RegisterHookScript(EJMicroButton, "OnEnter", function(self)
+    if not self:IsEnabled() then
+        return
+    end
+
     local thresholdProgressString, itemReward, pendingReward, monthString, timeString = EncounterJournal:GetMonthlyActivitiesInfo()
 
     if thresholdProgressString then

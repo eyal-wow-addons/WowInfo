@@ -5,7 +5,11 @@ local PvP = addon.PvP
 
 local PVP_RATED_NEXT_RANK = "%s > %s"
 
-Display:RegisterHookScript(LFDMicroButton, "OnEnter", function()
+Display:RegisterHookScript(LFDMicroButton, "OnEnter", function(self)
+    if not self:IsEnabled() then
+        return
+    end
+
     Display:AddTitleLine(L["PvP Progress:"])
 
     local isActiveSeason, isOffSeason, isPreseason = PvP:GetRatedPvPSeasonStateInfo()
