@@ -2,14 +2,16 @@ local _, addon = ...
 local L = addon.L
 local Display = addon:NewDisplay("Achievements")
 local Achievements = addon.Achievements
+local MicroMenu = addon.MicroMenu
 
 Display:RegisterHookScript(AchievementMicroButton, "OnEnter", function(self)
     if not self:IsEnabled() then
         return
     end
 
-    -- NOTE: Makes sure 'tooltipText' is never nil, otherwise, the tooltip wouldn't show up.
-    self.tooltipText = MicroButtonTooltipText(ACHIEVEMENT_BUTTON, "TOGGLEACHIEVEMENT")
+    if MicroMenu:SetButtonTooltip(self, ACHIEVEMENT_BUTTON, "TOGGLEACHIEVEMENT") then
+        return
+    end
 
     Display:AddTitleLine(L["Summary:"])
     Display:AddRightHighlightDoubleLine(Achievements:GetSummaryProgressString())
@@ -31,4 +33,3 @@ Display:RegisterHookScript(AchievementMicroButton, "OnEnter", function(self)
 
     Display:Show()
 end)
-

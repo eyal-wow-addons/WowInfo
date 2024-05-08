@@ -19,6 +19,7 @@ Libs\AceDB-3.0\AceDB-3.0.xml
 
 Core\Constants.lua
 Core\Addon.lua
+Core\MicroMenu.lua
 Core\WidgetUtils.lua
 Core\Timer.lua
 Core\Tooltip.lua
