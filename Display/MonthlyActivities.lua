@@ -37,7 +37,7 @@ Display:RegisterHookScript(EJMicroButton, "OnEnter", function(self)
 
         if pendingReward then
             Display:AddEmptyLine()
-            Display:AddHighlightLine(L["Collect your reward in the Collector's Cache at the Trading Post"])
+            Display:AddGreenLine(L["Collect your reward in the Collector's Cache at the Trading Post."])
         end
 
         Display:Show()
