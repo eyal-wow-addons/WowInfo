@@ -7,8 +7,9 @@ local defaults = {
     }
 }
 
-local function GetFactionID(factionID)
-    return select(14, GetFactionInfoByID(factionID))
+local function GetFactionID(index)
+    local factionData = C_Reputation.GetFactionDataByIndex(index)
+    return factionData and factionData.factionID
 end
 
 function Storage:OnConfig()

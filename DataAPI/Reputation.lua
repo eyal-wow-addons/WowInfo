@@ -7,9 +7,9 @@ local STANDING_PROGRESS_FORMAT = "%s / %s"
 
 local function GetFactionDisplayInfoByID(factionID)
     if factionID then
-        local factionName = GetFactionInfoByID(factionID)
-        if factionName then
-            local _, _, standingID, repMin, repMax, repValue = GetFactionInfoByID(factionID)
+        local factionData = C_Reputation.GetFactionDataByID(factionID)
+        if factionData and factionData.name then
+            local factionName, standingID, repMin, repMax, repValue = factionData.name, factionData.reaction, factionData.currentReactionThreshold, factionData.nextReactionThreshold, factionData.currentStanding
             local repInfo = C_GossipInfo.GetFriendshipReputation(factionID)
             local isCapped
 
@@ -19,7 +19,7 @@ local function GetFactionDisplayInfoByID(factionID)
 
             local hasParagonRewardPending = false
 
-            if repInfo.friendshipFactionID > 0 then
+            if repInfo and repInfo.friendshipFactionID and repInfo.friendshipFactionID > 0 then
                 if repInfo.nextThreshold then
                     repMin, repMax, repValue = repInfo.reactionThreshold, repInfo.nextThreshold, repInfo.standing
                 else
@@ -76,12 +76,13 @@ local function GetFactionDisplayInfoByID(factionID)
 end
 
 local function GetFactionID(index)
-    return select(14, GetFactionInfo(index))
+    local factionData = C_Reputation.GetFactionDataByIndex(index)
+    return factionData.factionID
 end
 
 function Reputation:IterableTrackedFactions()
     local i = 0
-    local n = GetNumFactions()
+    local n = C_Reputation.GetNumFactions()
     local hasTrackedFactions = false
     return function()
         i = i + 1

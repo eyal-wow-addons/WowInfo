@@ -13,7 +13,7 @@ Talents:RegisterEvent("TALENTS_SHOW_PVP_TALENTS", function()
     Display:AddTitleLine(L["PvP Talents:"], true)
 end)
 
-Display:RegisterHookScript(TalentMicroButton, "OnEnter", function(self)
+Display:RegisterHookScript(PlayerSpellsMicroButton, "OnEnter", function(self)
     if not self:IsEnabled() then
         return
     end

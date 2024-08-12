@@ -6,6 +6,10 @@ local PROFESIONS_RANK_WITH_MODIFIER_FORMAT = "%d |cff20ff20+ %d|r / %d";
 local PROFESIONS_LABEL_FORMAT = "%s - %s"
 local PROFESIONS_INDICES_MAP = {}
 
+Professions:RegisterEvent("PLAYER_LOGIN", function()
+    ProfessionsBook_LoadUI()
+end)
+
 function Professions:IterableProfessionInfo()
     local prof1, prof2, arch, fish, cook = GetProfessions()
     PROFESIONS_INDICES_MAP[1] = prof1 or -1

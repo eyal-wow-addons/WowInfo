@@ -1,4 +1,4 @@
-## Interface: 100207
+## Interface: 110000
 
 ## Title: Wow|cff40a5f7Info|r
 ## Notes: Provides game and character information.
@@ -66,11 +66,11 @@ Display\Friends.lua
 Display\GuildFriends.lua
 Display\Money.lua
 Display\MonthlyActivities.lua
+Display\Professions.lua
 Display\PvE.lua
 Display\PvP.lua
 Display\Quests.lua
 Display\Realms.lua
 Display\Reputation.lua
 Display\Speedometer.lua
-Display\Spellbook.lua
 Display\Talents.lua

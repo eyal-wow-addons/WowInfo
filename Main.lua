@@ -24,8 +24,8 @@ function addon:OnInitialize()
     SlashCmdList["WOWINFO"] = function(input)
         if TryLoadAddOn("WowInfo_Options") then
             HideUIPanel(GameMenuFrame)
-            InterfaceOptionsFrame_OpenToCategory("WowInfo")
-            InterfaceOptionsFrame_OpenToCategory("WowInfo")
+            Settings.OpenToCategory("WowInfo")
+            Settings.OpenToCategory("WowInfo")
         end
     end
 end

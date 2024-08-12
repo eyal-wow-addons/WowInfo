@@ -7,7 +7,7 @@ Professions:RegisterEvent("PROFESSIONS_SHOW_PROGRESS", function()
     Display:AddTitleLine(L["Professions:"], true)
 end)
 
-Display:RegisterHookScript(SpellbookMicroButton, "OnEnter", function()
+Display:RegisterHookScript(ProfessionMicroButton, "OnEnter", function()
     for nameString, icon, progressString in Professions:IterableProfessionInfo() do
         Display:AddRightHighlightDoubleLine(nameString, progressString)
         Display:AddIcon(icon)
