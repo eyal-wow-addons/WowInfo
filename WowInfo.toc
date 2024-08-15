@@ -1,4 +1,4 @@
-## Interface: 110000
+## Interface: 110002
 
 ## Title: Wow|cff40a5f7Info|r
 ## Notes: Provides game and character information.
