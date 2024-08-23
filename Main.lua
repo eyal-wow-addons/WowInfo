@@ -1,4 +1,4 @@
-local addonName, addon = ...
+local addon = LibStub("Addon-1.0"):New(...)
 
 local ADDON_LOAD_FAILED = "<< %s >> " .. ADDON_LOAD_FAILED
 
