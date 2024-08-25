@@ -3,5 +3,5 @@ local Tooltip = LibStub("Tooltip-1.0")
 
 function addon:NewDisplay(name)
     local display = addon:NewObject(name .. "Display")
-    return display, Tooltip
+    return Tooltip:CreateProxy(display)
 end
