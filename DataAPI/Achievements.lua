@@ -1,11 +1,8 @@
 local _, addon = ...
 local Achievements = addon:NewObject("Achievements")
 
-local ACHIEVEMENTUI_SUMMARYCATEGORIES = {92, 96, 97, 95, 168, 169, 201, 155, 15117, 15246}
+local ACHIEVEMENTUI_SUMMARYCATEGORIES = {92, 96, 97, 15522, 95, 168, 169, 201, 155, 15117, 15246}
 local ACHIEVEMENTUI_GUILDSUMMARYCATEGORIES = {15088, 15077, 15078, 15079, 15080, 15089}
-
-local COLLECTIONS_LABEL_FORMAT = "- %s: |cffffffff%d|r / |cff20ff20%d|r"
-local PROGRESS_FORMAT = "%s / %s"
 
 -- I've checked Blizzard's code and it seems like GetNextAchievement returns completed as the 2nd return value
 -- however, it seems to returns nil for achievements I've completed with one faction but not the other,
@@ -64,10 +61,10 @@ end
 do
     local MOUNTS_BASE_ACHIEVEMENT_ID = 2143 -- Leading the Cavalry
 
-    function Achievements:GetMountAchievementString()
+    function Achievements:GetMountAchievementInfo()
         local achievementName, achievementCurrAmount, achievementReqAmount = FindAchievementInfo(MOUNTS_BASE_ACHIEVEMENT_ID)
         if achievementName then
-            return COLLECTIONS_LABEL_FORMAT:format(achievementName, achievementCurrAmount, achievementReqAmount)
+            return achievementName, achievementCurrAmount, achievementReqAmount
         end
         return nil
     end
@@ -76,10 +73,10 @@ end
 do
     local PETS_BASE_ACHIEVEMENT_ID = 1017 -- Can I Keep Him?
 
-    function Achievements:GetPetsAchievementString()
+    function Achievements:GetPetsAchievementInfo()
         local achievementName, achievementCurrAmount, achievementReqAmount = FindAchievementInfo(PETS_BASE_ACHIEVEMENT_ID)
         if achievementName then
-            return COLLECTIONS_LABEL_FORMAT:format(achievementName, achievementCurrAmount, achievementReqAmount)
+            return achievementName, achievementCurrAmount, achievementReqAmount
         end
         return nil
     end
@@ -88,18 +85,18 @@ end
 do
     local TOYBOX_BASE_ACHIEVEMENT_ID = 9670 -- Toying Around
 
-    function Achievements:GetToysAchievementString()
+    function Achievements:GetToysAchievementInfo()
         local achievementName, achievementCurrAmount, achievementReqAmount = FindAchievementInfo(TOYBOX_BASE_ACHIEVEMENT_ID)
         if achievementName then
-            return COLLECTIONS_LABEL_FORMAT:format(achievementName, achievementCurrAmount, achievementReqAmount)
+            return achievementName, achievementCurrAmount, achievementReqAmount
         end
         return nil
     end
 end
 
-function Achievements:GetSummaryProgressString(guildOnly)
+function Achievements:GetSummaryProgressInfo(guildOnly)
     local total, completed = GetNumCompletedAchievements(guildOnly)
-    return ACHIEVEMENTS_COMPLETED, PROGRESS_FORMAT:format(BreakUpLargeNumbers(completed), BreakUpLargeNumbers(total))
+    return BreakUpLargeNumbers(total), BreakUpLargeNumbers(completed)
 end
 
 function Achievements:IterableCategoriesSummaryInfo(guildOnly)
@@ -112,9 +109,7 @@ function Achievements:IterableCategoriesSummaryInfo(guildOnly)
             local categoryId = categories[i]
             local categoryName = GetCategoryInfo(categoryId)
             local total, completed = GetCategoryTotalNumAchievements(categoryId, guildOnly)
-            return categoryName, PROGRESS_FORMAT:format(BreakUpLargeNumbers(completed), BreakUpLargeNumbers(total))
+            return categoryName, BreakUpLargeNumbers(total), BreakUpLargeNumbers(completed)
         end
     end
 end
-
-
