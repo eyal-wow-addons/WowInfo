@@ -1,35 +1,35 @@
 local _, addon = ...
 local L = addon.L
+local Collections = addon:GetObject("Collections")
+local Achievements = addon:GetObject("Achievements")
 local Display = addon:NewDisplay("Collections")
-local Collections = addon.Collections
-local Achievements = addon.Achievements
+
+local COLLECTIONS_LABEL_FORMAT = "- %s: |cffffffff%d|r / |cff20ff20%d|r"
+
+function Display:AddAchievementLine(callback)
+    local name, currAmount, reqAmount = callback()
+    if name then
+        self:AddLine(COLLECTIONS_LABEL_FORMAT:format(name, currAmount, reqAmount))
+    end
+end
 
 Display:RegisterHookScript(CollectionsMicroButton, "OnEnter", function()
     local totalMounts = Collections:GetTotalMounts()
     if totalMounts  then
-        local achievementString = Achievements:GetMountAchievementString()
-        Display:AddTitleLine(L["Mounts: X"]:format(totalMounts))
-        if achievementString then
-            Display:AddLine(achievementString)
-        end
+        Display:AddHeader(L["Mounts: X"]:format(totalMounts))
+        Display:AddAchievementLine(Achievements.GetMountAchievementInfo)
     end
 
     local totalPets = Collections:GetTotalPets()
     if totalPets then
-        local achievementString = Achievements:GetPetsAchievementString()
-        Display:AddTitleLine(L["Pets: X"]:format(totalPets))
-        if achievementString then
-            Display:AddLine(achievementString)
-        end
+        Display:AddHeader(L["Pets: X"]:format(totalPets))
+        Display:AddAchievementLine(Achievements.GetPetsAchievementInfo)
     end
 
     local totalLearnedToys, totalToys = Collections:GetTotalToys()
     if totalLearnedToys then
-        local achievementString = Achievements:GetToysAchievementString()
-        Display:AddTitleLine(L["Toys: X / Y"]:format(totalLearnedToys, totalToys))
-        if achievementString then
-            Display:AddLine(achievementString)
-        end
+        Display:AddHeader(L["Toys: X / Y"]:format(totalLearnedToys, totalToys))
+        Display:AddAchievementLine(Achievements.GetToysAchievementInfo)
     end
 
     Display:Show()
