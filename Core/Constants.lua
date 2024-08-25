@@ -1,5 +1,9 @@
 local _, addon = ...
 
+addon.PATTERNS = {
+    PROGRESS = "%s / %s"
+}
+
 do
 	addon.CLASS_NAMES = {
 		["Death Knight"]	= "DEATHKNIGHT",
