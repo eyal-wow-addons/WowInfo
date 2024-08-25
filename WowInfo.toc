@@ -19,6 +19,7 @@ Libs\AceDB-3.0\AceDB-3.0.xml
 
 Libs\Toolkit\Contracts.lua
 Libs\Toolkit\Addon.lua
+Libs\Toolkit\PlayerInfo.lua
 Libs\Toolkit\Tooltip.lua
 
 Main.lua
@@ -32,7 +33,7 @@ Core\MicroMenu.lua
 # Storage\Money.lua
 # Storage\Reputation.lua
 
-# Locales\enUS.lua
+Locales\enUS.lua
 
 # DataAPI\Achievements.lua
 # DataAPI\Collections.lua
@@ -68,7 +69,7 @@ Core\MicroMenu.lua
 # Display\PvE.lua
 # Display\PvP.lua
 # Display\Quests.lua
-# Display\Realms.lua
+Display\Realms.lua
 # Display\Reputation.lua
 # Display\Speedometer.lua
 # Display\Talents.lua

@@ -1,24 +1,22 @@
 local _, addon = ...
 local L = addon.L
-local Display = addon:NewDisplay("ConnectedRealms")
-local Realm = addon.Realm
-local Character = addon.Character
-
-Realm:RegisterEvent("REALM_SHOW_CONNECTED_REALMS", function()
-    Display:AddTitleLine(L["Connected Realms:"], true)
-end)
+local PlayerInfo = LibStub("PlayerInfo-1.0")
+local Display = addon:NewDisplay("Realms")
 
 hooksecurefunc("MainMenuBarPerformanceBarFrame_OnEnter", function()
-    if Character:IsOnConnectedRealm(Character:GetFullName(), true) then
-        for isPlayerRealm, realm in Realm:IterableConnectedRealms() do
+    if PlayerInfo:IsCurrentCharacterOnConnectedRealm() then
+        if PlayerInfo:HasConnectedRealms() then
+            Display:AddHeader(L["Connected Realms:"])
+        end
+        for isPlayerRealm, realm in PlayerInfo:IterableConnectedRealms() do
             if isPlayerRealm then
-                realm = GetClassColoredTextForUnit("player", realm)
+                Display:AddClassColorLine(realm)
+            else
+                Display:AddLine(realm)
             end
-            Display:AddLine(realm)
         end
     else
-        local realm = GetClassColoredTextForUnit("player", Character:GetRealm())
-        Display:AddTitleLine(L["Realm: X"]:format(realm), true)
+        Display:AddFormattedClassColoredHeader(L["Realm: X"], PlayerInfo:GetCharacterRealm())
     end
     Display:Show()
 end)
