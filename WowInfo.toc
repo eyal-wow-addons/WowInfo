@@ -21,10 +21,10 @@ Libs\Toolkit\Contracts.lua
 Libs\Toolkit\Addon.lua
 Libs\Toolkit\Tooltip.lua
 
+Main.lua
+
 Core\Constants.lua
 Core\MicroMenu.lua
-
-Main.lua
 
 # Storage\Currency.lua
 # Storage\Friends.lua
@@ -47,7 +47,6 @@ Main.lua
 # DataAPI\PvE.lua
 # DataAPI\PvP.lua
 # DataAPI\Quests.lua
-# DataAPI\Realms.lua
 # DataAPI\Reputation.lua
 # DataAPI\Speedometer.lua
 # DataAPI\Talents.lua
