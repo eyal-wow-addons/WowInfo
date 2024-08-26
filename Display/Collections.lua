@@ -7,7 +7,7 @@ local Display = addon:NewDisplay("Collections")
 local COLLECTIONS_LABEL_FORMAT = "- %s: |cffffffff%d|r / |cff20ff20%d|r"
 
 function Display:AddAchievementLine(callback)
-    local name, currAmount, reqAmount = callback()
+    local name, currAmount, reqAmount = callback
     if name then
         self:AddLine(COLLECTIONS_LABEL_FORMAT:format(name, currAmount, reqAmount))
     end
