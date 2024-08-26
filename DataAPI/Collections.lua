@@ -1,32 +1,36 @@
 local _, addon = ...
 local Collections = addon:NewObject("Collections")
 
-do
-    local function GetNumMounts()
-        local numCollectedMounts = 0
-        local numMounts = C_MountJournal.GetNumMounts()
+local CACHE = {
+    numCollectedMounts = 0
+}
 
-        if numMounts >= 1 then
-            local hideOnChar, isCollected
-            local mountIDs = C_MountJournal.GetMountIDs()
-            for _, mountID in ipairs(mountIDs) do
-                hideOnChar, isCollected = select(10, C_MountJournal.GetMountInfoByID(mountID))
-                if isCollected and hideOnChar ~= true then
-                    numCollectedMounts = numCollectedMounts + 1
-                end
+local function CacheNumMounts()
+    local numMounts = C_MountJournal.GetNumMounts()
+    if numMounts >= 1 then
+        local numCollectedMounts = 0
+        local hideOnChar, isCollected
+        local mountIDs = C_MountJournal.GetMountIDs()
+        for _, mountID in ipairs(mountIDs) do
+            hideOnChar, isCollected = select(10, C_MountJournal.GetMountInfoByID(mountID))
+            if isCollected and hideOnChar ~= true then
+                numCollectedMounts = numCollectedMounts + 1
             end
         end
-
-        return numMounts, numCollectedMounts
+        CACHE.numCollectedMounts = numCollectedMounts
+    else
+        CACHE.numCollectedMounts = 0
     end
+end
 
-    function Collections:GetTotalMounts()
-        local _, numCollectedMounts = GetNumMounts()
-        if numCollectedMounts > 0 then
-            return numCollectedMounts
-        end
-        return nil
+Collections:RegisterEvents(
+    "PLAYER_LOGIN", "COMPANION_LEARNED", "COMPANION_UNLEARNED", CacheNumMounts)
+
+function Collections:GetTotalMounts()
+    if CACHE.numCollectedMounts > 0 then
+        return CACHE.numCollectedMounts
     end
+    return nil
 end
 
 function Collections:GetTotalPets()
