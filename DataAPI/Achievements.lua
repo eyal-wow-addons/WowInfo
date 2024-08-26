@@ -109,10 +109,7 @@ local MOUNTS_BASE_ACHIEVEMENT_ID = 2143 -- Leading the Cavalry
 local PETS_BASE_ACHIEVEMENT_ID = 1017 -- Can I Keep Him?
 local TOYBOX_BASE_ACHIEVEMENT_ID = 9670 -- Toying Around
 
--- I'm not sure whether listening to CRITERIA_UPDATE is necessary, 
--- it's better to remove it if possible as it's called many times upon login,
--- but I'll keep it for now and may remove it later or add some throttling mechanism.
-Achievements:RegisterEvents("PLAYER_LOGIN", "ACHIEVEMENT_EARNED", "CRITERIA_UPDATE", function()
+Achievements:RegisterEvents("PLAYER_LOGIN", "ACHIEVEMENT_EARNED", function()
     CacheAchievementInfo("MOUNTS", MOUNTS_BASE_ACHIEVEMENT_ID)
     CacheAchievementInfo("PETS", PETS_BASE_ACHIEVEMENT_ID)
     CacheAchievementInfo("TOYS", TOYBOX_BASE_ACHIEVEMENT_ID)
