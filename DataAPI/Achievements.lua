@@ -4,7 +4,7 @@ local Achievements = addon:NewObject("Achievements")
 local ACHIEVEMENTUI_SUMMARYCATEGORIES = {92, 96, 97, 15522, 95, 168, 169, 201, 155, 15117, 15246}
 local ACHIEVEMENTUI_GUILDSUMMARYCATEGORIES = {15088, 15077, 15078, 15079, 15080, 15089}
 
-local CACHE = {
+local DATA = {
     ["MOUNTS"] = {},
     ["PETS"] = {},
     ["TOYS"] = {},
@@ -73,13 +73,13 @@ end
 local function CacheAchievementInfo(key, id)
     local name, currentAmount, reqAmount = FindAchievementInfo(id)
     if name then
-        CACHE[key].name = name
-        CACHE[key].currentAmount = currentAmount
-        CACHE[key].reqAmount = reqAmount
+        DATA[key].name = name
+        DATA[key].currentAmount = currentAmount
+        DATA[key].reqAmount = reqAmount
     else
-        CACHE[key].name = nil
-        CACHE[key].currentAmount = 0
-        CACHE[key].reqAmount = 0
+        DATA[key].name = nil
+        DATA[key].currentAmount = 0
+        DATA[key].reqAmount = 0
     end
 end
 
@@ -87,10 +87,10 @@ local function CacheAchievementsCategoriesSummaryInfo(guildOnly)
     local cacheKey = guildOnly and "GUILDSUMMARY" or "SUMMARY"
     local total, completed = GetNumCompletedAchievements(guildOnly)
 
-    CACHE[cacheKey].total = BreakUpLargeNumbers(total)
-    CACHE[cacheKey].completed = BreakUpLargeNumbers(completed)
+    DATA[cacheKey].total = BreakUpLargeNumbers(total)
+    DATA[cacheKey].completed = BreakUpLargeNumbers(completed)
 
-    local categoriesSummaryInfo = CACHE[cacheKey].categoriesSummaryInfo
+    local categoriesSummaryInfo = DATA[cacheKey].categoriesSummaryInfo
     local categories = guildOnly and ACHIEVEMENTUI_GUILDSUMMARYCATEGORIES or ACHIEVEMENTUI_SUMMARYCATEGORIES
     local categoryId, categoryName
     
@@ -118,25 +118,25 @@ Achievements:RegisterEvents("PLAYER_LOGIN", "ACHIEVEMENT_EARNED", function()
 end)
 
 function Achievements:GetMountAchievementInfo()
-    return CACHE["MOUNTS"].name, CACHE["MOUNTS"].currentAmount, CACHE["MOUNTS"].reqAmount
+    return DATA["MOUNTS"].name, DATA["MOUNTS"].currentAmount, DATA["MOUNTS"].reqAmount
 end
 
 function Achievements:GetPetsAchievementInfo()
-    return CACHE["PETS"].name, CACHE["PETS"].currentAmount, CACHE["PETS"].reqAmount
+    return DATA["PETS"].name, DATA["PETS"].currentAmount, DATA["PETS"].reqAmount
 end
 
 function Achievements:GetToysAchievementInfo()
-    return CACHE["TOYS"].name, CACHE["TOYS"].currentAmount, CACHE["TOYS"].reqAmount
+    return DATA["TOYS"].name, DATA["TOYS"].currentAmount, DATA["TOYS"].reqAmount
 end
 
 function Achievements:GetSummaryProgressInfo(guildOnly)
     local cacheKey = guildOnly and "GUILDSUMMARY" or "SUMMARY"
-    return CACHE[cacheKey].total, CACHE[cacheKey].completed
+    return DATA[cacheKey].total, DATA[cacheKey].completed
 end
 
 function Achievements:IterableCategoriesSummaryInfo(guildOnly)
     local cacheKey = guildOnly and "GUILDSUMMARY" or "SUMMARY"
-    local categoriesSummaryInfo = CACHE[cacheKey].categoriesSummaryInfo
+    local categoriesSummaryInfo = DATA[cacheKey].categoriesSummaryInfo
     local info
     local i = 0
     local n = #categoriesSummaryInfo
