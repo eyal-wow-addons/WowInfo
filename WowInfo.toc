@@ -34,7 +34,7 @@ Main.lua
 # Storage\Money.lua
 # Storage\Reputation.lua
 
-# Locales\enUS.lua
+Locales\enUS.lua
 
 # DataAPI\Achievements.lua
 # DataAPI\Collections.lua
@@ -70,7 +70,7 @@ Main.lua
 # Display\PvE.lua
 # Display\PvP.lua
 # Display\Quests.lua
-# Display\Realms.lua
+Display\Realms.lua
 # Display\Reputation.lua
 # Display\Speedometer.lua
 # Display\Talents.lua
