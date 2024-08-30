@@ -1,25 +1,32 @@
 local _, addon = ...
-local L = addon.L
-local MicroMenu = addon:GetObject("MicroMenu")
 local Achievements = addon:GetObject("Achievements")
 local Display = addon:NewDisplay("Achievements")
 
+local L = addon.L
+local MicroMenu = addon.MicroMenu
+
 function Display:AddAchievementSummaryProgressLine(guildOnly)
     local total, completed = Achievements:GetSummaryProgressInfo(guildOnly)
+
     if not guildOnly then
         self:AddHeader(L["Summary:"])
     else
         self:AddHeader(L["Guild:"])
     end
-    self:AddRightHighlightDoubleLine(ACHIEVEMENTS_COMPLETED, addon.PATTERNS.PROGRESS:format(completed, total))
-    self:AddEmptyLine()
+
+    self:SetText(ACHIEVEMENTS_COMPLETED)
+        :SetFormat(addon.PATTERNS.PROGRESS, completed, total)
+        :SetHighlight()
+        :ToLine()
+        :AddEmptyLine()
 end
 
 function Display:AddAchievementCategoriesSummaryInfo(guildOnly)
-    local progressString
     for categoryName, total, completed in Achievements:IterableCategoriesSummaryInfo(guildOnly) do
-        progressString = addon.PATTERNS.PROGRESS:format(completed, total)
-        Display:AddRightHighlightDoubleLine(categoryName, progressString)
+        self:SetText(categoryName)
+            :SetFormat(addon.PATTERNS.PROGRESS, completed, total)
+            :SetHighlight()
+            :ToLine()
     end
 end
 

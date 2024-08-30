@@ -36,7 +36,7 @@ Main.lua
 
 Locales\enUS.lua
 
-# DataAPI\Achievements.lua
+DataAPI\Achievements.lua
 # DataAPI\Collections.lua
 # DataAPI\Currency.lua
 # DataAPI\Durability.lua
@@ -54,7 +54,7 @@ Locales\enUS.lua
 # DataAPI\Talents.lua
 # DataAPI\WeeklyRewards.lua
 
-# Display\Achievements.lua
+Display\Achievements.lua
 # Display\Collections.lua
 # Display\Currency.lua
 # Display\CurrencyTracker.lua
