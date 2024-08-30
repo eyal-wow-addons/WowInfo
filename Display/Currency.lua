@@ -1,7 +1,8 @@
 local _, addon = ...
-local L = addon.L
+local Currency = addon:GetObject("Currency")
 local Display = addon:NewDisplay("Currency")
-local Currency = addon.Currency
+
+local L = addon.L
 
 local CURRENCY_ITEM_FORMAT = "|T%s:0|t %s"
 local CURRENCY_MAX_FORMAT = "%s |cffffffff/ %s|r"
@@ -11,10 +12,13 @@ local function AddCurrencyInfo(iterator)
     for name, isHeader, icon, quantity, maxQuantity in iterator() do
         refreshTooltip = true
         if isHeader then
-            Display:AddTitleLine(L["S Currency:"]:format(name))
+            Display:SetFormat(L["S Currency:"], name):ToHeader()
         else
             local leftText = CURRENCY_ITEM_FORMAT:format(icon, name)
             local rightText = BreakUpLargeNumbers(quantity)
+
+            Display:SetText(leftText):SetText(rightText)
+
             if quantity > 0 then
                 local percent
 
@@ -26,22 +30,24 @@ local function AddCurrencyInfo(iterator)
                     end
 
                     if percent == 100 then
-                        Display:AddRightRedDoubleLine(leftText, rightText)
+                        Display:SetRedColor()
                     elseif percent > 90 then
-                        Display:AddRightOrangeDoubleLine(leftText, rightText)
+                        Display:SetOrangeColor()
                     elseif percent >= 80 then
-                        Display:AddRightYellowDoubleLine(leftText, rightText)
+                        Display:SetYellowColor()
                     else
                         percent = nil
                     end
                 end
 
                 if not percent then
-                    Display:AddRightHighlightDoubleLine(leftText, rightText)
+                    Display:SetHighlight()
                 end
             else
-                Display:AddGrayDoubleLine(leftText, rightText)
+                Display:SetGrayColor()
             end
+
+            Display:ToLine()
         end
     end
     return refreshTooltip

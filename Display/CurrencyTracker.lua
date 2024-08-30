@@ -1,7 +1,8 @@
 local _, addon = ...
-local L = addon.L
+local Currency = addon:GetObject("Currency")
 local Display = addon:NewDisplay("CurrencyTracker")
-local Currency = addon.Currency
+
+local L = addon.L
 
 local CURRENCY_QUANTITY_PER_CHARACTER_FORMAT = "%s: %s"
 
@@ -10,21 +11,25 @@ hooksecurefunc(GameTooltip, "SetCurrencyToken", function(_, index)
     local currencyID = link and C_CurrencyInfo.GetCurrencyIDFromLink(link)
     local totalQuantity = Currency:GetTotalQuantity(currencyID)
     if totalQuantity > 0 then
-        Display:AddTitleLine(L["All Characters (X):"]:format(totalQuantity))
+        Display:AddFormattedHeader(L["All Characters (X):"], totalQuantity)
 
         do
             local charName, quantity = Currency:GetPlayerCurrencyInfo(currencyID)
+
+            charName = Display:ToClassColor(charName)
+
             if quantity > 0 then
-                quantity = WHITE_FONT_COLOR:WrapTextInColorCode(quantity)
+                quantity = Display:ToWhite(quantity)
             else
-                quantity = GRAY_FONT_COLOR:WrapTextInColorCode(quantity)
+                quantity = Display:ToGray(quantity)
             end
-            Display:AddLine(CURRENCY_QUANTITY_PER_CHARACTER_FORMAT:format(charName, quantity))
+
+            Display:AddFormattedLine(CURRENCY_QUANTITY_PER_CHARACTER_FORMAT, charName, quantity)
         end
 
         if currencyID then
             for charName, quantity in Currency:IterableCharactersCurrencyInfo(currencyID) do
-                Display:AddLine(CURRENCY_QUANTITY_PER_CHARACTER_FORMAT:format(charName, WHITE_FONT_COLOR:WrapTextInColorCode(quantity)))
+                Display:AddFormattedLine(CURRENCY_QUANTITY_PER_CHARACTER_FORMAT, charName, Display:ToWhite(quantity))
             end
         end
 

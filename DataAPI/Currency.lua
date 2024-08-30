@@ -1,6 +1,6 @@
 local _, addon = ...
+local PlayerInfo = LibStub("PlayerInfo-1.0")
 local Currency = addon:NewObject("Currency")
-local Character = addon.Character
 
 Currency.GetCurrencyListSize = C_CurrencyInfo.GetCurrencyListSize
 Currency.GetCurrencyListInfo = C_CurrencyInfo.GetCurrencyListInfo
@@ -12,7 +12,7 @@ local ACCOUNT_WIDE_CURRENCY = {
 
 local expansions, currentExpansionLevel
 
-function Currency:OnInitialize()
+function Currency:OnInitializing()
     expansions = {}
     currentExpansionLevel = Currency.GetClampedCurrentExpansionLevel()
     for i = 0, currentExpansionLevel do
@@ -114,9 +114,7 @@ function Currency:GetPlayerCurrencyInfo(currencyID)
     if not currencyID or ACCOUNT_WIDE_CURRENCY[currencyID] then
         return
     end
-    local quantity = GetCurrencyQuantity(currencyID)
-    local charName = Character:GetFullName()
-    return GetClassColoredTextForUnit("player", Character:RemoveRealm(charName)), quantity
+    return PlayerInfo:GetCharacterName(), GetCurrencyQuantity(currencyID)
 end
 
 function Currency:IterableCharactersCurrencyInfo(currencyID)
@@ -128,14 +126,16 @@ function Currency:IterableCharactersCurrencyInfo(currencyID)
         end
         charName, data = self.storage:GetCharacterCurrencyInfo(charName)
         while charName do
-            if Character:IsOnCurrentRealm(charName) or Character:IsOnConnectedRealm(charName) then
+            local onCurrentRealm = PlayerInfo:IsCharacterOnCurrentRealm(charName)
+            local onConnectedRealm = PlayerInfo:IsCharacterOnConnectedRealm(charName)
+            if onCurrentRealm or onConnectedRealm then
                 for id, quantity in pairs(data) do
                     if id == currencyID then
                         charDisplayName = charName
-                        if Character:IsOnConnectedRealm(charName) then
-                            charDisplayName = Character:ShortConnectedRealm(charDisplayName)
+                        if onConnectedRealm then
+                            charDisplayName = PlayerInfo:ShortConnectedRealm(charDisplayName)
                         else
-                            charDisplayName = Character:RemoveRealm(charDisplayName)
+                            charDisplayName = PlayerInfo:RemoveRealm(charDisplayName)
                         end
                         return charDisplayName, quantity
                     end
