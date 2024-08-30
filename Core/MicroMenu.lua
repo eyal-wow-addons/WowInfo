@@ -1,5 +1,6 @@
 local _, addon = ...
-local MicroMenu = addon:NewObject("MicroMenu")
+local MicroMenu = {}
+addon.MicroMenu = MicroMenu
 
 -- NOTE: 
 -- Sometimes the 'AchievementMicroButton' tooltip wouldn't show up because 'tooltipText' is nil, 
