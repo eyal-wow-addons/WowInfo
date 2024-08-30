@@ -37,7 +37,7 @@ Main.lua
 Locales\enUS.lua
 
 DataAPI\Achievements.lua
-# DataAPI\Collections.lua
+DataAPI\Collections.lua
 # DataAPI\Currency.lua
 # DataAPI\Durability.lua
 # DataAPI\EncounterJournal.lua
@@ -55,7 +55,7 @@ DataAPI\Achievements.lua
 # DataAPI\WeeklyRewards.lua
 
 Display\Achievements.lua
-# Display\Collections.lua
+Display\Collections.lua
 # Display\Currency.lua
 # Display\CurrencyTracker.lua
 # Display\GreatVaultProgress.lua
