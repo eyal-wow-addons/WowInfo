@@ -6,19 +6,16 @@ Currency.GetCurrencyListSize = C_CurrencyInfo.GetCurrencyListSize
 Currency.GetCurrencyListInfo = C_CurrencyInfo.GetCurrencyListInfo
 Currency.GetClampedCurrentExpansionLevel = GetClampedCurrentExpansionLevel
 
+local DATA = {
+    expansions = {},
+    expansionCategory = "",
+    currentExpansionLevel = 0,
+    currency = {}
+}
+
 local ACCOUNT_WIDE_CURRENCY = {
     [2032] = true -- Trader's Tender
 }
-
-local expansions, currentExpansionLevel
-
-function Currency:OnInitializing()
-    expansions = {}
-    currentExpansionLevel = Currency.GetClampedCurrentExpansionLevel()
-    for i = 0, currentExpansionLevel do
-        table.insert(expansions, _G["EXPANSION_NAME" .. i])
-    end
-end
 
 local function IterableCurrencyInfo()
     local i = 0
@@ -40,15 +37,17 @@ local function IterableCurrencyInfo()
     end
 end
 
-Currency:RegisterEvents(
-    "PLAYER_LOGIN",
-    "PLAYER_LOGOUT", function(_, eventName)
-        if eventName == "PLAYER_LOGIN" then
-            Currency.storage:ClearCurrencyData()
-        elseif eventName == "PLAYER_LOGOUT" then
-            Currency.storage:StoreCurrencyData(IterableCurrencyInfo)
+local function GetCurrencyQuantity(currencyID)
+    if not currencyID or ACCOUNT_WIDE_CURRENCY[currencyID] then
+        return -1
+    end
+    for id, quantity in IterableCurrencyInfo() do
+        if id == currencyID then
+            return quantity
         end
-    end)
+    end
+    return 0
+end
 
 local function IterableCurrencyInfoByCategory(categoryName)
     local isHeaderCategoryFound = false
@@ -78,11 +77,11 @@ local function IterableCurrencyInfoByCategory(categoryName)
     end
 end
 
-function Currency:IterableLatestExpansionInfo()
-    local expansionLevel = currentExpansionLevel + 1
+local function GetExpansionCategory()
+    local expansionLevel = DATA.currentExpansionLevel + 1
     local categoryName
     while expansionLevel > 0 do
-        categoryName = IterableCurrencyInfoByCategory(expansions[expansionLevel])()
+        categoryName = IterableCurrencyInfoByCategory(DATA.expansions[expansionLevel])()
         if not categoryName then
             -- If we didn't find a header for the latest expansion available
             -- then try the expansion before that
@@ -91,23 +90,75 @@ function Currency:IterableLatestExpansionInfo()
             break
         end
     end
-    return IterableCurrencyInfoByCategory(expansions[expansionLevel])
+    return categoryName
+end
+
+local function CacheCurrency(categoryName)
+    local index = 1
+    DATA.currency[categoryName] = DATA.currency[categoryName] or {}
+    for name, isHeader, icon, quantity, maxQuantity in IterableCurrencyInfoByCategory(categoryName) do
+        local category = DATA.currency[categoryName]
+        if not category[name] then
+            category[name] = {index, isHeader, icon, quantity, maxQuantity}
+        else
+            category[name][1] = index
+            category[name][4] = quantity
+            category[name][5] = maxQuantity
+        end
+        index = index + 1
+    end
+end
+
+local function CacheCategories()
+    local expansionCategory = GetExpansionCategory()
+    if not expansionCategory then
+        return
+    end
+    CacheCurrency(expansionCategory)
+    CacheCurrency(PLAYER_V_PLAYER)
+    DATA.expansionCategory = expansionCategory
+end
+
+local function CachedIterableCurrencyInfoByCategory(categoryName)
+    local category = DATA.currency[categoryName]
+    local index = 1
+    return function()
+        for name, currencyData in next, category do
+            if currencyData[1] == index then
+                index = index + 1
+                return name, currencyData[2], currencyData[3], currencyData[4], currencyData[5]
+            end
+        end
+    end
+end
+
+function Currency:OnInitializing()
+    DATA.currentExpansionLevel = Currency.GetClampedCurrentExpansionLevel()
+    for i = 0, DATA.currentExpansionLevel do
+        table.insert(DATA.expansions, _G["EXPANSION_NAME" .. i])
+    end
+end
+
+Currency:RegisterEvents(
+    "PLAYER_LOGIN",
+    "PLAYER_LOGOUT",
+    "CURRENCY_DISPLAY_UPDATE", function(_, eventName)
+        if eventName == "PLAYER_LOGIN" then
+            Currency.storage:ClearCurrencyData()
+            CacheCategories()
+        elseif eventName == "PLAYER_LOGOUT" then
+            Currency.storage:StoreCurrencyData(IterableCurrencyInfo)
+        elseif eventName == "CURRENCY_DISPLAY_UPDATE" then
+            CacheCategories()
+        end
+    end)
+
+function Currency:IterableLatestExpansionInfo()
+    return CachedIterableCurrencyInfoByCategory(DATA.expansionCategory)
 end
 
 function Currency:IterablePvPInfo()
-    return IterableCurrencyInfoByCategory(PLAYER_V_PLAYER)
-end
-
-local function GetCurrencyQuantity(currencyID)
-    if not currencyID or ACCOUNT_WIDE_CURRENCY[currencyID] then
-        return -1
-    end
-    for id, quantity in IterableCurrencyInfo() do
-        if id == currencyID then
-            return quantity
-        end
-    end
-    return 0
+    return CachedIterableCurrencyInfoByCategory(PLAYER_V_PLAYER)
 end
 
 function Currency:GetPlayerCurrencyInfo(currencyID)
