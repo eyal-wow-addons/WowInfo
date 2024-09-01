@@ -10,7 +10,7 @@ hooksecurefunc("MainMenuBarPerformanceBarFrame_OnEnter", function()
             Display:AddHeader(L["Connected Realms:"])
         end
         for isPlayerRealm, realm in PlayerInfo:IterableConnectedRealms() do
-            Display:SetText(realm)
+            Display:SetLine(realm)
             if isPlayerRealm then
                 Display:SetClassColor()
             end

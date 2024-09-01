@@ -12,12 +12,11 @@ local function AddCurrencyInfo(iterator)
     for name, isHeader, icon, quantity, maxQuantity in iterator() do
         refreshTooltip = true
         if isHeader then
-            Display:SetFormat(L["S Currency:"], name):ToHeader()
+            Display:AddFormattedHeader(L["S Currency:"], name)
         else
-            local leftText = CURRENCY_ITEM_FORMAT:format(icon, name)
-            local rightText = BreakUpLargeNumbers(quantity)
-
-            Display:SetText(leftText):SetText(rightText)
+            Display
+                :SetFormattedLine(CURRENCY_ITEM_FORMAT, icon, name)
+                :SetLine(BreakUpLargeNumbers(quantity))
 
             if quantity > 0 then
                 local percent
@@ -26,7 +25,7 @@ local function AddCurrencyInfo(iterator)
                     percent = Round(quantity / maxQuantity * 100)
 
                     if IsShiftKeyDown() then
-                        rightText = CURRENCY_MAX_FORMAT:format(rightText, BreakUpLargeNumbers(maxQuantity))
+                        Display:SetFormattedLine(CURRENCY_MAX_FORMAT, BreakUpLargeNumbers(maxQuantity))
                     end
 
                     if percent == 100 then

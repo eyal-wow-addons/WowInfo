@@ -14,8 +14,8 @@ function Display:AddAchievementSummaryProgressLine(guildOnly)
         self:AddHeader(L["Guild:"])
     end
 
-    self:SetText(ACHIEVEMENTS_COMPLETED)
-        :SetFormat(addon.PATTERNS.PROGRESS, completed, total)
+    self:SetLine(ACHIEVEMENTS_COMPLETED)
+        :SetFormattedLine(addon.PATTERNS.PROGRESS, completed, total)
         :SetHighlight()
         :ToLine()
         :AddEmptyLine()
@@ -23,8 +23,8 @@ end
 
 function Display:AddAchievementCategoriesSummaryInfo(guildOnly)
     for categoryName, total, completed in Achievements:IterableCategoriesSummaryInfo(guildOnly) do
-        self:SetText(categoryName)
-            :SetFormat(addon.PATTERNS.PROGRESS, completed, total)
+        self:SetLine(categoryName)
+            :SetFormattedLine(addon.PATTERNS.PROGRESS, completed, total)
             :SetHighlight()
             :ToLine()
     end
