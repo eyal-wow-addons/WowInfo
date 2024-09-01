@@ -1,43 +1,60 @@
 local _, addon = ...
-local L = addon.L
+local MonthlyActivities = addon:GetObject("MonthlyActivities")
 local Display = addon:NewDisplay("MonthlyActivities")
-local EncounterJournal = addon.EncounterJournal
+
+local L = addon.L
 
 Display:RegisterHookScript(EJMicroButton, "OnEnter", function(self)
     if not self:IsEnabled() then
         return
     end
 
-    local thresholdProgressString, itemReward, pendingReward, monthString, timeString = EncounterJournal:GetMonthlyActivitiesInfo()
+    local thresholdProgressString, itemReward, pendingReward, monthString, timeString = MonthlyActivities:GetInfo()
 
     if thresholdProgressString then
         if itemReward and not Display.itemDataLoadedCancelFunc then
             Display.itemDataLoadedCancelFunc = function()
                 local itemName = itemReward:GetItemName()
-                local itemColor = itemReward:GetItemQualityColor() or HIGHLIGHT_FONT_COLOR
                 if itemName then
-                    Display:AddHighlightLine(L["Traveler's Log Progress:"])
-                    Display:AddRightHighlightDoubleLine(itemName, thresholdProgressString, itemColor.r, itemColor.g, itemColor.b)
-                    Display:AddIcon(itemReward:GetItemIcon())
-                    Display:Show()
+                    Display
+                        :SetLine(L["Traveler's Log Progress:"])
+                        :SetHighlight()
+                        :ToLine()
+                        :SetLine(itemName)
+                        :SetItemQualityColor(itemReward)
+                        :SetLine(thresholdProgressString)
+                        :SetHighlight()
+                        :ToLine()
+                        :AddIcon(itemReward:GetItemIcon())
+                        :Show()
                 end
             end
         end
         
-        Display:AddTitleDoubleLine(L["Traveler's Log:"], monthString)
-        Display:AddEmptyLine()
-        Display:AddHighlightDoubleLine(" ", timeString)
-        Display:AddEmptyLine()
+        Display
+            :SetDoubleLine(L["Traveler's Log:"], monthString)
+            :ToHeader()
+            :AddEmptyLine()
+            :SetDoubleLine(" ", timeString)
+            :SetHighlight()
+            :ToLine()
+            :AddEmptyLine()
 
         if itemReward then
             itemReward:ContinueWithCancelOnItemLoad(Display.itemDataLoadedCancelFunc)
         else
-            Display:AddRightHighlightDoubleLine(L["Travel Points"], thresholdProgressString)
+            Display
+                :SetDoubleLine(L["Travel Points"], thresholdProgressString)
+                :SetHighlight()
+                :ToLine()
         end
 
         if pendingReward then
-            Display:AddEmptyLine()
-            Display:AddGreenLine(L["Collect your reward in the Collector's Cache at the Trading Post."])
+            Display
+                :AddEmptyLine()
+                :SetLine(L["Collect your reward in the Collector's Cache at the Trading Post."])
+                :SetGreenColor()
+                :ToLine()
         end
 
         Display:Show()

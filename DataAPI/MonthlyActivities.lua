@@ -1,7 +1,5 @@
 local _, addon = ...
-local EncounterJournal = addon:NewObject("EncounterJournal")
-
-local MONTHLY_ACTIVITIES_PROGRESS_FORMAT = "%s / %s"
+local MonthlyActivities = addon:NewObject("MonthlyActivities")
 
 local MONTHLY_ACTIVITIES_MONTH_NAMES = {
 	MONTH_JANUARY,
@@ -59,7 +57,7 @@ do
         return monthString, timeString
     end
 
-    function EncounterJournal:GetMonthlyActivitiesInfo()
+    function MonthlyActivities:GetInfo()
         if AreMonthlyActivitiesRestricted() then
             return nil
         end
@@ -91,6 +89,6 @@ do
         end
         earnedThresholdAmount = math.min(earnedThresholdAmount, thresholdMax)
 
-        return MONTHLY_ACTIVITIES_PROGRESS_FORMAT:format(earnedThresholdAmount, thresholdMax), itemReward, pendingReward, GetMonthlyActivitiesTimeInfo(activitiesInfo.displayMonthName, activitiesInfo.secondsRemaining)
+        return addon.PATTERNS.PROGRESS:format(earnedThresholdAmount, thresholdMax), itemReward, pendingReward, GetMonthlyActivitiesTimeInfo(activitiesInfo.displayMonthName, activitiesInfo.secondsRemaining)
     end
 end
