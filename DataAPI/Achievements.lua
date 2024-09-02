@@ -87,8 +87,8 @@ local function CacheAchievementsCategoriesSummaryInfo(guildOnly)
     local cacheKey = guildOnly and "GUILDSUMMARY" or "SUMMARY"
     local total, completed = GetNumCompletedAchievements(guildOnly)
 
-    DATA[cacheKey].total = BreakUpLargeNumbers(total)
-    DATA[cacheKey].completed = BreakUpLargeNumbers(completed)
+    DATA[cacheKey].total = total
+    DATA[cacheKey].completed = completed
 
     local categoriesSummaryInfo = DATA[cacheKey].categoriesSummaryInfo
     local categories = guildOnly and ACHIEVEMENTUI_GUILDSUMMARYCATEGORIES or ACHIEVEMENTUI_SUMMARYCATEGORIES
@@ -100,8 +100,8 @@ local function CacheAchievementsCategoriesSummaryInfo(guildOnly)
         total, completed = GetCategoryTotalNumAchievements(categoryId, guildOnly)
         categoriesSummaryInfo[i] = categoriesSummaryInfo[i] or {}
         categoriesSummaryInfo[i].name = categoryName
-        categoriesSummaryInfo[i].total = BreakUpLargeNumbers(total)
-        categoriesSummaryInfo[i].completed = BreakUpLargeNumbers(completed)
+        categoriesSummaryInfo[i].total = total
+        categoriesSummaryInfo[i].completed = completed
     end
 end
 

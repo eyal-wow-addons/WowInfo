@@ -8,6 +8,9 @@ local MicroMenu = addon.MicroMenu
 function Display:AddAchievementSummaryProgressLine(guildOnly)
     local total, completed = Achievements:GetSummaryProgressInfo(guildOnly)
 
+    total = BreakUpLargeNumbers(total)
+    completed = BreakUpLargeNumbers(completed)
+
     if not guildOnly then
         self:AddHeader(L["Summary:"])
     else
@@ -23,6 +26,10 @@ end
 
 function Display:AddAchievementCategoriesSummaryInfo(guildOnly)
     for categoryName, total, completed in Achievements:IterableCategoriesSummaryInfo(guildOnly) do
+
+        total = BreakUpLargeNumbers(total)
+        completed = BreakUpLargeNumbers(completed)
+        
         self:SetLine(categoryName)
             :SetFormattedLine(addon.PATTERNS.PROGRESS, completed, total)
             :SetHighlight()
