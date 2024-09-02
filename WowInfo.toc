@@ -40,7 +40,7 @@ DataAPI\Achievements.lua
 DataAPI\Collections.lua
 DataAPI\Currency.lua
 DataAPI\Durability.lua
-# DataAPI\Experience.lua
+DataAPI\Experience.lua
 # DataAPI\Friends.lua
 # DataAPI\Guild.lua
 # DataAPI\Money.lua
@@ -61,7 +61,7 @@ Display\CurrencyTracker.lua
 # Display\GreatVaultProgress.lua
 # Display\DailyReset.lua
 Display\Durability.lua
-# Display\Experience.lua
+Display\Experience.lua
 # Display\Friends.lua
 # Display\GuildFriends.lua
 # Display\Money.lua

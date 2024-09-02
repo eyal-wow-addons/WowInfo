@@ -1,22 +1,17 @@
 local _, addon = ...
 local Experience = addon:NewObject("Experience")
 
-local CURRENT_PROGRESS_LABEL_FORMAT = "%s / %s (%s)"
-local RESTED_STATUS_LABEL_FORMAT = "%s (%s)"
-local TNL_PROGRESS_LABEL_FORMAT = "%s (%s)"
-
-function Experience:GetPlayerProgressInfo()
+function Experience:GetInfo()
     local xp, xpMax = UnitXP("player"), UnitXPMax("player")
-    local exhaustionThreshold = GetXPExhaustion()
-    local currentProgressString = CURRENT_PROGRESS_LABEL_FORMAT:format(AbbreviateNumbers(xp), AbbreviateNumbers(xpMax), FormatPercentage(xp / xpMax, true))
-    local exhaustionString
+    return xp, xpMax, xp / xpMax
+end
 
-    if exhaustionThreshold then
-        exhaustionString = RESTED_STATUS_LABEL_FORMAT:format(AbbreviateNumbers(exhaustionThreshold), FormatPercentage(exhaustionThreshold / xpMax, true))
-    end
-
+function Experience:GetNextLevelInfo(xp, xpMax)
     local tnl = xpMax - xp
-    local nextLevelProgressString = TNL_PROGRESS_LABEL_FORMAT:format(AbbreviateNumbers(tnl), FormatPercentage(tnl / xpMax, true))
+    return tnl, tnl / xpMax
+end
 
-    return currentProgressString, exhaustionString, nextLevelProgressString
+function Experience:GetRestedInfo(xpMax)
+    local exhaustionThreshold = GetXPExhaustion()
+    return exhaustionThreshold, exhaustionThreshold and exhaustionThreshold / xpMax
 end
