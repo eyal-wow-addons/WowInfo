@@ -1,7 +1,8 @@
 local _, addon = ...
 
 addon.PATTERNS = {
-    PROGRESS = "%s / %s"
+    PROGRESS1 = "%s / %s",
+    PROGRESS2 = "%s (%s)"
 }
 
 do

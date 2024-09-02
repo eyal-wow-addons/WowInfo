@@ -12,7 +12,7 @@ Display:RegisterHookScript(EJMicroButton, "OnEnter", function(self)
     local earnedThresholdAmount, thresholdMax, itemReward, pendingReward, monthString, timeString = MonthlyActivities:GetInfo()
   
     if earnedThresholdAmount then
-        local thresholdProgressString = addon.PATTERNS.PROGRESS:format(earnedThresholdAmount, thresholdMax)
+        local thresholdProgressString = addon.PATTERNS.PROGRESS1:format(earnedThresholdAmount, thresholdMax)
 
         if itemReward and not Display.itemDataLoadedCancelFunc then
             Display.itemDataLoadedCancelFunc = function()

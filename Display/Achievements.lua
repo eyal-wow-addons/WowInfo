@@ -18,7 +18,7 @@ function Display:AddAchievementSummaryProgressLine(guildOnly)
     end
 
     self:SetLine(ACHIEVEMENTS_COMPLETED)
-        :SetFormattedLine(addon.PATTERNS.PROGRESS, completed, total)
+        :SetFormattedLine(addon.PATTERNS.PROGRESS1, completed, total)
         :SetHighlight()
         :ToLine()
         :AddEmptyLine()
@@ -31,7 +31,7 @@ function Display:AddAchievementCategoriesSummaryInfo(guildOnly)
         completed = BreakUpLargeNumbers(completed)
         
         self:SetLine(categoryName)
-            :SetFormattedLine(addon.PATTERNS.PROGRESS, completed, total)
+            :SetFormattedLine(addon.PATTERNS.PROGRESS1, completed, total)
             :SetHighlight()
             :ToLine()
     end
