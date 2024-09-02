@@ -1,6 +1,8 @@
 local _, addon = ...
 local MonthlyActivities = addon:NewObject("MonthlyActivities")
 
+local DATA = {}
+
 local MONTHLY_ACTIVITIES_MONTH_NAMES = {
 	MONTH_JANUARY,
 	MONTH_FEBRUARY,
@@ -29,6 +31,7 @@ local function HasPendingReward(activitiesInfo, pendingRewards, thresholdOrderIn
     return false
 end
 
+local GetMonthlyActivitiesTimeInfo
 do
     local MonthlyActivitiesTimeLeftFormatter = CreateFromMixins(SecondsFormatterMixin)
     MonthlyActivitiesTimeLeftFormatter:Init(0, SecondsFormatter.Abbreviation.OneLetter, false, true)
@@ -42,7 +45,7 @@ do
         return 2;
     end
 
-    local function GetMonthlyActivitiesTimeInfo(displayMonthName, secondsRemaining)
+    function GetMonthlyActivitiesTimeInfo(displayMonthName, secondsRemaining)
         local time = MonthlyActivitiesTimeLeftFormatter:Format(secondsRemaining)
         local timeString = MONTHLY_ACTIVITIES_DAYS:format(time)
         local monthString
@@ -56,39 +59,56 @@ do
 
         return monthString, timeString
     end
+end
 
-    function MonthlyActivities:GetInfo()
-        if AreMonthlyActivitiesRestricted() then
-            return nil
+local function CacheInfo()
+    local activitiesInfo = C_PerksActivities.GetPerksActivitiesInfo()
+    local pendingRewards = C_PerksProgram.GetPendingChestRewards()
+
+    local itemReward, pendingReward
+    local thresholdMax = 0
+    for _, thresholdInfo in pairs(activitiesInfo.thresholds) do
+        thresholdInfo.pendingReward = HasPendingReward(activitiesInfo, pendingRewards, thresholdInfo.thresholdOrderIndex)
+        if thresholdInfo.requiredContributionAmount > thresholdMax then
+            thresholdMax = thresholdInfo.requiredContributionAmount
+            itemReward = thresholdInfo.itemReward and Item:CreateFromItemID(thresholdInfo.itemReward) or nil
+            pendingReward = thresholdInfo.pendingReward
         end
-
-        local activitiesInfo = C_PerksActivities.GetPerksActivitiesInfo()
-        local pendingRewards = C_PerksProgram.GetPendingChestRewards()
-
-        local itemReward, pendingReward
-        local thresholdMax = 0
-        for _, thresholdInfo in pairs(activitiesInfo.thresholds) do
-            thresholdInfo.pendingReward = HasPendingReward(activitiesInfo, pendingRewards, thresholdInfo.thresholdOrderIndex)
-            if thresholdInfo.requiredContributionAmount > thresholdMax then
-                thresholdMax = thresholdInfo.requiredContributionAmount
-                itemReward = thresholdInfo.itemReward and Item:CreateFromItemID(thresholdInfo.itemReward) or nil
-                pendingReward = thresholdInfo.pendingReward
-            end
-        end
-
-        -- Prevent divide by zero below
-        if thresholdMax == 0 then
-            thresholdMax = 1000
-        end
-
-        local earnedThresholdAmount = 0
-        for _, activity in pairs(activitiesInfo.activities) do
-            if activity.completed then
-                earnedThresholdAmount = earnedThresholdAmount + activity.thresholdContributionAmount
-            end
-        end
-        earnedThresholdAmount = math.min(earnedThresholdAmount, thresholdMax)
-
-        return addon.PATTERNS.PROGRESS:format(earnedThresholdAmount, thresholdMax), itemReward, pendingReward, GetMonthlyActivitiesTimeInfo(activitiesInfo.displayMonthName, activitiesInfo.secondsRemaining)
     end
+
+    -- Prevent divide by zero below
+    if thresholdMax == 0 then
+        thresholdMax = 1000
+    end
+
+    local earnedThresholdAmount = 0
+    for _, activity in pairs(activitiesInfo.activities) do
+        if activity.completed then
+            earnedThresholdAmount = earnedThresholdAmount + activity.thresholdContributionAmount
+        end
+    end
+    earnedThresholdAmount = math.min(earnedThresholdAmount, thresholdMax)
+
+    DATA.itemReward = itemReward
+    DATA.pendingReward = pendingReward
+    DATA.thresholdMax = thresholdMax
+    DATA.earnedThresholdAmount = earnedThresholdAmount
+    DATA.displayMonthName = activitiesInfo.displayMonthName
+    DATA.secondsRemaining = activitiesInfo.secondsRemaining
+end
+
+MonthlyActivities:RegisterEvents(
+    "PLAYER_LOGIN",
+    "CHEST_REWARDS_UPDATED_FROM_SERVER",
+    "PERKS_ACTIVITIES_TRACKED_LIST_CHANGED",
+    "PERKS_ACTIVITIES_UPDATED",
+    "PERKS_ACTIVITY_COMPLETED", function(_, eventName, ...)
+        CacheInfo()
+    end)
+
+function MonthlyActivities:GetInfo()
+    if AreMonthlyActivitiesRestricted() then
+        return nil
+    end
+    return addon.PATTERNS.PROGRESS:format(DATA.earnedThresholdAmount, DATA.thresholdMax), DATA.itemReward, DATA.pendingReward, GetMonthlyActivitiesTimeInfo(DATA.displayMonthName, DATA.secondsRemaining)
 end
