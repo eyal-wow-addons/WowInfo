@@ -14,9 +14,11 @@ local function AddCurrencyInfo(iterator)
         if isHeader then
             Display:AddFormattedHeader(L["S Currency:"], name)
         else
+            local currentQuantity = BreakUpLargeNumbers(quantity)
+
             Display
                 :SetFormattedLine(CURRENCY_ITEM_FORMAT, icon, name)
-                :SetLine(BreakUpLargeNumbers(quantity))
+                :SetLine(currentQuantity)
 
             if quantity > 0 then
                 local percent
@@ -25,7 +27,7 @@ local function AddCurrencyInfo(iterator)
                     percent = Round(quantity / maxQuantity * 100)
 
                     if IsShiftKeyDown() then
-                        Display:SetFormattedLine(CURRENCY_MAX_FORMAT, BreakUpLargeNumbers(maxQuantity))
+                        Display:SetFormattedLine(CURRENCY_MAX_FORMAT, currentQuantity, BreakUpLargeNumbers(maxQuantity))
                     end
 
                     if percent == 100 then
