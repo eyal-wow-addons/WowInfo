@@ -9,9 +9,11 @@ Display:RegisterHookScript(EJMicroButton, "OnEnter", function(self)
         return
     end
 
-    local thresholdProgressString, itemReward, pendingReward, monthString, timeString = MonthlyActivities:GetInfo()
+    local earnedThresholdAmount, thresholdMax, itemReward, pendingReward, monthString, timeString = MonthlyActivities:GetInfo()
+  
+    if earnedThresholdAmount then
+        local thresholdProgressString = addon.PATTERNS.PROGRESS:format(earnedThresholdAmount, thresholdMax)
 
-    if thresholdProgressString then
         if itemReward and not Display.itemDataLoadedCancelFunc then
             Display.itemDataLoadedCancelFunc = function()
                 local itemName = itemReward:GetItemName()
@@ -30,7 +32,7 @@ Display:RegisterHookScript(EJMicroButton, "OnEnter", function(self)
                 end
             end
         end
-        
+
         Display
             :SetDoubleLine(L["Traveler's Log:"], monthString)
             :ToHeader()

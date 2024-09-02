@@ -110,5 +110,5 @@ function MonthlyActivities:GetInfo()
     if AreMonthlyActivitiesRestricted() then
         return nil
     end
-    return addon.PATTERNS.PROGRESS:format(DATA.earnedThresholdAmount, DATA.thresholdMax), DATA.itemReward, DATA.pendingReward, GetMonthlyActivitiesTimeInfo(DATA.displayMonthName, DATA.secondsRemaining)
+    return DATA.earnedThresholdAmount, DATA.thresholdMax, DATA.itemReward, DATA.pendingReward, GetMonthlyActivitiesTimeInfo(DATA.displayMonthName, DATA.secondsRemaining)
 end
