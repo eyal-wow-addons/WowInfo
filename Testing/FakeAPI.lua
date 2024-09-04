@@ -544,7 +544,7 @@ local GuildRosterData = {
 }
 
 do
-    local Guild = addon.Guild
+    local Guild = addon:GetObject("Guild", true) or {}
 
     Guild.GetNumGuildMembers = function()
         return #GuildRosterData
@@ -559,43 +559,95 @@ end
 do
     local FriendInfo = {
         [1] = {
+            connected = GuildRosterData[11].online,
+            name = GuildRosterData[11].name,
+            className = GuildRosterData[11].class,
+            area = GuildRosterData[11].zone,
+            notes = GuildRosterData[11].note,
+            guid = "Player-2808-4MZ129JIP5",
+            level = GuildRosterData[11].level,
+            dnd = (GuildRosterData[11].status == 2),
+            afk = (GuildRosterData[11].status == 1),
+            rafLinkType = nil,
+            mobile = GuildRosterData[11].isMobile,
+        },
+        [2] = {
+            connected = GuildRosterData[12].online,
+            name = GuildRosterData[12].name,
+            className = GuildRosterData[12].class,
+            area = GuildRosterData[12].zone,
+            notes = GuildRosterData[12].note,
+            guid = "Player-5831-MFNHT71W2F",
+            level = GuildRosterData[12].level,
+            dnd = (GuildRosterData[12].status == 2),
+            afk = (GuildRosterData[12].status == 1),
+            rafLinkType = nil,
+            mobile = GuildRosterData[12].isMobile,
+        },
+        [3] = {
+            connected = GuildRosterData[13].online,
+            name = GuildRosterData[13].name,
+            className = GuildRosterData[13].class,
+            area = GuildRosterData[13].zone,
+            notes = GuildRosterData[13].note,
+            guid = "Player-3603-OE0LPE3ZUA",
+            level = GuildRosterData[13].level,
+            dnd = (GuildRosterData[13].status == 2),
+            afk = (GuildRosterData[13].status == 1),
+            rafLinkType = nil,
+            mobile = GuildRosterData[13].isMobile,
+        },
+        [4] = {
+            connected = GuildRosterData[15].online,
+            name = GuildRosterData[15].name,
+            className = GuildRosterData[15].class,
+            area = GuildRosterData[15].zone,
+            notes = GuildRosterData[15].note,
+            guid = "Player-1251-O6K752XNCU",
+            level = GuildRosterData[15].level,
+            dnd = (GuildRosterData[15].status == 2),
+            afk = (GuildRosterData[15].status == 1),
+            rafLinkType = nil,
+            mobile = GuildRosterData[15].isMobile,
+        },
+        [5] = {
             connected = GuildRosterData[20].online,
             name = GuildRosterData[20].name,
             className = GuildRosterData[20].class,
             area = GuildRosterData[20].zone,
             notes = GuildRosterData[20].note,
-            guid = "Player-1096-085DE707",
+            guid = "Player-1528-1LWJNYNAUB",
             level = GuildRosterData[20].level,
             dnd = (GuildRosterData[20].status == 2),
             afk = (GuildRosterData[20].status == 1),
             rafLinkType = nil,
             mobile = GuildRosterData[20].isMobile,
         },
-        [2] = {
+        [6] = {
+            connected = GuildRosterData[25].online,
+            name = GuildRosterData[25].name,
+            className = GuildRosterData[25].class,
+            area = GuildRosterData[25].zone,
+            notes = GuildRosterData[25].note,
+            guid = "Player-7932-YBEFCJWJIE",
+            level = GuildRosterData[25].level,
+            dnd = (GuildRosterData[25].status == 2),
+            afk = (GuildRosterData[25].status == 1),
+            rafLinkType = nil,
+            mobile = GuildRosterData[25].isMobile,
+        },
+        [7] = {
             connected = GuildRosterData[30].online,
             name = GuildRosterData[30].name,
             className = GuildRosterData[30].class,
             area = GuildRosterData[30].zone,
             notes = GuildRosterData[30].note,
-            guid = "Player-1096-085DE709",
+            guid = "Player-2115-KDMS08HYO4",
             level = GuildRosterData[30].level,
             dnd = (GuildRosterData[30].status == 2),
             afk = (GuildRosterData[30].status == 1),
             rafLinkType = nil,
             mobile = GuildRosterData[30].isMobile,
-        },
-        [3] = {
-            connected = GuildRosterData[12].online,
-            name = GuildRosterData[12].name,
-            className = GuildRosterData[12].class,
-            area = GuildRosterData[12].zone,
-            notes = GuildRosterData[12].note,
-            guid = "Player-1096-085DE712",
-            level = GuildRosterData[12].level,
-            dnd = (GuildRosterData[12].status == 2),
-            afk = (GuildRosterData[12].status == 1),
-            rafLinkType = nil,
-            mobile = GuildRosterData[12].isMobile,
         }
     }
 
@@ -844,53 +896,97 @@ do
 
     local BNetAccountInfo = {
         {
+            bnetAccountID = 1,
+            accountName = "John Doe",
             gameAccountInfo = BNetGameAccountInfo[1]
         },
         {
+            bnetAccountID = 2,
+            accountName = "Elena Smith",
             gameAccountInfo = BNetGameAccountInfo[2]
         },
         {
+            bnetAccountID = 3,
+            accountName = "Michael Johnson",
             gameAccountInfo = BNetGameAccountInfo[3]
         },
         {
+            bnetAccountID = 4,
+            accountName = "Emily Clark",
             gameAccountInfo = BNetGameAccountInfo[4]
         },
         {
+            bnetAccountID = 5,
+            accountName = "David Brown",
             gameAccountInfo = BNetGameAccountInfo[5]
         },
         {
+            bnetAccountID = 6,
+            accountName = "Jessica Miller",
             gameAccountInfo = BNetGameAccountInfo[6]
         },
         {
+            bnetAccountID = 7,
+            accountName = "Christopher Wilson",
             gameAccountInfo = BNetGameAccountInfo[7]
         },
         {
+            bnetAccountID = 8,
+            accountName = "Laura Davis",
             gameAccountInfo = BNetGameAccountInfo[8]
         },
         {
+            bnetAccountID = 9,
+            accountName = "Daniel Martinez",
             gameAccountInfo = BNetGameAccountInfo[9]
         },
         {
+            bnetAccountID = 10,
+            accountName = "Amy Taylor",
             gameAccountInfo = BNetGameAccountInfo[10]
         },
     }
 
-    local Friends = addon.Friends
-    
-    Friends.GetNumFriends = function()
+    local Friends = addon:GetObject("Friends", true) or {}
+
+    function Friends:GetNumFriends()
         return #FriendInfo
     end
 
-    Friends.GetFriendInfoByIndex = function(index)
+    function Friends:GetNumOnlineFriends()
+        local onlineFriends = 0
+        for _, value in ipairs(FriendInfo) do
+            if value.connected then
+                onlineFriends = onlineFriends + 1
+            end
+        end
+        return onlineFriends
+    end
+
+    function Friends:GetFriendInfoByIndex(index)
         return FriendInfo[index]
     end
 
-    Friends.BNGetNumFriends = function()
-        return #BNetAccountInfo
+    function Friends:BNGetNumFriends()
+        local onlineFriends = 0
+        for _, value in ipairs(BNetAccountInfo) do
+            if value.gameAccountInfo.isOnline then
+                onlineFriends = onlineFriends + 1
+            end
+        end
+        return #BNetAccountInfo, onlineFriends, 0, 0
     end
 
-    Friends.GetFriendAccountInfo = function(index)
+    function Friends:GetFriendAccountInfo(index)
         return BNetAccountInfo[index]
+    end
+
+    function Friends:GetAccountInfoByID(id)
+        for _, value in ipairs(BNetAccountInfo) do
+            if value.gameAccountInfo.gameAccountID == id then
+                return value.gameAccountInfo
+            end
+        end
     end
 end
 
@@ -1538,7 +1634,7 @@ do
         }
     }
 
-    local Currency = addon.Currency
+    local Currency = addon:GetObject("Currency", true) or {}
 
     Currency.GetCurrencyListSize = function()
         return #CurrencyInfo
