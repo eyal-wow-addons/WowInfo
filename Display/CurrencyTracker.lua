@@ -4,7 +4,7 @@ local Display = addon:NewDisplay("CurrencyTracker")
 
 local L = addon.L
 
-local CURRENCY_QUANTITY_PER_CHARACTER_FORMAT = "%s: %s"
+local QUANTITY_LINE_FORMAT = "%s: %s"
 
 hooksecurefunc(GameTooltip, "SetCurrencyToken", function(_, index)
     local link = C_CurrencyInfo.GetCurrencyListLink(index)
@@ -24,12 +24,12 @@ hooksecurefunc(GameTooltip, "SetCurrencyToken", function(_, index)
                 quantity = Display:ToGray(quantity)
             end
 
-            Display:AddFormattedLine(CURRENCY_QUANTITY_PER_CHARACTER_FORMAT, charName, quantity)
+            Display:AddFormattedLine(QUANTITY_LINE_FORMAT, charName, quantity)
         end
 
         if currencyID then
             for charName, quantity in Currency:IterableCharactersCurrencyInfo(currencyID) do
-                Display:AddFormattedLine(CURRENCY_QUANTITY_PER_CHARACTER_FORMAT, charName, Display:ToWhite(quantity))
+                Display:AddFormattedLine(QUANTITY_LINE_FORMAT, charName, Display:ToWhite(quantity))
             end
         end
 

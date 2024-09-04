@@ -4,12 +4,12 @@ local Collections = addon:GetObject("Collections")
 local Achievements = addon:GetObject("Achievements")
 local Display = addon:NewDisplay("Collections")
 
-local COLLECTIONS_LABEL_FORMAT = "- %s: |cffffffff%d|r / |cff20ff20%d|r"
+local ACHIEVEMENT_LINE_FORMAT = "- %s: |cffffffff%d|r / |cff20ff20%d|r"
 
 function Display:AddAchievementLine(callback)
     local name, currAmount, reqAmount = callback()
     if name then
-        self:AddFormattedLine(COLLECTIONS_LABEL_FORMAT, name, currAmount, reqAmount)
+        self:AddFormattedLine(ACHIEVEMENT_LINE_FORMAT, name, currAmount, reqAmount)
     end
     return self
 end

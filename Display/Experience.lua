@@ -4,7 +4,7 @@ local Display = addon:NewDisplay("Experience")
 
 local L = addon.L
 
-local CURRENT_PROGRESS_LABEL_FORMAT = "%s / %s (%s)"
+local CURRENT_PROGRESS_LINE_FORMAT = "%s / %s (%s)"
 
 local function GetFormattedXpProgress(xp, xpMax, xpPct)
     return AbbreviateNumbers(xp), AbbreviateNumbers(xpMax), FormatPercentage(xpPct, true)
@@ -28,7 +28,7 @@ Display:RegisterHookScript(MainStatusTrackingBarContainer.bars[4], "OnEnter", fu
 
     Display
         :SetLine(L["Current"])
-        :SetFormattedLine(CURRENT_PROGRESS_LABEL_FORMAT, GetFormattedXpProgress(xp, xpMax, xpPct))
+        :SetFormattedLine(CURRENT_PROGRESS_LINE_FORMAT, GetFormattedXpProgress(xp, xpMax, xpPct))
         :SetHighlight()
         :ToLine()
 

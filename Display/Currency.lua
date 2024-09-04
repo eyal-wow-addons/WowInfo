@@ -4,8 +4,8 @@ local Display = addon:NewDisplay("Currency")
 
 local L = addon.L
 
-local CURRENCY_ITEM_FORMAT = "|T%s:0|t %s"
-local CURRENCY_MAX_FORMAT = "%s |cffffffff/ %s|r"
+local ITEM_LINE_FORMAT = "|T%s:0|t %s"
+local MAX_QUANTITY_LINE_FORMAT = "%s |cffffffff/ %s|r"
 
 local function AddCurrencyInfo(iterator)
     local refreshTooltip
@@ -17,7 +17,7 @@ local function AddCurrencyInfo(iterator)
             local currentQuantity = BreakUpLargeNumbers(quantity)
 
             Display
-                :SetFormattedLine(CURRENCY_ITEM_FORMAT, icon, name)
+                :SetFormattedLine(ITEM_LINE_FORMAT, icon, name)
                 :SetLine(currentQuantity)
 
             if quantity > 0 then
@@ -27,7 +27,7 @@ local function AddCurrencyInfo(iterator)
                     percent = Round(quantity / maxQuantity * 100)
 
                     if IsShiftKeyDown() then
-                        Display:SetFormattedLine(CURRENCY_MAX_FORMAT, currentQuantity, BreakUpLargeNumbers(maxQuantity))
+                        Display:SetFormattedLine(MAX_QUANTITY_LINE_FORMAT, currentQuantity, BreakUpLargeNumbers(maxQuantity))
                     end
 
                     if percent == 100 then
@@ -37,12 +37,8 @@ local function AddCurrencyInfo(iterator)
                     elseif percent >= 80 then
                         Display:SetYellowColor()
                     else
-                        percent = nil
+                        Display:SetHighlight()
                     end
-                end
-
-                if not percent then
-                    Display:SetHighlight()
                 end
             else
                 Display:SetGrayColor()
