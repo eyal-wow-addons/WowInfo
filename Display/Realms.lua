@@ -12,7 +12,7 @@ hooksecurefunc("MainMenuBarPerformanceBarFrame_OnEnter", function()
         for isPlayerRealm, realm in PlayerInfo:IterableConnectedRealms() do
             Display:SetLine(realm)
             if isPlayerRealm then
-                Display:SetClassColor()
+                Display:SetPlayerClassColor()
             end
             Display:ToLine()
         end
