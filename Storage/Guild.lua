@@ -7,7 +7,7 @@ local defaults = {
     }
 }
 
-function Storage:OnInitialize()
+function Storage:OnInitialized()
     DB = self:RegisterDB(defaults)
 end
 
