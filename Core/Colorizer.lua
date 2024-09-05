@@ -34,8 +34,8 @@ function Colorizer:ToOrange(text)
     return WrapText(ORANGE_FONT_COLOR, text)
 end
 
-function Colorizer:ToClassColor(className, text)
-    local classColor = RAID_CLASS_COLORS[className] or NORMAL_FONT_COLOR
+function Colorizer:ToClassColor(classFileName, text)
+    local classColor = RAID_CLASS_COLORS[classFileName] or NORMAL_FONT_COLOR
     return WrapText(classColor, text)
 end
 
