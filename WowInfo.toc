@@ -29,7 +29,7 @@ Core\MicroMenu.lua
 Main.lua
 
 Storage\Currency.lua
-# Storage\Friends.lua
+Storage\Friends.lua
 # Storage\Guild.lua
 # Storage\Money.lua
 # Storage\Reputation.lua
@@ -41,7 +41,7 @@ DataAPI\Collections.lua
 DataAPI\Currency.lua
 DataAPI\Durability.lua
 DataAPI\Experience.lua
-# DataAPI\Friends.lua
+DataAPI\Friends.lua
 # DataAPI\Guild.lua
 # DataAPI\Money.lua
 DataAPI\MonthlyActivities.lua
@@ -58,11 +58,11 @@ Display\Achievements.lua
 Display\Collections.lua
 Display\Currency.lua
 Display\CurrencyTracker.lua
-# Display\GreatVaultProgress.lua
 # Display\DailyReset.lua
 Display\Durability.lua
 Display\Experience.lua
-# Display\Friends.lua
+Display\Friends.lua
+# Display\GreatVaultProgress.lua
 # Display\GuildFriends.lua
 # Display\Money.lua
 Display\MonthlyActivities.lua

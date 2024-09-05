@@ -2,7 +2,6 @@ local _, addon = ...
 local L = {}
 addon.L = L
 
-L["AFK"] = "|cffff0000<AFK>|r"
 L["All Characters (X):"] = "All Characters (%d):"
 L["Bags"] = "Bags"
 L["Battle.net (X):"] = "Battle.net (%d):"
@@ -15,7 +14,6 @@ L["Connected Realms:"] = "Connected Realms:"
 L["Current"] = "Current"
 L["Daily Reset:"] = "Daily Reset:"
 L["Defeated"] = "Defeated"
-L["DND"] = "|cffff0000<DND>|r"
 L["Dungeons & Raids:"] = "Dungeons & Raids:"
 L["Durability:"] = "Durability:"
 L["Equipped"] = "Equipped"
