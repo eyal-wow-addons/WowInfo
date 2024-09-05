@@ -2,10 +2,6 @@ local _, addon = ...
 local PlayerInfo = LibStub("PlayerInfo-1.0")
 local Currency = addon:NewObject("Currency")
 
-Currency.GetCurrencyListSize = C_CurrencyInfo.GetCurrencyListSize
-Currency.GetCurrencyListInfo = C_CurrencyInfo.GetCurrencyListInfo
-Currency.GetClampedCurrentExpansionLevel = GetClampedCurrentExpansionLevel
-
 local DATA = {
     expansions = {},
     expansionCategory = "",
@@ -52,15 +48,15 @@ end
 local function IterableCurrencyInfoByCategory(categoryName)
     local isHeaderCategoryFound = false
     local i = 0
-    local n = Currency.GetCurrencyListSize()
+    local n = C_CurrencyInfo.GetCurrencyListSize()
     return function()
         i = i + 1
         while i <= n do
-            local info = Currency.GetCurrencyListInfo(i)
+            local info = C_CurrencyInfo.GetCurrencyListInfo(i)
             if not info.isHeader and isHeaderCategoryFound then
                 return info.name, info.isHeader, info.iconFileID, info.quantity, info.maxQuantity
             elseif info.name == categoryName then
-                local nextInfo = Currency.GetCurrencyListInfo(i + 1)
+                local nextInfo = C_CurrencyInfo.GetCurrencyListInfo(i + 1)
                 -- Check whether the header has children
                 if nextInfo and nextInfo.name and not nextInfo.isHeader then
                     isHeaderCategoryFound = true
@@ -133,7 +129,7 @@ local function CachedIterableCurrencyInfoByCategory(categoryName)
 end
 
 function Currency:OnInitializing()
-    DATA.currentExpansionLevel = Currency.GetClampedCurrentExpansionLevel()
+    DATA.currentExpansionLevel = GetClampedCurrentExpansionLevel()
     for i = 0, DATA.currentExpansionLevel do
         table.insert(DATA.expansions, _G["EXPANSION_NAME" .. i])
     end
