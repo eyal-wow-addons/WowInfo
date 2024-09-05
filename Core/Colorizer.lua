@@ -34,7 +34,23 @@ function Colorizer:ToOrange(text)
     return WrapText(ORANGE_FONT_COLOR, text)
 end
 
-function Colorizer:ToClassColor(text)
-    return GetClassColoredTextForUnit("player", text)
+function Colorizer:ToClassColor(className, text)
+    local classColor = RAID_CLASS_COLORS[className] or NORMAL_FONT_COLOR
+    return WrapText(classColor, text)
+end
+
+function Colorizer:ToUnitClassColor(unit, text)
+    C:Requires(unit, 2, "string")
+    return self:ToClassColor(select(2, UnitClass(unit)), text)
+end
+
+function Colorizer:ToPlayerClassColor(text)
+    return self:ToUnitClassColor("player", text)
+end
+
+function Colorizer:ToItemQualityColor(item, text)
+    local itemColor = item:GetItemQualityColor()
+    itemColor = itemColor and itemColor.color or NORMAL_FONT_COLOR
+    return WrapText(itemColor, text)
 end
 
