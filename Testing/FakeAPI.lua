@@ -164,20 +164,20 @@ local GuildRosterData = {
         standingID = 1,
     },
     {
-        name = "Serenity",
-        rank = "Member",
-        rankIndex = 5,
-        level = 30,
+        name = "Moroc",
+        rank = "Humongous",
+        rankIndex = 1,
+        level = 80,
         class = "Warrior",
-        zone = "Undercity",
+        zone = "The Ringing Deeps",
         note = "",
         officernote = "",
-        online = false,
-        status = 1, -- Away
+        online = true,
+        status = 2, -- Away
         classFileName = "WARRIOR",
         achievementPoints = 1500,
         achievementRank = 3,
-        isMobile = true,
+        isMobile = false,
         isSoREligible = true,
         standingID = 1,
     },
@@ -254,24 +254,6 @@ local GuildRosterData = {
         standingID = 2,
     },
     {
-        name = "Lightbringer",
-        rank = "Officer",
-        rankIndex = 2,
-        level = 70,
-        class = "Paladin",
-        zone = "Stormwind City",
-        note = "",
-        officernote = "",
-        online = true,
-        status = 0, -- Available
-        classFileName = "PALADIN",
-        achievementPoints = 4000,
-        achievementRank = 7,
-        isMobile = false,
-        isSoREligible = true,
-        standingID = 1,
-    },
-    {
         name = "Stargazer",
         rank = "Member",
         rankIndex = 5,
@@ -288,24 +270,6 @@ local GuildRosterData = {
         isMobile = false,
         isSoREligible = true,
         standingID = 3,
-    },
-    {
-        name = "Moonshadow",
-        rank = "Officer",
-        rankIndex = 2,
-        level = 50,
-        class = "Priest",
-        zone = "Darnassus",
-        note = "",
-        officernote = "",
-        online = false,
-        status = 2, -- Busy
-        classFileName = "PRIEST",
-        achievementPoints = 2200,
-        achievementRank = 3,
-        isMobile = true,
-        isSoREligible = false,
-        standingID = 2,
     },
     {
         name = "Stormcaller",
@@ -434,24 +398,6 @@ local GuildRosterData = {
         standingID = 1,
     },
     {
-        name = "Stargazer",
-        rank = "Member",
-        rankIndex = 5,
-        level = 40,
-        class = "Hunter",
-        zone = "Thunder Bluff",
-        note = "",
-        officernote = "",
-        online = true,
-        status = 1, -- Away
-        classFileName = "HUNTER",
-        achievementPoints = 1800,
-        achievementRank = 2,
-        isMobile = false,
-        isSoREligible = true,
-        standingID = 3,
-    },
-    {
         name = "Moonshadow",
         rank = "Officer",
         rankIndex = 2,
@@ -468,42 +414,6 @@ local GuildRosterData = {
         isMobile = true,
         isSoREligible = false,
         standingID = 2,
-    },
-    {
-        name = "Stormcaller",
-        rank = "Member",
-        rankIndex = 5,
-        level = 65,
-        class = "Shaman",
-        zone = "Orgrimmar",
-        note = "",
-        officernote = "",
-        online = true,
-        status = 0, -- Available
-        classFileName = "SHAMAN",
-        achievementPoints = 3500,
-        achievementRank = 6,
-        isMobile = false,
-        isSoREligible = true,
-        standingID = 1,
-    },
-    {
-        name = "Valiant",
-        rank = "Member",
-        rankIndex = 5,
-        level = 30,
-        class = "Warrior",
-        zone = "Undercity",
-        note = "",
-        officernote = "",
-        online = true,
-        status = 1, -- Away
-        classFileName = "WARRIOR",
-        achievementPoints = 1500,
-        achievementRank = 3,
-        isMobile = false,
-        isSoREligible = true,
-        standingID = 1,
     },
     {
         name = "Firesong",
@@ -547,7 +457,13 @@ do
     local Guild = addon:GetObject("Guild", true) or {}
 
     Guild.GetNumGuildMembers = function()
-        return #GuildRosterData
+        local onlineMembers = 0
+        for _, info in ipairs(GuildRosterData) do
+            if info.online then
+                onlineMembers = onlineMembers + 1
+            end
+        end
+        return #GuildRosterData, onlineMembers
     end
 
     Guild.GetGuildRosterInfo = function(index)
@@ -624,30 +540,30 @@ do
             mobile = GuildRosterData[20].isMobile,
         },
         [6] = {
+            connected = GuildRosterData[22].online,
+            name = GuildRosterData[22].name,
+            className = GuildRosterData[22].class,
+            area = GuildRosterData[22].zone,
+            notes = GuildRosterData[22].note,
+            guid = "Player-7932-YBEFCJWJIE",
+            level = GuildRosterData[22].level,
+            dnd = (GuildRosterData[22].status == 2),
+            afk = (GuildRosterData[22].status == 1),
+            rafLinkType = nil,
+            mobile = GuildRosterData[22].isMobile,
+        },
+        [7] = {
             connected = GuildRosterData[25].online,
             name = GuildRosterData[25].name,
             className = GuildRosterData[25].class,
             area = GuildRosterData[25].zone,
             notes = GuildRosterData[25].note,
-            guid = "Player-7932-YBEFCJWJIE",
+            guid = "Player-2115-KDMS08HYO4",
             level = GuildRosterData[25].level,
             dnd = (GuildRosterData[25].status == 2),
             afk = (GuildRosterData[25].status == 1),
             rafLinkType = nil,
             mobile = GuildRosterData[25].isMobile,
-        },
-        [7] = {
-            connected = GuildRosterData[30].online,
-            name = GuildRosterData[30].name,
-            className = GuildRosterData[30].class,
-            area = GuildRosterData[30].zone,
-            notes = GuildRosterData[30].note,
-            guid = "Player-2115-KDMS08HYO4",
-            level = GuildRosterData[30].level,
-            dnd = (GuildRosterData[30].status == 2),
-            afk = (GuildRosterData[30].status == 1),
-            rafLinkType = nil,
-            mobile = GuildRosterData[30].isMobile,
         }
     }
 
@@ -947,7 +863,7 @@ do
         },
         {
             bnetAccountID = 10,
-            accountName = "Amy Taylor",
+            accountName = "Andreas",
             gameAccountInfo = BNetGameAccountInfo[10]
         },
     }
