@@ -6,19 +6,7 @@ local Display = addon:NewDisplay("Friends")
 
 local L = addon.L
 
-local WOW_CHAR_FORMAT = "%s |cffffffff%d|r"
-local WOW_CHAR_GROUPED_FORMAT = "|cffaaaaaa[|r%s|cffaaaaaa]|r"
 local BNET_CHAR_LINE_FORMAT = "%s (%s)"
-local GAME_STATUS_TABLE = { FRIENDS_TEXTURE_ONLINE, FRIENDS_TEXTURE_AFK, FRIENDS_TEXTURE_DND, FRIENDS_TEXTURE_OFFLINE }
-local GAME_STATUS_FORMAT = "|T%s:0|t %s"
-
-local function GetFormattedCharName(info)
-    local className = addon.CLASS_NAMES[info.characterClassName]
-    local charName = Display:ToClassColor(className, info.characterName)
-    charName = info.characterLevel and WOW_CHAR_FORMAT:format(charName, info.characterLevel)
-    charName = info.grouped and WOW_CHAR_GROUPED_FORMAT:format(charName) or charName
-    return charName
-end
 
 Display:RegisterHookScript(QuickJoinToastButton, "OnEnter", function()
     local _, numWoWOnline, _, numBNetOnline = Friends:GetNumOnlineFriendsInfo()
@@ -30,8 +18,8 @@ Display:RegisterHookScript(QuickJoinToastButton, "OnEnter", function()
             Display:AddFormattedHeader(L["World of Warcraft (X):"], numWoWOnline)
 
             for info in Friends:IterableWoWFriendsInfo() do
-                local charName = GetFormattedCharName(info)
-                charName = info.status and GAME_STATUS_FORMAT:format(GAME_STATUS_TABLE[info.status], charName)
+                local charName = Friends:GetFormattedCharName(info)
+                charName = Friends:GetFormattedStatus(info, charName)
 
                 Display:SetLine(charName):ToLine()
 
@@ -54,15 +42,11 @@ Display:RegisterHookScript(QuickJoinToastButton, "OnEnter", function()
 
             for info in Friends:IterableBattleNetFriendsInfo() do
                 local accountName = info.accountName
-
-                if info.isFavorite and info.appearOffline then
-                    accountName = Display:ToGray(accountName)
-                end
-
-                accountName = info.status and GAME_STATUS_FORMAT:format(GAME_STATUS_TABLE[info.status], accountName)
+                accountName = info.isFavorite and info.appearOffline and Display:ToGray(accountName) or accountName
+                accountName = Friends:GetFormattedStatus(info, accountName)
 
                 if info.characterName then
-                    Display:SetFormattedLine(BNET_CHAR_LINE_FORMAT, accountName, GetFormattedCharName(info))
+                    Display:SetFormattedLine(BNET_CHAR_LINE_FORMAT, accountName, Friends:GetFormattedCharName(info))
                 else
                     Display:SetLine(accountName)
                 end

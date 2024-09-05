@@ -82,11 +82,11 @@ function Friends:IterableWoWFriendsInfo()
                 characterName = friendInfo.name
 
                 if friendInfo.afk then
-                    status = 2
-                elseif friendInfo.dnd then
                     status = 3
+                elseif friendInfo.dnd then
+                    status = 4
                 else
-                    status = 1
+                    status = 2
                 end
 
                 if friendInfo.area then
@@ -104,8 +104,8 @@ function Friends:IterableWoWFriendsInfo()
                 end
 
                 DATA.WOW.characterName = characterName
-                DATA.WOW.characterClassName = friendInfo.className
                 DATA.WOW.characterLevel = friendInfo.level
+                DATA.WOW.className = friendInfo.className
                 DATA.WOW.grouped = grouped
                 DATA.WOW.zoneName = friendInfo.area
                 DATA.WOW.sameZone = sameZone
@@ -120,7 +120,7 @@ end
 
 function Friends:IterableBattleNetFriendsInfo()
     local maxOnlineFriends, friendAccountInfo, accountInfo
-    local characterName, characterClassName, characterLevel, grouped, zoneName, sameZone, status, accountName, realmName, sameRealm, clientProgram, appearOffline, isFavorite
+    local characterName, characterLevel, className, grouped, zoneName, sameZone, status, accountName, realmName, sameRealm, clientProgram, appearOffline, isFavorite
     local i = 0
     local n = self.BNGetNumFriends()
     return function()
@@ -149,18 +149,18 @@ function Friends:IterableBattleNetFriendsInfo()
                 clientProgram = accountInfo.gameAccountInfo.clientProgram
 
                 if accountInfo.isAFK or accountInfo.gameAccountInfo.isGameAFK then
-                    status = 2
-                elseif accountInfo.isDND or accountInfo.gameAccountInfo.isGameBusy then
                     status = 3
+                elseif accountInfo.isDND or accountInfo.gameAccountInfo.isGameBusy then
+                    status = 4
                 else
-                    status = 1
+                    status = 2
                 end
 
                 if characterName then
                     if clientProgram == BNET_CLIENT_WOW then
                         clientProgram = accountInfo.gameAccountInfo.richPresence == BNET_FRIEND_TOOLTIP_WOW_CLASSIC and BNET_FRIEND_TOOLTIP_WOW_CLASSIC or clientProgram
-                        characterClassName = accountInfo.gameAccountInfo.className
                         characterLevel =  accountInfo.gameAccountInfo.characterLevel
+                        className = accountInfo.gameAccountInfo.className
 
                         if UnitInParty(characterName) or UnitInRaid(characterName) then
                             grouped = true
@@ -189,8 +189,8 @@ function Friends:IterableBattleNetFriendsInfo()
                 end
 
                 DATA.BATTLENET.characterName = characterName
-                DATA.BATTLENET.characterClassName = characterClassName
                 DATA.BATTLENET.characterLevel = characterLevel
+                DATA.BATTLENET.className = className
                 DATA.BATTLENET.grouped = grouped
                 DATA.BATTLENET.zoneName = zoneName
                 DATA.BATTLENET.sameZone = sameZone
