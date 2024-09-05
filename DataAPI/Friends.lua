@@ -10,7 +10,8 @@ Friends.GetAccountInfoByID = C_BattleNet.GetAccountInfoByID
 
 local DATA = {
     WOW = {},
-    BATTLENET = {}
+    BATTLENET = {},
+    ONLINE = {}
 }
 
 local connectedFriendsCounter = 0
@@ -19,30 +20,33 @@ function Friends:GetOnlineFriendsInfo()
     local numWoWTotal = self.GetNumFriends()
     local numBNetTotal = self.BNGetNumFriends()
     local onlineFriendsCounter = 0
-    local onlineFriends
 
     for i = 1, numWoWTotal do
         local info = self.GetFriendInfoByIndex(i)
         if info and info.connected then
-            onlineFriends = onlineFriends or {}
-            onlineFriends[info.name] = true
+            DATA.ONLINE[info.name] = true
             onlineFriendsCounter = onlineFriendsCounter + 1
+        elseif DATA.ONLINE[info.name] then
+            DATA.ONLINE[info.name] = nil
         end
     end
 
     for i = 1, numBNetTotal do
         local accountInfo = self.GetFriendAccountInfo(i)
-        local characterName = accountInfo.gameAccountInfo.characterName
-        local client = accountInfo.gameAccountInfo.clientProgram
-        local isOnline = accountInfo.gameAccountInfo.isOnline
-        if client == BNET_CLIENT_WOW and isOnline  then
-            onlineFriends = onlineFriends or {}
-            onlineFriends[characterName] = true
-            onlineFriendsCounter = onlineFriendsCounter + 1
+        if accountInfo then
+            local characterName = accountInfo.gameAccountInfo.characterName
+            local client = accountInfo.gameAccountInfo.clientProgram
+            local isOnline = accountInfo.gameAccountInfo.isOnline
+            if client == BNET_CLIENT_WOW and isOnline then
+                DATA.ONLINE[characterName] = true
+                onlineFriendsCounter = onlineFriendsCounter + 1
+            elseif DATA.ONLINE[characterName] then
+                DATA.ONLINE[characterName] = nil
+            end
         end
     end
 
-    return onlineFriends, onlineFriendsCounter
+    return DATA.ONLINE, onlineFriendsCounter
 end
 
 function Friends:GetNumOnlineFriendsInfo()
