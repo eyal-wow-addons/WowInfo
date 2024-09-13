@@ -11,7 +11,7 @@ local DATA = {}
 function Guild:IterableGuildRosterInfo(index)
     Guild.GuildRoster()
     local sameZone, grouped
-    local characterName, characterLevel, zone, online, status, classFileName, isMobile
+    local characterName, characterLevel, zone, online, status, classFilename, isMobile
     local onlineFriendsLookupTable = Friends:GetOnlineFriendsInfo()
     local i = index or 0
     local n = Guild.GetNumGuildMembers()
@@ -21,7 +21,7 @@ function Guild:IterableGuildRosterInfo(index)
         end
         i = i + 1
         if i <= n then
-            characterName, _, _, characterLevel, _, zone, _, _, online, status, classFileName, _, _, isMobile = Guild.GetGuildRosterInfo(i)
+            characterName, _, _, characterLevel, _, zone, _, _, online, status, classFilename, _, _, isMobile = Guild.GetGuildRosterInfo(i)
 
             characterName = Ambiguate(characterName, "guild")
 
@@ -51,7 +51,7 @@ function Guild:IterableGuildRosterInfo(index)
 
             DATA.characterName = characterName
             DATA.characterLevel = characterLevel
-            DATA.classFileName = classFileName
+            DATA.classFilename = classFilename
             DATA.grouped = grouped
             DATA.zoneName = zone
             DATA.sameZone = sameZone
