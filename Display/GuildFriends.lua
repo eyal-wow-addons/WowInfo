@@ -1,7 +1,6 @@
 local _, addon = ...
 local Guild = addon:GetObject("Guild")
-local Friends = addon:GetObject("Friends")
-local Display = addon:NewDisplay("GuildFriends")
+local Display = addon:NewDisplay("GuildFriends", "Friends")
 
 local L = addon.L
 
@@ -21,8 +20,8 @@ Display:RegisterHookScript(GuildMicroButton, "OnEnter", function(self)
             Display:AddFormattedHeader(L["Guild Friends (X):"], totalOnlineGuildFriends)
 
             for info in Guild:IterableOnlineFriendsInfo() do
-                local charName = Friends:GetFormattedCharName(info)
-                charName = Friends:GetFormattedStatus(info, charName)
+                local charName = Display:GetFormattedCharName(info)
+                charName = Display:GetFormattedStatus(info, charName)
 
                 Display:SetLine(charName)
 

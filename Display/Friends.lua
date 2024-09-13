@@ -43,10 +43,10 @@ Display:RegisterHookScript(QuickJoinToastButton, "OnEnter", function()
             for info in Friends:IterableBattleNetFriendsInfo() do
                 local accountName = info.accountName
                 accountName = info.isFavorite and info.appearOffline and Display:ToGray(accountName) or accountName
-                accountName = Friends:GetFormattedStatus(info, accountName)
+                accountName = Display:GetFormattedStatus(info, accountName)
 
                 if info.characterName then
-                    Display:SetFormattedLine(BNET_CHAR_LINE_FORMAT, accountName, Friends:GetFormattedCharName(info))
+                    Display:SetFormattedLine(BNET_CHAR_LINE_FORMAT, accountName, Display:GetFormattedCharName(info))
                 else
                     Display:SetLine(accountName)
                 end
