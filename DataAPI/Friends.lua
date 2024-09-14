@@ -1,6 +1,8 @@
 local _, addon = ...
 local Friends = addon:NewObject("Friends")
 
+local tinsert = table.insert
+
 Friends.GetNumFriends = C_FriendList.GetNumFriends
 Friends.GetNumOnlineFriends = C_FriendList.GetNumOnlineFriends
 Friends.GetFriendInfoByIndex = C_FriendList.GetFriendInfoByIndex
@@ -14,15 +16,57 @@ local DATA = {
     ONLINE = {}
 }
 
+local CACHE = {
+    WOW = {},
+    BATTLENET = {}
+}
+
 local connectedFriendsCounter = 0
 
+local function CacheFriendsInfoHelper(cache, getNumFriends, getFriendInfo)
+    local numTotal = getNumFriends()
+    for i = 1, math.max(#cache, numTotal) do
+        local info = getFriendInfo(i)
+        if info and cache[i] then
+            cache[i] = info
+        elseif not info then
+            cache[i] = nil
+        else
+            tinsert(cache, info)
+        end
+    end
+end
+
+local function CacheFriendsInfo()
+    CacheFriendsInfoHelper(CACHE.WOW, Friends.GetNumFriends, Friends.GetFriendInfoByIndex)
+end
+
+local function CacheFriendsAccountInfo()
+    CacheFriendsInfoHelper(CACHE.BATTLENET, Friends.BNGetNumFriends, Friends.GetFriendAccountInfo)
+end
+
+Friends:RegisterEvents(
+    "PLAYER_LOGIN",
+    "FRIENDLIST_UPDATE",
+    "BN_FRIEND_INVITE_ADDED",
+    "BN_FRIEND_INVITE_REMOVED",
+    "BN_CONNECTED",
+    "BN_DISCONNECTED", function(_, eventName)
+        if eventName == "PLAYER_LOGIN" or eventName == "FRIENDLIST_UPDATE" then
+            CacheFriendsInfo()
+            CacheFriendsAccountInfo()
+        else
+            CacheFriendsAccountInfo()
+        end
+    end)
+
 function Friends:GetOnlineFriendsInfo()
-    local numWoWTotal = self.GetNumFriends()
-    local numBNetTotal = self.BNGetNumFriends()
+    local numWoWTotal = #CACHE.WOW
+    local numBNetTotal = #CACHE.BATTLENET
     local onlineFriendsCounter = 0
 
     for i = 1, numWoWTotal do
-        local info = self.GetFriendInfoByIndex(i)
+        local info = CACHE.WOW[i]
         if info and info.connected then
             DATA.ONLINE[info.name] = true
             onlineFriendsCounter = onlineFriendsCounter + 1
@@ -32,7 +76,7 @@ function Friends:GetOnlineFriendsInfo()
     end
 
     for i = 1, numBNetTotal do
-        local accountInfo = self.GetFriendAccountInfo(i)
+        local accountInfo = CACHE.BATTLENET[i]
         if accountInfo then
             local characterName = accountInfo.gameAccountInfo.characterName
             local client = accountInfo.gameAccountInfo.clientProgram
@@ -62,7 +106,7 @@ end
 function Friends:IterableWoWFriendsInfo()
     local maxOnlineFriends, friendInfo, characterName, grouped, sameZone, status
     local i = 0
-    local n = self.GetNumFriends()
+    local n = #CACHE.WOW
     return function()
         maxOnlineFriends = self.storage:GetMaxOnlineFriends()
         if maxOnlineFriends == 0 then
@@ -74,7 +118,7 @@ function Friends:IterableWoWFriendsInfo()
                 return
             end
 
-            friendInfo = self.GetFriendInfoByIndex(i)
+            friendInfo = CACHE.WOW[i]
 
             if friendInfo and friendInfo.connected then
                 connectedFriendsCounter = connectedFriendsCounter + 1
@@ -122,7 +166,7 @@ function Friends:IterableBattleNetFriendsInfo()
     local maxOnlineFriends, friendAccountInfo, accountInfo
     local characterName, characterLevel, className, grouped, zoneName, sameZone, status, accountName, realmName, sameRealm, clientProgram, appearOffline, isFavorite
     local i = 0
-    local n = self.BNGetNumFriends()
+    local n = #CACHE.BATTLENET
     return function()
         maxOnlineFriends = self.storage:GetMaxOnlineFriends()
         if maxOnlineFriends == 0 then
@@ -134,7 +178,7 @@ function Friends:IterableBattleNetFriendsInfo()
                 return
             end
 
-            accountInfo = self.GetFriendAccountInfo(i)
+            accountInfo = CACHE.BATTLENET[i]
 
             if accountInfo and accountInfo.gameAccountInfo.isOnline then
                 connectedFriendsCounter = connectedFriendsCounter + 1

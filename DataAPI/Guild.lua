@@ -2,27 +2,22 @@ local _, addon = ...
 local Friends = addon:GetObject("Friends")
 local Guild = addon:NewObject("Guild")
 
+local tinsert = table.insert
+
 Guild.GuildRoster = C_GuildInfo.GuildRoster
 Guild.GetNumGuildMembers = GetNumGuildMembers
 Guild.GetGuildRosterInfo = GetGuildRosterInfo
 
 local DATA = {}
+local CACHE = {}
 
-function Guild:IterableGuildRosterInfo(index)
-    Guild.GuildRoster()
-    local sameZone, grouped
-    local characterName, characterLevel, zone, online, status, classFilename, isMobile
-    local onlineFriendsLookupTable = Friends:GetOnlineFriendsInfo()
-    local i = index or 0
-    local n = Guild.GetNumGuildMembers()
-    return function()
-        if not onlineFriendsLookupTable then
-            return
-        end
-        i = i + 1
-        if i <= n then
-            characterName, _, _, characterLevel, _, zone, _, _, online, status, classFilename, _, _, isMobile = Guild.GetGuildRosterInfo(i)
+local function CacheGuildRosterInfo()
+    local numTotal = Guild.GetNumGuildMembers()
+    local characterName, characterLevel, zoneName, online, status, classFilename, isMobile
+    for i = 1, math.max(#CACHE, numTotal) do
+        characterName, _, _, characterLevel, _, zoneName, _, _, online, status, classFilename, _, _, isMobile = Guild.GetGuildRosterInfo(i)
 
+        if characterName then
             characterName = Ambiguate(characterName, "guild")
 
             if status == 1 then
@@ -34,30 +29,82 @@ function Guild:IterableGuildRosterInfo(index)
             else
                 status = 1
             end
+        end
 
-            if zone then
-                if GetRealZoneText() == zone then
+        if characterName and CACHE[i] then
+            CACHE[i].characterName = characterName
+            CACHE[i].characterLevel = characterLevel
+            CACHE[i].zoneName = zoneName
+            CACHE[i].online = online
+            CACHE[i].status = status
+            CACHE[i].classFilename = classFilename
+            CACHE[i].isMobile = isMobile
+        elseif not characterName then
+            CACHE[i] = nil
+        else
+            tinsert(CACHE, {
+                characterName = characterName,
+                characterLevel = characterLevel,
+                zoneName = zoneName,
+                online = online,
+                status = status,
+                classFilename = classFilename,
+                isMobile = isMobile
+            })
+        end
+    end
+end
+
+Friends:RegisterEvents(
+    "FRIENDLIST_UPDATE",
+    "BN_FRIEND_INVITE_ADDED",
+    "BN_FRIEND_INVITE_REMOVED",
+    "BN_CONNECTED",
+    "BN_DISCONNECTED",
+    "GUILD_ROSTER_UPDATE", function(_, eventName)
+        if eventName == "GUILD_ROSTER_UPDATE" then
+            CacheGuildRosterInfo()
+        else
+            Guild.GuildRoster()
+        end
+    end)
+
+function Guild:IterableGuildRosterInfo(index)
+    local memberInfo, sameZone, grouped
+    local onlineFriendsLookupTable = Friends:GetOnlineFriendsInfo()
+    local i = index or 0
+    local n = #CACHE
+    return function()
+        if not onlineFriendsLookupTable then
+            return
+        end
+        i = i + 1
+        if i <= n then
+            memberInfo = CACHE[i]
+
+            if memberInfo.zone then
+                if GetRealZoneText() == memberInfo.zone then
                     sameZone = true
                 else
                     sameZone = false
                 end
             end
 
-            if UnitInParty(characterName) or UnitInRaid(characterName) then
+            if UnitInParty(memberInfo.characterName) or UnitInRaid(memberInfo.characterName) then
                 grouped = true
             else
                 grouped = false
             end
 
-            DATA.characterName = characterName
-            DATA.characterLevel = characterLevel
-            DATA.classFilename = classFilename
+            DATA.characterName = memberInfo.characterName
+            DATA.characterLevel = memberInfo.characterLevel
+            DATA.classFilename = memberInfo.classFilename
             DATA.grouped = grouped
-            DATA.zoneName = zone
+            DATA.zoneName = memberInfo.zoneName
             DATA.sameZone = sameZone
-            DATA.status = status
-            DATA.isMobile = isMobile
-            DATA.isFriend = onlineFriendsLookupTable[characterName]
+            DATA.status = memberInfo.status
+            DATA.isMobile = memberInfo.isMobile
+            DATA.isFriend = onlineFriendsLookupTable[memberInfo.characterName]
 
             return i, DATA
         end
