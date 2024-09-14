@@ -18,8 +18,8 @@ Display:RegisterHookScript(QuickJoinToastButton, "OnEnter", function()
             Display:AddFormattedHeader(L["World of Warcraft (X):"], numWoWOnline)
 
             for info in Friends:IterableWoWFriendsInfo() do
-                local charName = Friends:GetFormattedCharName(info)
-                charName = Friends:GetFormattedStatus(info, charName)
+                local charName = Display:GetFormattedCharName(info)
+                charName = Display:GetFormattedStatus(info, charName)
 
                 Display:SetLine(charName):ToLine()
 
