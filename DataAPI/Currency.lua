@@ -5,9 +5,10 @@ local Currency = addon:NewObject("Currency")
 local DATA = {
     expansions = {},
     expansionCategory = "",
-    currentExpansionLevel = 0,
-    currency = {}
+    currentExpansionLevel = 0
 }
+
+local CACHE = {}
 
 local ACCOUNT_WIDE_CURRENCY = {
     [2032] = true -- Trader's Tender
@@ -91,9 +92,9 @@ end
 
 local function CacheCurrency(categoryName)
     local index = 1
-    DATA.currency[categoryName] = DATA.currency[categoryName] or {}
+    CACHE[categoryName] = CACHE[categoryName] or {}
     for name, isHeader, icon, quantity, maxQuantity in IterableCurrencyInfoByCategory(categoryName) do
-        local category = DATA.currency[categoryName]
+        local category = CACHE[categoryName]
         if not category[name] then
             category[name] = {index, isHeader, icon, quantity, maxQuantity}
         else
@@ -116,7 +117,7 @@ local function CacheCategories()
 end
 
 local function CachedIterableCurrencyInfoByCategory(categoryName)
-    local category = DATA.currency[categoryName]
+    local category = CACHE[categoryName]
     local index = 1
     return function()
         for name, currencyData in next, category do
