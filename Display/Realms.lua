@@ -17,7 +17,7 @@ hooksecurefunc("MainMenuBarPerformanceBarFrame_OnEnter", function()
             Display:ToLine()
         end
     else
-        Display:AddFormattedHeader(L["Realm: X"], Display:ToClassColor(CharacterInfo:GetRealm()))
+        Display:AddFormattedHeader(L["Realm: X"], Display:ToPlayerClassColor(CharacterInfo:GetRealm()))
     end
     Display:Show()
 end)
