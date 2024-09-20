@@ -19,7 +19,7 @@ Libs\AceDB-3.0\AceDB-3.0.xml
 
 Libs\Toolkit\Contracts.lua
 Libs\Toolkit\Addon.lua
-Libs\Toolkit\PlayerInfo.lua
+Libs\Toolkit\CharacterInfo.lua
 Libs\Toolkit\Tooltip.lua
 
 Core\Constants.lua
