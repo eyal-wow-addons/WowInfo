@@ -1,5 +1,5 @@
 local _, addon = ...
-local PlayerInfo = LibStub("PlayerInfo-1.0")
+local CharacterInfo = LibStub("CharacterInfo-1.0")
 local Storage, DB = addon:NewStorage("Currency")
 
 local defaults = {
@@ -14,7 +14,7 @@ function Storage:OnInitialized()
     end
 
     local englishFaction = UnitFactionGroup("player")
-    local charName = PlayerInfo:GetCharacterFullName()
+    local charName = CharacterInfo:GetFullName()
 
     if not addon.DB.global.Currency[englishFaction] or type(addon.DB.global.Currency[englishFaction]) ~= "table" then
         addon.DB.global.Currency[englishFaction] = {}

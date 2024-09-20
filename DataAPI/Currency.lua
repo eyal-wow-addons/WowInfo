@@ -1,5 +1,5 @@
 local _, addon = ...
-local PlayerInfo = LibStub("PlayerInfo-1.0")
+local CharacterInfo = LibStub("CharacterInfo-1.0")
 local Currency = addon:NewObject("Currency")
 
 local DATA = {
@@ -162,7 +162,7 @@ function Currency:GetPlayerCurrencyInfo(currencyID)
     if not currencyID or ACCOUNT_WIDE_CURRENCY[currencyID] then
         return
     end
-    return PlayerInfo:GetCharacterName(), GetCurrencyQuantity(currencyID)
+    return CharacterInfo:GetName(), GetCurrencyQuantity(currencyID)
 end
 
 function Currency:IterableCharactersCurrencyInfo(currencyID)
