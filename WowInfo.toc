@@ -34,8 +34,6 @@ Storage\Guild.lua
 Storage\Money.lua
 # Storage\Reputation.lua
 
-Locales\enUS.lua
-
 DataAPI\Achievements.lua
 DataAPI\Collections.lua
 DataAPI\Currency.lua
@@ -53,6 +51,8 @@ DataAPI\MonthlyActivities.lua
 # DataAPI\Speedometer.lua
 # DataAPI\Talents.lua
 # DataAPI\WeeklyRewards.lua
+
+Locales\enUS.lua
 
 Display\Extensions\Friends.lua
 
