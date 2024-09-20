@@ -39,7 +39,7 @@ Display:RegisterHookScript(QuickJoinToastButton, "OnEnter", function()
 
         for info in Friends:IterableBattleNetFriendsInfo() do
             local accountName = info.accountName
-            accountName = info.isFavorite and info.appearOffline and Display:ToGray(accountName) or accountName
+            --accountName = info.isFavorite and info.appearOffline and Display:ToGray(accountName) or accountName
             accountName = Display:GetFormattedStatus(info, accountName)
 
             if info.characterName then
