@@ -174,16 +174,16 @@ function Currency:IterableCharactersCurrencyInfo(currencyID)
         end
         charName, data = self.storage:GetCharacterCurrencyInfo(charName)
         while charName do
-            local onCurrentRealm = PlayerInfo:IsCharacterOnCurrentRealm(charName)
-            local onConnectedRealm = PlayerInfo:IsCharacterOnConnectedRealm(charName)
+            local onCurrentRealm = CharacterInfo:IsCharacterOnCurrentRealm(charName)
+            local onConnectedRealm = CharacterInfo:IsCharacterOnConnectedRealm(charName)
             if onCurrentRealm or onConnectedRealm then
                 for id, quantity in pairs(data) do
                     if id == currencyID then
                         charDisplayName = charName
                         if onConnectedRealm then
-                            charDisplayName = PlayerInfo:ShortConnectedRealm(charDisplayName)
+                            charDisplayName = CharacterInfo:ShortConnectedRealm(charDisplayName)
                         else
-                            charDisplayName = PlayerInfo:RemoveRealm(charDisplayName)
+                            charDisplayName = CharacterInfo:RemoveRealm(charDisplayName)
                         end
                         return charDisplayName, quantity
                     end
