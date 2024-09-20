@@ -40,7 +40,6 @@ function Colorizer:ToClassColor(classFilename, text)
 end
 
 function Colorizer:ToUnitClassColor(unit, text)
-    C:Requires(unit, 2, "string")
     return self:ToClassColor(select(2, UnitClass(unit)), text)
 end
 
