@@ -16,7 +16,7 @@ hooksecurefunc(GameTooltip, "SetCurrencyToken", function(_, index)
         do
             local charName, quantity = Currency:GetPlayerCurrencyInfo(currencyID)
 
-            charName = Display:ToClassColor(charName)
+            charName = Display:ToPlayerClassColor(charName)
 
             if quantity > 0 then
                 quantity = Display:ToWhite(quantity)
