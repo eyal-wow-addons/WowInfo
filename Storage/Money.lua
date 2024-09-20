@@ -1,4 +1,5 @@
 local _, addon = ...
+local CharacterInfo = LibStub("CharacterInfo-1.0")
 local Storage, DB = addon:NewStorage("Money")
 
 local defaults = {
@@ -9,7 +10,7 @@ local defaults = {
     }
 }
 
-function Storage:OnConfig()
+function Storage:OnInitialized()
     DB = self:RegisterDB(defaults)
 
     if not addon.DB.global.Money then
@@ -32,11 +33,11 @@ Storage:RegisterEvents(
     "SEND_MAIL_MONEY_CHANGED", 
     "SEND_MAIL_COD_CHANGED", 
     "TRADE_MONEY_CHANGED", function()
-        DB.__data[addon.Character:GetFullName()] = GetMoney()
+        DB.__data[CharacterInfo:GetFullName()] = GetMoney()
     end)
 
 function Storage:GetPlayerMoneyInfo()
-    local charName = addon.Character:GetFullName()
+    local charName = CharacterInfo:GetFullName()
     return charName, DB.__data[charName]
 end
 
@@ -44,7 +45,8 @@ function Storage:GetCharacterMoneyInfo(charName)
     local money
     charName, money = next(DB.__data, charName)
     while charName do
-        if money >= 0 and (addon.Character:IsOnCurrentRealm(charName) or addon.Character:IsOnConnectedRealm(charName)) then
+        if money >= 0
+            and (CharacterInfo:IsCharacterOnCurrentRealm(charName) or CharacterInfo:IsCharacterOnConnectedRealm(charName)) then
             return charName, money
         end
         charName, money = next(DB.__data, charName)
@@ -62,7 +64,7 @@ function Storage:Reset()
         DB.__data[charName] = nil
     end
 
-    DB.__data[addon.Character:GetFullName()] = GetMoney()
+    DB.__data[CharacterInfo:GetFullName()] = GetMoney()
 end
 
 function Storage:SetMinMoneyAmount(value)

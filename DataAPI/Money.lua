@@ -1,10 +1,13 @@
 local _, addon = ...
+local CharacterInfo = LibStub("CharacterInfo-1.0")
 local Money = addon:NewObject("Money")
-local Character = addon.Character
+
+local floor = math.floor
+local GetMoneyString = GetMoneyString
 
 function Money:GetPlayerMoneyInfo()
     local charName, money = Money.storage:GetPlayerMoneyInfo()
-    return GetClassColoredTextForUnit("player", Character:RemoveRealm(charName)), GetMoneyString(money, true)
+    return CharacterInfo:RemoveRealm(charName), GetMoneyString(money, true)
 end
 
 function Money:IterableCharactersMoneyInfo()
@@ -15,15 +18,16 @@ function Money:IterableCharactersMoneyInfo()
         while charName do
             charDisplayName = charName
 
-            if Character:IsOnConnectedRealm(charName) and Money.storage:IsConnectedRealmsNamesHidden() then
-                charDisplayName = Character:ShortConnectedRealm(charDisplayName)
-            elseif Character:IsOnCurrentRealm(charName) then
-                charDisplayName = Character:RemoveRealm(charDisplayName)
+            if CharacterInfo:IsCharacterOnConnectedRealm(charName) and Money.storage:IsConnectedRealmsNamesHidden() then
+                charDisplayName = CharacterInfo:ShortConnectedRealm(charDisplayName)
+            elseif CharacterInfo:IsCharacterOnCurrentRealm(charName) then
+                charDisplayName = CharacterInfo:RemoveRealm(charDisplayName)
             end
 
             local fraction = floor(money / (COPPER_PER_SILVER * SILVER_PER_GOLD))
 
-            if not Character:IsSameCharacter(charName) and (fraction > Money.storage:GetMinMoneyAmount() or Money.storage:CanShowAllCharacters()) then
+            if not CharacterInfo:IsSameCharacter(charName)
+                and (fraction > Money.storage:GetMinMoneyAmount() or Money.storage:CanShowAllCharacters()) then
                 return charDisplayName, GetMoneyString(money, true)
             end
 
@@ -36,7 +40,9 @@ function Money:GetTotalMoneyString()
     local totalMoney = 0
     local charName, money = Money.storage:GetCharacterMoneyInfo()
     while charName do
-        if Character:IsSameCharacter(charName) or Character:IsOnCurrentRealm(charName) or Character:IsOnConnectedRealm(charName) then
+        if CharacterInfo:IsSameCharacter(charName)
+            or CharacterInfo:IsCharacterOnCurrentRealm(charName)
+            or CharacterInfo:IsCharacterOnConnectedRealm(charName) then
             totalMoney = totalMoney + money
         end
         charName, money = Money.storage:GetCharacterMoneyInfo(charName)

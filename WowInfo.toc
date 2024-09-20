@@ -31,7 +31,7 @@ Main.lua
 Storage\Currency.lua
 Storage\Friends.lua
 Storage\Guild.lua
-# Storage\Money.lua
+Storage\Money.lua
 # Storage\Reputation.lua
 
 Locales\enUS.lua
@@ -43,7 +43,7 @@ DataAPI\Durability.lua
 DataAPI\Experience.lua
 DataAPI\Friends.lua
 DataAPI\Guild.lua
-# DataAPI\Money.lua
+DataAPI\Money.lua
 DataAPI\MonthlyActivities.lua
 # DataAPI\Professions.lua
 # DataAPI\PvE.lua
@@ -66,7 +66,7 @@ Display\Experience.lua
 Display\Friends.lua
 # Display\GreatVaultProgress.lua
 Display\GuildFriends.lua
-# Display\Money.lua
+Display\Money.lua
 Display\MonthlyActivities.lua
 # Display\Professions.lua
 # Display\PvE.lua
