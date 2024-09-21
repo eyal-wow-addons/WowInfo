@@ -19,6 +19,7 @@ local function AddCurrencyInfo(iterator)
             Display
                 :SetFormattedLine(ITEM_LINE_FORMAT, icon, name)
                 :SetLine(currentQuantity)
+                :SetHighlight()
 
             if quantity > 0 then
                 local percent
@@ -36,8 +37,6 @@ local function AddCurrencyInfo(iterator)
                         Display:SetOrangeColor()
                     elseif percent >= 80 then
                         Display:SetYellowColor()
-                    else
-                        Display:SetHighlight()
                     end
                 end
             else
