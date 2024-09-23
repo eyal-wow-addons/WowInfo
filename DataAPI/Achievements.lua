@@ -53,21 +53,21 @@ local function GetCategoryTotalNumAchievements(categoryId, guildOnly)
     local categories = guildOnly and GetGuildCategoryList() or GetCategoryList()
 
 	-- Not recursive because we only have one deep and this saves time.
-	local totalAchievements, totalCompleted = 0, 0;
-	local numAchievements, numCompleted = GetCategoryNumAchievements(categoryId, true);
-	totalAchievements = totalAchievements + numAchievements;
-	totalCompleted = totalCompleted + numCompleted;
+	local totalAchievements, totalCompleted = 0, 0
+	local numAchievements, numCompleted = GetCategoryNumAchievements(categoryId, true)
+	totalAchievements = totalAchievements + numAchievements
+	totalCompleted = totalCompleted + numCompleted
 
 	for _, id in ipairs(categories) do
-        local _, parentId = GetCategoryInfo(id);
+        local _, parentId = GetCategoryInfo(id)
 		if parentId == categoryId then
-			numAchievements, numCompleted = GetCategoryNumAchievements(id, true);
-			totalAchievements = totalAchievements + numAchievements;
-			totalCompleted = totalCompleted + numCompleted;
+			numAchievements, numCompleted = GetCategoryNumAchievements(id, true)
+			totalAchievements = totalAchievements + numAchievements
+			totalCompleted = totalCompleted + numCompleted
 		end
 	end
 
-	return totalAchievements, totalCompleted;
+	return totalAchievements, totalCompleted
 end
 
 local function CacheAchievementInfo(key, id)

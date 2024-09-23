@@ -95,7 +95,7 @@ function Quests:GetZoneStoryInfo()
             for i = 1, numCriteria do
                 local _, _, completed = GetAchievementCriteriaInfo(storyAchievementID, i)
                 if completed then
-                    completedCriteria = completedCriteria + 1;
+                    completedCriteria = completedCriteria + 1
                 end
             end
             return storyAchievementID, mapInfo.name, numCriteria == completedCriteria, L["Story Progress: X/Y Chapters"]:format(completedCriteria, numCriteria)

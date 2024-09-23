@@ -19,7 +19,7 @@ local MONTHLY_ACTIVITIES_MONTH_NAMES = {
 }
 
 local function AreMonthlyActivitiesRestricted()
-	return IsTrialAccount() or IsVeteranTrialAccount();
+	return IsTrialAccount() or IsVeteranTrialAccount()
 end
 
 local function HasPendingReward(activitiesInfo, pendingRewards, thresholdOrderIndex)
@@ -38,11 +38,11 @@ do
     MonthlyActivitiesTimeLeftFormatter:SetStripIntervalWhitespace(true)
 
     function MonthlyActivitiesTimeLeftFormatter:GetMinInterval(seconds)
-        return SecondsFormatter.Interval.Minutes;
+        return SecondsFormatter.Interval.Minutes
     end
 
     function MonthlyActivitiesTimeLeftFormatter:GetDesiredUnitCount(seconds)
-        return 2;
+        return 2
     end
 
     function GetMonthlyActivitiesTimeInfo(displayMonthName, secondsRemaining)

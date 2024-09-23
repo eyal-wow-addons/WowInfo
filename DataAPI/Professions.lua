@@ -2,7 +2,7 @@ local _, addon = ...
 local Professions = addon:NewObject("Professions")
 
 local PROFESIONS_RANK_FORMAT = "%d / %d"
-local PROFESIONS_RANK_WITH_MODIFIER_FORMAT = "%d |cff20ff20+ %d|r / %d";
+local PROFESIONS_RANK_WITH_MODIFIER_FORMAT = "%d |cff20ff20+ %d|r / %d"
 local PROFESIONS_LABEL_FORMAT = "%s - %s"
 local PROFESIONS_INDICES_MAP = {}
 
