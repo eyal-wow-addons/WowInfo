@@ -1,23 +1,36 @@
 local _, addon = ...
-local L = addon.L
 local Reputation = addon:NewObject("Reputation")
 
-local ICON_AVAILABLE_REWARD = " |TInterface\\RaidFrame\\ReadyCheck-Ready:0|t"
-local STANDING_PROGRESS_FORMAT = "%s / %s"
+local GetNumFactions = C_Reputation.GetNumFactions
+local GetFactionDataByID = C_Reputation.GetFactionDataByID
+local GetFriendshipReputation = C_GossipInfo.GetFriendshipReputation
+local IsFactionParagon = C_Reputation.IsFactionParagon
+local GetFactionParagonInfo = C_Reputation.GetFactionParagonInfo
+local IsMajorFaction = C_Reputation.IsMajorFaction
+local GetMajorFactionData = C_MajorFactions.GetMajorFactionData
+local GetRenownRewardsForLevel = C_MajorFactions.GetRenownRewardsForLevel
+local HasMaximumRenown = C_MajorFactions.HasMaximumRenown
+local UnitSex = UnitSex
+local GetText = GetText
+
+local DATA = {}
 
 local function GetFactionDisplayInfoByID(factionID)
     if factionID then
-        local factionData = C_Reputation.GetFactionDataByID(factionID)
+        local factionData = GetFactionDataByID(factionID)
         if factionData and factionData.name then
             local factionName, standingID, repMin, repMax, repValue = factionData.name, factionData.reaction, factionData.currentReactionThreshold, factionData.nextReactionThreshold, factionData.currentStanding
-            local repInfo = C_GossipInfo.GetFriendshipReputation(factionID)
-            local isCapped
-
+            local repInfo = GetFriendshipReputation(factionID)
+            
             local gender = UnitSex("player")
             local standing = GetText("FACTION_STANDING_LABEL" .. standingID, gender)
-            local standingColor = FACTION_BAR_COLORS[standingID]
 
+            local isCapped = false
+            local isFactionParagon = false
             local hasParagonRewardPending = false
+            local isMajorFaction = false
+            local renownLevel = 0
+            local hasRenownReward = false
 
             if repInfo and repInfo.friendshipFactionID and repInfo.friendshipFactionID > 0 then
                 if repInfo.nextThreshold then
@@ -28,22 +41,20 @@ local function GetFactionDisplayInfoByID(factionID)
                 end
                 standingID = 5 -- Always color friendship factions with green
                 standing = repInfo.reaction
-            elseif C_Reputation.IsFactionParagon(factionID) then
-                local currentValue, threshold, _, hasRewardPending, tooLowLevelForParagon = C_Reputation.GetFactionParagonInfo(factionID)
+            elseif IsFactionParagon(factionID) then
+                local currentValue, threshold, _, hasRewardPending, tooLowLevelForParagon = GetFactionParagonInfo(factionID)
                 repMin, repMax, repValue = 0, threshold, currentValue % threshold
-                standingColor = LIGHTBLUE_FONT_COLOR
                 if not tooLowLevelForParagon and hasRewardPending then
                     hasParagonRewardPending = true
-                    factionName = factionName .. ICON_AVAILABLE_REWARD
                 end
-            elseif C_Reputation.IsMajorFaction(factionID) then
-                local majorFactionData = C_MajorFactions.GetMajorFactionData(factionID)
-                local rewards = C_MajorFactions.GetRenownRewardsForLevel(factionID, majorFactionData.renownLevel)
+                isFactionParagon = true
+            elseif IsMajorFaction(factionID) then
+                local majorFactionData = GetMajorFactionData(factionID)
+                local rewards = GetRenownRewardsForLevel(factionID, majorFactionData.renownLevel)
                 repMin, repMax = 0, majorFactionData.renownLevelThreshold
-                isCapped = C_MajorFactions.HasMaximumRenown(factionID)
+                isCapped = HasMaximumRenown(factionID)
                 repValue = isCapped and majorFactionData.renownLevelThreshold or majorFactionData.renownReputationEarned or 0
-                standingColor = BLUE_FONT_COLOR
-                factionName = L["S (Renown X)"]:format(factionName, majorFactionData.renownLevel)
+                renownLevel = majorFactionData.renownLevel
                 if #rewards > 0 then
                     local rewardInfo = rewards[1]
                     if rewardInfo.itemID
@@ -54,47 +65,51 @@ local function GetFactionDisplayInfoByID(factionID)
                         or rewardInfo.transmogSetID
                         or rewardInfo.garrFollowerID
                         or rewardInfo.transmogIllusionSourceID then
-                        factionName = factionName .. ICON_AVAILABLE_REWARD
+                            hasRenownReward = true
                     end
                 end
+                isMajorFaction = true
             else
                 if (standingID == MAX_REPUTATION_REACTION) then
-                    isCapped = true;
+                    isCapped = true
                 end
             end
 
             repMax = repMax - repMin
             repValue = repValue - repMin
 
-            repMax = AbbreviateNumbers(repMax)
-            repValue = AbbreviateNumbers(repValue)
-            factionName = standingColor:WrapTextInColorCode(factionName)
+            DATA.factionName = factionName
+            DATA.standing = standing
+            DATA.standingID = standingID
+            DATA.isCapped = isCapped
+            DATA.repValue = repValue
+            DATA.repMax = repMax
+            DATA.factionType = (isFactionParagon and 1) or (isMajorFaction and 2) or 0
+            DATA.hasParagonRewardPending = hasParagonRewardPending
+            DATA.renownLevel = renownLevel
+            DATA.hasRenownReward = hasRenownReward
 
-            return factionName, standing, isCapped, repValue, repMax, hasParagonRewardPending
+            return DATA
         end
     end
 end
 
-local function GetFactionID(index)
-    local factionData = C_Reputation.GetFactionDataByIndex(index)
-    return factionData.factionID
+function Reputation:HasTrackedFactions()
+    for factionID in self.storage:IterableTrackedFactions() do
+        return true
+    end
+    return false
 end
 
 function Reputation:IterableTrackedFactions()
     local i = 0
-    local n = C_Reputation.GetNumFactions()
-    local hasTrackedFactions = false
+    local n = GetNumFactions()
     return function()
         i = i + 1
         while i <= n do
-            local factionID = GetFactionID(i)
-            local factionName, standing, isCapped, repValue, repMax, hasParagonRewardPending = GetFactionDisplayInfoByID(factionID)
-            if Reputation.storage:HasFactionsTracked() and Reputation.storage:IsSelectedFaction(factionID) or (Reputation.storage:GetAlwaysShowParagon() and hasParagonRewardPending) then
-                if not hasTrackedFactions then
-                    Reputation:TriggerEvent("REPUTATION_SHOW_TRACKED_FACTIONS_PROGRESS")
-                    hasTrackedFactions = true
-                end
-                return factionName, standing, isCapped, STANDING_PROGRESS_FORMAT:format(repValue, repMax)
+            local factionID = self.storage:IterableTrackedFactions(i)()
+            if factionID then
+                return GetFactionDisplayInfoByID(factionID)
             end
             i = i + 1
         end

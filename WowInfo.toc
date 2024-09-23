@@ -32,7 +32,7 @@ Storage\Currency.lua
 Storage\Friends.lua
 Storage\Guild.lua
 Storage\Money.lua
-# Storage\Reputation.lua
+Storage\Reputation.lua
 
 DataAPI\Achievements.lua
 DataAPI\Collections.lua
@@ -47,7 +47,7 @@ DataAPI\MonthlyActivities.lua
 # DataAPI\PvE.lua
 # DataAPI\PvP.lua
 # DataAPI\Quests.lua
-# DataAPI\Reputation.lua
+DataAPI\Reputation.lua
 # DataAPI\Speedometer.lua
 # DataAPI\Talents.lua
 # DataAPI\WeeklyRewards.lua

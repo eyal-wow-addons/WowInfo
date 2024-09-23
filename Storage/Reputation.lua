@@ -1,5 +1,11 @@
 local _, addon = ...
+local CharacterInfo = LibStub("CharacterInfo-1.0")
 local Storage, DB = addon:NewStorage("Reputation")
+
+local GetNumFactions = C_Reputation.GetNumFactions
+local GetFactionDataByIndex = C_Reputation.GetFactionDataByIndex
+local GetFactionParagonInfo = C_Reputation.GetFactionParagonInfo
+local IsFactionParagon = C_Reputation.IsFactionParagon
 
 local defaults = {
     profile = {
@@ -8,11 +14,24 @@ local defaults = {
 }
 
 local function GetFactionID(index)
-    local factionData = C_Reputation.GetFactionDataByIndex(index)
+    local factionData = GetFactionDataByIndex(index)
     return factionData and factionData.factionID
 end
 
-function Storage:OnConfig()
+local function HasParagonRewardPending(factionID)
+    local hasParagonRewardPending = false
+    if factionID then
+        if IsFactionParagon(factionID) then
+            local _, _, _, hasRewardPending, tooLowLevelForParagon = GetFactionParagonInfo(factionID)
+            if not tooLowLevelForParagon and hasRewardPending then
+                hasParagonRewardPending = true
+            end
+        end
+    end
+    return hasParagonRewardPending
+end
+
+function Storage:OnInitialized()
     DB = self:RegisterDB(defaults)
 
     if not addon.DB.global.Reputation then
@@ -20,7 +39,7 @@ function Storage:OnConfig()
     end
 
     local rep = addon.DB.global.Reputation
-    local charName = addon.Character:GetFullName()
+    local charName = CharacterInfo:GetFullName()
 
     rep[charName] = rep[charName] or {}
     
@@ -49,7 +68,19 @@ function Storage:ToggleFaction(factionID)
     end
 end
 
-function Storage:HasFactionsTracked()
-	return DB.__data and next(DB.__data) and true or false
+function Storage:IterableTrackedFactions(startIndex)
+    local i = startIndex or 0
+    local n = GetNumFactions()
+    return function()
+        i = i + 1
+        while i <= n do
+            local factionID = GetFactionID(i)
+            local shouldAlwaysShowParagon = self:GetAlwaysShowParagon() and HasParagonRewardPending(factionID)
+            if factionID and DB.__data[factionID] or shouldAlwaysShowParagon then
+                return factionID
+            end
+            i = i + 1
+        end
+    end
 end
 
