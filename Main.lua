@@ -1,10 +1,38 @@
 local addon = LibStub("Addon-1.0"):New(...)
 
 local Tooltip = LibStub("Tooltip-1.0")
+
 local Colorizer = addon.Colorizer
+
+local ADDON_LOAD_FAILED = "<< %s >> " .. ADDON_LOAD_FAILED
+
+local function TryLoadAddOn(name)
+	local loaded, reason = C_AddOns.LoadAddOn(name)
+	if not loaded and not reason then
+        C_AddOns.LoadAddOn(name)
+    elseif reason then
+        local _, title = GetAddOnInfo(addon:GetName())
+        title = NORMAL_FONT_COLOR:WrapTextInColorCode(title)
+        local state = RED_FONT_COLOR:WrapTextInColorCode(_G["ADDON_" .. reason])
+        print(YELLOW_FONT_COLOR:WrapTextInColorCode(ADDON_LOAD_FAILED:format(title, name, state)))
+        return false
+	end
+    return true
+end
 
 function addon:OnInitialized()
     self.DB = LibStub("AceDB-3.0"):New("WowInfoDB", {}, true)
+    SLASH_WOWINFO1 = "/wowinfo"
+    SLASH_WOWINFO2 = "/wowi"
+    SLASH_WOWINFO3 = "/wi"
+    SlashCmdList["WOWINFO"] = function(input)
+        if TryLoadAddOn("WowInfo_Options") then
+            if not addon.__options then
+                addon.__options = LibStub("AceOptions-1.0")
+            end
+            addon.__options:Open()
+        end
+    end
 end
 
 do
