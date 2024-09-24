@@ -1,6 +1,7 @@
 local _, addon = ...
-local CharacterInfo = LibStub("CharacterInfo-1.0")
 local Currency = addon:NewObject("Currency")
+
+local CharacterInfo = LibStub("CharacterInfo-1.0")
 
 local DATA = {
     expansions = {},

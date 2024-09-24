@@ -1,6 +1,7 @@
 local _, addon = ...
-local CharacterInfo = LibStub("CharacterInfo-1.0")
 local Storage, DB = addon:NewStorage("Currency")
+
+local CharacterInfo = LibStub("CharacterInfo-1.0")
 
 local defaults = {
     profile = {}

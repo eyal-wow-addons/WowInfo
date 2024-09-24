@@ -1,6 +1,7 @@
 local _, addon = ...
-local CharacterInfo = LibStub("CharacterInfo-1.0")
 local Money = addon:NewObject("Money")
+
+local CharacterInfo = LibStub("CharacterInfo-1.0")
 
 local floor = math.floor
 local GetMoneyString = GetMoneyString
