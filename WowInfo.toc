@@ -73,6 +73,6 @@ Display\MonthlyActivities.lua
 # Display\PvP.lua
 # Display\Quests.lua
 Display\Realms.lua
-# Display\Reputation.lua
+Display\Reputation.lua
 # Display\Speedometer.lua
 # Display\Talents.lua

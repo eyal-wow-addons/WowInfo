@@ -27,10 +27,9 @@ local function GetFactionDisplayInfoByID(factionID)
 
             local isCapped = false
             local isFactionParagon = false
-            local hasParagonRewardPending = false
             local isMajorFaction = false
             local renownLevel = 0
-            local hasRenownReward = false
+            local hasReward = false
 
             if repInfo and repInfo.friendshipFactionID and repInfo.friendshipFactionID > 0 then
                 if repInfo.nextThreshold then
@@ -45,7 +44,7 @@ local function GetFactionDisplayInfoByID(factionID)
                 local currentValue, threshold, _, hasRewardPending, tooLowLevelForParagon = GetFactionParagonInfo(factionID)
                 repMin, repMax, repValue = 0, threshold, currentValue % threshold
                 if not tooLowLevelForParagon and hasRewardPending then
-                    hasParagonRewardPending = true
+                    hasReward = true
                 end
                 isFactionParagon = true
             elseif IsMajorFaction(factionID) then
@@ -65,7 +64,7 @@ local function GetFactionDisplayInfoByID(factionID)
                         or rewardInfo.transmogSetID
                         or rewardInfo.garrFollowerID
                         or rewardInfo.transmogIllusionSourceID then
-                            hasRenownReward = true
+                            hasReward = true
                     end
                 end
                 isMajorFaction = true
@@ -82,12 +81,11 @@ local function GetFactionDisplayInfoByID(factionID)
             DATA.standing = standing
             DATA.standingID = standingID
             DATA.isCapped = isCapped
-            DATA.repValue = repValue
-            DATA.repMax = repMax
+            DATA.progressValue = repValue
+            DATA.progressMax = repMax
             DATA.factionType = (isFactionParagon and 1) or (isMajorFaction and 2) or 0
-            DATA.hasParagonRewardPending = hasParagonRewardPending
+            DATA.hasReward = hasReward
             DATA.renownLevel = renownLevel
-            DATA.hasRenownReward = hasRenownReward
 
             return DATA
         end
@@ -107,7 +105,7 @@ function Reputation:IterableTrackedFactions()
     return function()
         i = i + 1
         while i <= n do
-            local factionID = self.storage:IterableTrackedFactions(i)()
+            local factionID = self.storage:GetTrackedFaction(i)
             if factionID then
                 return GetFactionDisplayInfoByID(factionID)
             end

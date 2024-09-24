@@ -1,20 +1,45 @@
 local _, addon = ...
-local L = addon.L
+local Reputation = addon:GetObject("Reputation")
 local Display = addon:NewDisplay("Reputation")
-local Reputation = addon.Reputation
 
-Reputation:RegisterEvent("REPUTATION_SHOW_TRACKED_FACTIONS_PROGRESS", function()
-    Display:AddTitleLine(L["Reputation:"], true)
-end)
+local L = addon.L
+
+local PROGRESS_FORMAT = "%s / %s"
+local ICON_AVAILABLE_REWARD = " |TInterface\\RaidFrame\\ReadyCheck-Ready:0|t"
 
 Display:RegisterHookScript(CharacterMicroButton, "OnEnter", function()
-    for factionName, standing, isCapped, progressString in Reputation:IterableTrackedFactions() do
-        if isCapped then
-            Display:AddRightHighlightDoubleLine(factionName, standing)
-        else
-            Display:AddRightHighlightDoubleLine(factionName, progressString)
-        end
-    end
+    if Reputation:HasTrackedFactions() then
+        Display:AddHeader(L["Reputation:"])
+        local factionName, standingColor
+        for info in Reputation:IterableTrackedFactions() do
+            factionName = info.factionName
+            standingColor = FACTION_BAR_COLORS[info.standingID]
 
-    Display:Show()
+            if info.hasReward then
+                factionName = factionName .. ICON_AVAILABLE_REWARD
+            end
+
+            if info.factionType == 1 then
+                standingColor = LIGHTBLUE_FONT_COLOR
+            elseif info.factionType == 2 then
+                standingColor = BLUE_FONT_COLOR
+                factionName = L["S (Renown X)"]:format(factionName, info.renownLevel)
+            end
+
+            Display
+                :SetLine(factionName)
+                :SetColor(standingColor)
+    
+            if isCapped then
+                Display:SetLine(info.standing)
+            else
+                Display:SetFormattedLine(PROGRESS_FORMAT, info.progressValue, info.progressMax)
+            end
+
+            Display
+                :SetHighlight()
+                :ToLine()
+        end
+        Display:Show()
+    end
 end)

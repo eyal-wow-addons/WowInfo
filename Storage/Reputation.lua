@@ -68,15 +68,23 @@ function Storage:ToggleFaction(factionID)
     end
 end
 
-function Storage:IterableTrackedFactions(startIndex)
-    local i = startIndex or 0
+function Storage:GetTrackedFaction(index)
+    local factionID = GetFactionID(index)
+    local shouldAlwaysShowParagon = self:GetAlwaysShowParagon() and HasParagonRewardPending(factionID)
+    if factionID and DB.__data[factionID] or shouldAlwaysShowParagon then
+        return factionID
+    end
+    return nil
+end
+
+function Storage:IterableTrackedFactions()
+    local i = 0
     local n = GetNumFactions()
     return function()
         i = i + 1
         while i <= n do
-            local factionID = GetFactionID(i)
-            local shouldAlwaysShowParagon = self:GetAlwaysShowParagon() and HasParagonRewardPending(factionID)
-            if factionID and DB.__data[factionID] or shouldAlwaysShowParagon then
+            local factionID = self:GetTrackedFaction(i)
+            if factionID then
                 return factionID
             end
             i = i + 1
