@@ -55,11 +55,11 @@ function Storage:ToggleAlwaysShowParagon()
 end
 
 function Storage:IsSelectedFaction(factionID)
-    return factionID and GetFactionID(factionID) and DB.__data[factionID] ~= nil
+    return factionID and DB.__data[factionID] ~= nil
 end
 
 function Storage:ToggleFaction(factionID)
-    if factionID and GetFactionID(factionID) then
+    if factionID then
         if DB.__data[factionID] then
             DB.__data[factionID] = nil
         else
