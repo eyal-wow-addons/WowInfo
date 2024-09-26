@@ -15,6 +15,8 @@ local GetText = GetText
 
 local DATA = {}
 
+local CACHE = {}
+
 local function GetFactionDisplayInfoByID(factionID)
     if factionID then
         local factionData = GetFactionDataByID(factionID)
@@ -92,8 +94,55 @@ local function GetFactionDisplayInfoByID(factionID)
     end
 end
 
+local function HasParagonRewardPending(factionID)
+    local hasParagonRewardPending = false
+    if factionID then
+        if IsFactionParagon(factionID) then
+            local _, _, _, hasRewardPending, tooLowLevelForParagon = GetFactionParagonInfo(factionID)
+            if not tooLowLevelForParagon and hasRewardPending then
+                hasParagonRewardPending = true
+            end
+        end
+    end
+    return hasParagonRewardPending
+end
+
+local function IsTrackedFaction(factionID)
+    local shouldAlwaysShowParagon = Reputation.storage:GetAlwaysShowParagon() and HasParagonRewardPending(factionID)
+    if factionID and Reputation.storage:IsSelectedFaction(factionID) or shouldAlwaysShowParagon then
+        return true
+    end
+    return false
+end
+
+local function CacheFactionData()
+    local headerCollapsedState = {}
+    while factionData do
+        if factionData.isHeader and factionData.isCollapsed then
+            headerCollapsedState[i] = true
+            C_Reputation.ExpandFactionHeader(i)
+        end
+        i = i + 1
+        factionData = C_Reputation.GetFactionDataByIndex(i)
+    end
+    for i = 1, C_Reputation.GetNumFactions() do
+        local factionData = C_Reputation.GetFactionDataByIndex(i)
+        CACHE[i] = factionData and factionData.factionID
+    end
+    for k in pairs(headerCollapsedState) do
+        C_Reputation.CollapseFactionHeader(k)
+        headerCollapsedState[k] = nil
+    end
+end
+
+Reputation:RegisterEvents(
+    "PLAYER_LOGIN",
+    "MAJOR_FACTION_RENOWN_LEVEL_CHANGED",
+	"MAJOR_FACTION_UNLOCKED",
+	"UPDATE_FACTION", CacheFactionData)
+
 function Reputation:HasTrackedFactions()
-    for factionID in self.storage:IterableTrackedFactions() do
+    for info in self:IterableTrackedFactions() do
         return true
     end
     return false
@@ -101,12 +150,12 @@ end
 
 function Reputation:IterableTrackedFactions()
     local i = 0
-    local n = GetNumFactions()
+    local n = #CACHE
     return function()
         i = i + 1
         while i <= n do
-            local factionID = self.storage:GetTrackedFaction(i)
-            if factionID then
+            local factionID = CACHE[i]
+            if IsTrackedFaction(factionID) then
                 return GetFactionDisplayInfoByID(factionID)
             end
             i = i + 1

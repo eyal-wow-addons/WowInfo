@@ -13,24 +13,6 @@ local defaults = {
     }
 }
 
-local function GetFactionID(index)
-    local factionData = GetFactionDataByIndex(index)
-    return factionData and factionData.factionID
-end
-
-local function HasParagonRewardPending(factionID)
-    local hasParagonRewardPending = false
-    if factionID then
-        if IsFactionParagon(factionID) then
-            local _, _, _, hasRewardPending, tooLowLevelForParagon = GetFactionParagonInfo(factionID)
-            if not tooLowLevelForParagon and hasRewardPending then
-                hasParagonRewardPending = true
-            end
-        end
-    end
-    return hasParagonRewardPending
-end
-
 function Storage:OnInitialized()
     DB = self:RegisterDB(defaults)
 
@@ -67,28 +49,3 @@ function Storage:ToggleFaction(factionID)
         end
     end
 end
-
-function Storage:GetTrackedFaction(index)
-    local factionID = GetFactionID(index)
-    local shouldAlwaysShowParagon = self:GetAlwaysShowParagon() and HasParagonRewardPending(factionID)
-    if factionID and DB.__data[factionID] or shouldAlwaysShowParagon then
-        return factionID
-    end
-    return nil
-end
-
-function Storage:IterableTrackedFactions()
-    local i = 0
-    local n = GetNumFactions()
-    return function()
-        i = i + 1
-        while i <= n do
-            local factionID = self:GetTrackedFaction(i)
-            if factionID then
-                return factionID
-            end
-            i = i + 1
-        end
-    end
-end
-
