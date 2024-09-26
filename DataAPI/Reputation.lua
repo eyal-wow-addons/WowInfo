@@ -2,6 +2,9 @@ local _, addon = ...
 local Reputation = addon:NewObject("Reputation")
 
 local GetNumFactions = C_Reputation.GetNumFactions
+local ExpandFactionHeader = C_Reputation.ExpandFactionHeader
+local CollapseFactionHeader = C_Reputation.CollapseFactionHeader
+local GetFactionDataByIndex = C_Reputation.GetFactionDataByIndex
 local GetFactionDataByID = C_Reputation.GetFactionDataByID
 local GetFriendshipReputation = C_GossipInfo.GetFriendshipReputation
 local IsFactionParagon = C_Reputation.IsFactionParagon
@@ -15,9 +18,11 @@ local GetText = GetText
 
 local DATA = {}
 
-local CACHE = {}
+local CACHE = {
+    count = 0
+}
 
-local function GetFactionDisplayInfoByID(factionID)
+local function CreateFactionInfo(factionID)
     if factionID then
         local factionData = GetFactionDataByID(factionID)
         if factionData and factionData.name then
@@ -88,6 +93,7 @@ local function GetFactionDisplayInfoByID(factionID)
             DATA.factionType = (isFactionParagon and 1) or (isMajorFaction and 2) or 0
             DATA.hasReward = hasReward
             DATA.renownLevel = renownLevel
+            DATA.isAccountWide = factionData.isAccountWide
 
             return DATA
         end
@@ -115,23 +121,45 @@ local function IsTrackedFaction(factionID)
     return false
 end
 
-local function CacheFactionData()
-    local headerCollapsedState = {}
-    while factionData do
-        if factionData.isHeader and factionData.isCollapsed then
-            headerCollapsedState[i] = true
-            C_Reputation.ExpandFactionHeader(i)
+local function CacheFactionData(self)
+    if self.__cachedNumFactions ~= CACHE.count then
+        local i = 1
+        local factionData = GetFactionDataByIndex(i)
+        local headerCollapsedState = {}
+        while factionData do
+            if factionData.isHeader and factionData.isCollapsed then
+                headerCollapsedState[i] = true
+                ExpandFactionHeader(i)
+            end
+            i = i + 1
+            factionData = GetFactionDataByIndex(i)
         end
-        i = i + 1
-        factionData = C_Reputation.GetFactionDataByIndex(i)
-    end
-    for i = 1, C_Reputation.GetNumFactions() do
-        local factionData = C_Reputation.GetFactionDataByIndex(i)
-        CACHE[i] = factionData and factionData.factionID
-    end
-    for k in pairs(headerCollapsedState) do
-        C_Reputation.CollapseFactionHeader(k)
-        headerCollapsedState[k] = nil
+        local categoryName
+        for i = 1, GetNumFactions() do
+            local factionData = GetFactionDataByIndex(i)
+            if factionData then
+                if not CACHE[i] then
+                    CACHE[i] = {}
+                end
+                if factionData.isHeader and not factionData.isChild then
+                    categoryName = factionData.name
+                end
+                CACHE[i].categoryName = categoryName
+                CACHE[i].name = factionData.name
+                CACHE[i].factionID = factionData.factionID
+                CACHE[i].isHeader = factionData.isHeader
+                CACHE[i].isHeaderWithRep = factionData.isHeaderWithRep
+                CACHE[i].isChild = factionData.isChild
+            else
+                CACHE[i] = nil
+            end
+            CACHE.count = i
+        end
+        for k in pairs(headerCollapsedState) do
+            CollapseFactionHeader(k)
+            headerCollapsedState[k] = nil
+        end
+        self.__cachedNumFactions = CACHE.count
     end
 end
 
@@ -141,22 +169,33 @@ Reputation:RegisterEvents(
 	"MAJOR_FACTION_UNLOCKED",
 	"UPDATE_FACTION", CacheFactionData)
 
+function Reputation:GetFactionListInfoByIndex(index)
+    return CACHE[index]
+end
+
+function Reputation:GetNumFactions()
+    return CACHE.count
+end
+
 function Reputation:HasTrackedFactions()
-    for info in self:IterableTrackedFactions() do
-        return true
+    for i = 1, self:GetNumFactions() do
+        local info = self:GetFactionListInfoByIndex(i)
+        if info and IsTrackedFaction(info.factionID) then
+            return true
+        end
     end
     return false
 end
 
-function Reputation:IterableTrackedFactions()
+function Reputation:IterableTrackedFactionsInfo()
     local i = 0
-    local n = #CACHE
+    local n = self:GetNumFactions()
     return function()
         i = i + 1
         while i <= n do
-            local factionID = CACHE[i]
-            if IsTrackedFaction(factionID) then
-                return GetFactionDisplayInfoByID(factionID)
+            local info = self:GetFactionListInfoByIndex(i)
+            if info and IsTrackedFaction(info.factionID) then
+                return CreateFactionInfo(info.factionID), info.categoryName
             end
             i = i + 1
         end

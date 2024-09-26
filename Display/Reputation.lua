@@ -10,9 +10,14 @@ local ICON_AVAILABLE_REWARD = " |TInterface\\RaidFrame\\ReadyCheck-Ready:0|t"
 Display:RegisterHookScript(CharacterMicroButton, "OnEnter", function()
     if Reputation:HasTrackedFactions() then
         Display:AddHeader(L["Reputation:"])
-        local factionName, standingColor
-        for info in Reputation:IterableTrackedFactions() do
-            factionName = info.factionName
+        local factionName, standingColor, prevCategoryName
+        for info, categoryName in Reputation:IterableTrackedFactionsInfo() do
+            if prevCategoryName ~= categoryName then
+                Display:AddLine(categoryName)
+                prevCategoryName = categoryName
+            end
+
+            factionName = "  " .. info.factionName
             standingColor = FACTION_BAR_COLORS[info.standingID]
 
             if info.hasReward then
@@ -30,7 +35,7 @@ Display:RegisterHookScript(CharacterMicroButton, "OnEnter", function()
                 :SetLine(factionName)
                 :SetColor(standingColor)
     
-            if isCapped then
+            if isCapped or IsShiftKeyDown() then
                 Display:SetLine(info.standing)
             else
                 Display:SetFormattedLine(PROGRESS_FORMAT, info.progressValue, info.progressMax)
