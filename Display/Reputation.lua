@@ -10,35 +10,39 @@ local ICON_AVAILABLE_REWARD = " |TInterface\\RaidFrame\\ReadyCheck-Ready:0|t"
 Display:RegisterHookScript(CharacterMicroButton, "OnEnter", function()
     if Reputation:HasTrackedFactions() then
         Display:AddHeader(L["Reputation:"])
-        local factionName, standingColor, prevCategoryName
-        for info, categoryName in Reputation:IterableTrackedFactionsInfo() do
-            if prevCategoryName ~= categoryName then
-                Display:AddLine(categoryName)
-                prevCategoryName = categoryName
+        local factionName, standingColor, prevHeaderName
+        for data, progressInfo in Reputation:IterableTrackedFactionsData() do
+            if prevHeaderName ~= data.headerName then
+                Display:AddLine(data.headerName)
+                prevHeaderName = data.headerName
             end
 
-            factionName = "  " .. info.factionName
-            standingColor = FACTION_BAR_COLORS[info.standingID]
+            factionName = data.factionName
+            standingColor = FACTION_BAR_COLORS[progressInfo.standingID]
 
-            if info.hasReward then
-                factionName = factionName .. ICON_AVAILABLE_REWARD
-            end
-
-            if info.factionType == 1 then
+            if progressInfo.type == 1 then
+                -- Friendship Faction
+            elseif progressInfo.type == 2 then
+                -- Paragon 
                 standingColor = LIGHTBLUE_FONT_COLOR
-            elseif info.factionType == 2 then
+            elseif progressInfo.type == 3 then
+                -- Major Faction
                 standingColor = BLUE_FONT_COLOR
-                factionName = L["S (Renown X)"]:format(factionName, info.renownLevel)
+            end
+
+            if progressInfo.hasReward then
+                factionName = factionName .. ICON_AVAILABLE_REWARD
             end
 
             Display
                 :SetLine(factionName)
+                :Indent(4)
                 :SetColor(standingColor)
     
-            if isCapped or IsShiftKeyDown() then
-                Display:SetLine(info.standing)
+            if progressInfo.isCapped or IsShiftKeyDown() then
+                Display:SetLine(progressInfo.standing)
             else
-                Display:SetFormattedLine(PROGRESS_FORMAT, info.progressValue, info.progressMax)
+                Display:SetFormattedLine(PROGRESS_FORMAT, progressInfo.currentValue, progressInfo.maxValue)
             end
 
             Display

@@ -16,88 +16,80 @@ local HasMaximumRenown = C_MajorFactions.HasMaximumRenown
 local UnitSex = UnitSex
 local GetText = GetText
 
-local DATA = {}
+local tinsert = table.insert
+
+local INFO = {}
 
 local CACHE = {
     count = 0
 }
 
-local function CreateFactionInfo(factionID)
-    if factionID then
-        local factionData = GetFactionDataByID(factionID)
-        if factionData and factionData.name then
-            local factionName, standingID, repMin, repMax, repValue = factionData.name, factionData.reaction, factionData.currentReactionThreshold, factionData.nextReactionThreshold, factionData.currentStanding
-            local repInfo = GetFriendshipReputation(factionID)
-            
-            local gender = UnitSex("player")
-            local standing = GetText("FACTION_STANDING_LABEL" .. standingID, gender)
+local function CreateFactionProgressInfo(factionData)
+    local factionID = factionData.factionID
+    local standingID = factionData.reaction
+    local repMin, repMax, repValue = factionData.currentReactionThreshold, factionData.nextReactionThreshold, factionData.currentStanding
 
-            local isCapped = false
-            local isFactionParagon = false
-            local isMajorFaction = false
-            local renownLevel = 0
-            local hasReward = false
+    local gender = UnitSex("player")
+    local standing = GetText("FACTION_STANDING_LABEL" .. standingID, gender)
 
-            if repInfo and repInfo.friendshipFactionID and repInfo.friendshipFactionID > 0 then
-                if repInfo.nextThreshold then
-                    repMin, repMax, repValue = repInfo.reactionThreshold, repInfo.nextThreshold, repInfo.standing
-                else
-                    repMin, repMax, repValue = 0, 1, 1
-                    isCapped = true
-                end
-                standingID = 5 -- Always color friendship factions with green
-                standing = repInfo.reaction
-            elseif IsFactionParagon(factionID) then
-                local currentValue, threshold, _, hasRewardPending, tooLowLevelForParagon = GetFactionParagonInfo(factionID)
-                repMin, repMax, repValue = 0, threshold, currentValue % threshold
-                if not tooLowLevelForParagon and hasRewardPending then
-                    hasReward = true
-                end
-                isFactionParagon = true
-            elseif IsMajorFaction(factionID) then
-                local majorFactionData = GetMajorFactionData(factionID)
-                local rewards = GetRenownRewardsForLevel(factionID, majorFactionData.renownLevel)
-                repMin, repMax = 0, majorFactionData.renownLevelThreshold
-                isCapped = HasMaximumRenown(factionID)
-                repValue = isCapped and majorFactionData.renownLevelThreshold or majorFactionData.renownReputationEarned or 0
-                renownLevel = majorFactionData.renownLevel
-                if #rewards > 0 then
-                    local rewardInfo = rewards[1]
-                    if rewardInfo.itemID
-                        or rewardInfo.mountID
-                        or rewardInfo.spellID
-                        or rewardInfo.titleMaskID
-                        or rewardInfo.transmogID
-                        or rewardInfo.transmogSetID
-                        or rewardInfo.garrFollowerID
-                        or rewardInfo.transmogIllusionSourceID then
-                            hasReward = true
-                    end
-                end
-                isMajorFaction = true
+    local progressType = 0
+    local renownLevel = 0
+    local isCapped, hasReward = false, false
+
+    if IsMajorFaction(factionID) then
+        local majorFactionData = GetMajorFactionData(factionID)
+        repMin, repMax = 0, majorFactionData.renownLevelThreshold
+        isCapped = HasMaximumRenown(factionID)
+        repValue = isCapped and majorFactionData.renownLevelThreshold or majorFactionData.renownReputationEarned or 0
+        renownLevel = majorFactionData.renownLevel
+        if isCapped then
+            standing = MAJOR_FACTION_MAX_RENOWN_REACHED
+        else
+            standing = MAJOR_FACTION_RENOWN_LEVEL_TOAST:format(renownLevel)
+        end
+        local _, _, rewardQuestID, hasRewardPending, tooLowLevelForParagon = GetFactionParagonInfo(factionID)
+        if not tooLowLevelForParagon and (rewardQuestID or hasRewardPending) then
+			hasReward = true
+		end
+        progressType = 3
+    elseif IsFactionParagon(factionID) then
+        local currentValue, threshold, _, hasRewardPending, tooLowLevelForParagon = GetFactionParagonInfo(factionID)
+        repMin, repMax, repValue = 0, threshold, currentValue % threshold
+        if not tooLowLevelForParagon and hasRewardPending then
+            hasReward = true
+        end
+        progressType = 2
+    else
+        local repInfo = GetFriendshipReputation(factionID)
+        if repInfo and repInfo.friendshipFactionID and repInfo.friendshipFactionID > 0 then
+            if repInfo.nextThreshold then
+                repMin, repMax, repValue = repInfo.reactionThreshold, repInfo.nextThreshold, repInfo.standing
             else
-                if (standingID == MAX_REPUTATION_REACTION) then
-                    isCapped = true
-                end
+                repMin, repMax, repValue = 0, 1, 1
+                isCapped = true
             end
-
-            repMax = repMax - repMin
-            repValue = repValue - repMin
-
-            DATA.factionName = factionName
-            DATA.standing = standing
-            DATA.standingID = standingID
-            DATA.isCapped = isCapped
-            DATA.progressValue = repValue
-            DATA.progressMax = repMax
-            DATA.factionType = (isFactionParagon and 1) or (isMajorFaction and 2) or 0
-            DATA.hasReward = hasReward
-            DATA.renownLevel = renownLevel
-            DATA.isAccountWide = factionData.isAccountWide
-
-            return DATA
+            standingID = 5 -- Always color friendship factions with green
+            standing = repInfo.reaction
+            progressType = 1
+        elseif standingID == MAX_REPUTATION_REACTION then
+            isCapped = true
+            repMin, repMax, repValue = 0, 1, 1
         end
     end
+
+    repMax = repMax - repMin
+    repValue = repValue - repMin
+
+    INFO.type = progressType
+    INFO.standing = standing
+    INFO.renownLevel = renownLevel
+    INFO.standingID = standingID
+    INFO.isCapped = isCapped
+    INFO.currentValue = repValue
+    INFO.maxValue = repMax
+    INFO.hasReward = hasReward
+
+    return INFO
 end
 
 local function HasParagonRewardPending(factionID)
@@ -121,55 +113,103 @@ local function IsTrackedFaction(factionID)
     return false
 end
 
-local function CacheFactionData(self)
+local function CacheFactionData(self, eventName)
+    local progressInfo
     if self.__cachedNumFactions ~= CACHE.count then
+        -- NOTE: 'ExpandFactionHeader' and 'CollapseFactionHeader' trigger UPDATE_FACTION and may cause infinite recursion,
+        -- so we are unregistering the event before these functions are called and registering it again after they are called.
+        self:UnregisterEvent("UPDATE_FACTION")
+
         local i = 1
+        local headerName
+        local collapsedIndexes = {}
         local factionData = GetFactionDataByIndex(i)
-        local headerCollapsedState = {}
         while factionData do
-            if factionData.isHeader and factionData.isCollapsed then
-                headerCollapsedState[i] = true
-                ExpandFactionHeader(i)
+            if factionData then
+                if factionData.factionID == 0 then
+                    -- NOTE: The 'Inactive' header holds hidden factions that aren't displayed in the default UI so break out.
+                    break
+                end
+                
+                if factionData.isCollapsed then
+                    ExpandFactionHeader(i)
+                    tinsert(collapsedIndexes, i)
+                end
+
+                local cachedData = CACHE[i]
+
+                if not cachedData then
+                    CACHE[i] = {
+                        progressInfo = {}
+                    }
+                    cachedData = CACHE[i]
+                end
+
+                -- Top level header
+                if factionData.isHeader and not factionData.isChild then
+                    headerName = factionData.name
+                end
+
+                cachedData.headerName = headerName
+                cachedData.factionName = factionData.name
+                cachedData.factionID = factionData.factionID
+                cachedData.isHeader = factionData.isHeader
+                cachedData.isHeaderWithRep = factionData.isHeaderWithRep
+                cachedData.isChild = factionData.isChild
+                cachedData.isAccountWide = factionData.isAccountWide
+
+                progressInfo = CreateFactionProgressInfo(factionData)
+
+                cachedData.progressInfo.type = progressInfo.type
+                cachedData.progressInfo.standing = progressInfo.standing
+                cachedData.progressInfo.renownLevel = progressInfo.renownLevel
+                cachedData.progressInfo.standingID = progressInfo.standingID
+                cachedData.progressInfo.isCapped = progressInfo.isCapped
+                cachedData.progressInfo.currentValue = progressInfo.currentValue
+                cachedData.progressInfo.maxValue = progressInfo.maxValue
+                cachedData.progressInfo.hasReward = progressInfo.hasReward
             end
+            CACHE.count = i
             i = i + 1
             factionData = GetFactionDataByIndex(i)
         end
-        local categoryName
-        for i = 1, GetNumFactions() do
-            local factionData = GetFactionDataByIndex(i)
-            if factionData then
-                if not CACHE[i] then
-                    CACHE[i] = {}
-                end
-                if factionData.isHeader and not factionData.isChild then
-                    categoryName = factionData.name
-                end
-                CACHE[i].categoryName = categoryName
-                CACHE[i].name = factionData.name
-                CACHE[i].factionID = factionData.factionID
-                CACHE[i].isHeader = factionData.isHeader
-                CACHE[i].isHeaderWithRep = factionData.isHeaderWithRep
-                CACHE[i].isChild = factionData.isChild
-            else
-                CACHE[i] = nil
-            end
-            CACHE.count = i
+
+        for i = #collapsedIndexes, 1, -1 do
+            local collapsedIndex = collapsedIndexes[i]
+            CollapseFactionHeader(collapsedIndex)
+            collapsedIndexes[i] = nil
         end
-        for k in pairs(headerCollapsedState) do
-            CollapseFactionHeader(k)
-            headerCollapsedState[k] = nil
-        end
+
         self.__cachedNumFactions = CACHE.count
+        self:RegisterEvent("UPDATE_FACTION", CacheFactionData)
+    end
+    for i = 1, CACHE.count do
+        local cachedData = CACHE[i]
+        if cachedData then
+            local factionData = GetFactionDataByID(cachedData.factionID)
+            if factionData then
+                progressInfo = CreateFactionProgressInfo(factionData)
+                cachedData.progressInfo.standing = progressInfo.standing
+                cachedData.progressInfo.renownLevel = progressInfo.renownLevel
+                cachedData.progressInfo.standingID = progressInfo.standingID
+                cachedData.progressInfo.isCapped = progressInfo.isCapped
+                cachedData.progressInfo.currentValue = progressInfo.currentValue
+                cachedData.progressInfo.maxValue = progressInfo.maxValue
+                cachedData.progressInfo.hasReward = progressInfo.hasReward
+            end
+        end
     end
 end
 
-Reputation:RegisterEvents(
-    "PLAYER_LOGIN",
-    "MAJOR_FACTION_RENOWN_LEVEL_CHANGED",
-	"MAJOR_FACTION_UNLOCKED",
-	"UPDATE_FACTION", CacheFactionData)
+Reputation:RegisterEvent("PLAYER_LOGIN", function(self, eventName)
+    CacheFactionData(self, eventName)
+    self:RegisterEvents(
+        "MAJOR_FACTION_RENOWN_LEVEL_CHANGED", 
+        "MAJOR_FACTION_UNLOCKED",
+        "UPDATE_FACTION", CacheFactionData)
+end)
 
-function Reputation:GetFactionListInfoByIndex(index)
+function Reputation:GetFactionDataByIndex(index)
     return CACHE[index]
 end
 
@@ -179,23 +219,23 @@ end
 
 function Reputation:HasTrackedFactions()
     for i = 1, self:GetNumFactions() do
-        local info = self:GetFactionListInfoByIndex(i)
-        if info and IsTrackedFaction(info.factionID) then
+        local data = self:GetFactionDataByIndex(i)
+        if data and IsTrackedFaction(data.factionID) then
             return true
         end
     end
     return false
 end
 
-function Reputation:IterableTrackedFactionsInfo()
+function Reputation:IterableTrackedFactionsData()
     local i = 0
     local n = self:GetNumFactions()
     return function()
         i = i + 1
         while i <= n do
-            local info = self:GetFactionListInfoByIndex(i)
-            if info and IsTrackedFaction(info.factionID) then
-                return CreateFactionInfo(info.factionID), info.categoryName
+            local data = self:GetFactionDataByIndex(i)
+            if data and IsTrackedFaction(data.factionID) then
+                return data, data.progressInfo
             end
             i = i + 1
         end
