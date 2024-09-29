@@ -1,7 +1,9 @@
 local _, addon = ...
 local MonthlyActivities = addon:NewObject("MonthlyActivities")
 
-local DATA = {}
+local MONTHLY_ACTIVITIES_DAYS = MONTHLY_ACTIVITIES_DAYS
+
+local CACHE = {}
 
 local MONTHLY_ACTIVITIES_MONTH_NAMES = {
 	MONTH_JANUARY,
@@ -89,12 +91,12 @@ local function CacheInfo()
     end
     earnedThresholdAmount = math.min(earnedThresholdAmount, thresholdMax)
 
-    DATA.itemReward = itemReward
-    DATA.pendingReward = pendingReward
-    DATA.thresholdMax = thresholdMax
-    DATA.earnedThresholdAmount = earnedThresholdAmount
-    DATA.displayMonthName = activitiesInfo.displayMonthName
-    DATA.secondsRemaining = activitiesInfo.secondsRemaining
+    CACHE.itemReward = itemReward
+    CACHE.pendingReward = pendingReward
+    CACHE.thresholdMax = thresholdMax
+    CACHE.earnedThresholdAmount = earnedThresholdAmount
+    CACHE.displayMonthName = activitiesInfo.displayMonthName
+    CACHE.secondsRemaining = activitiesInfo.secondsRemaining
 end
 
 MonthlyActivities:RegisterEvents(
@@ -110,5 +112,5 @@ function MonthlyActivities:GetInfo()
     if AreMonthlyActivitiesRestricted() then
         return nil
     end
-    return DATA.earnedThresholdAmount, DATA.thresholdMax, DATA.itemReward, DATA.pendingReward, GetMonthlyActivitiesTimeInfo(DATA.displayMonthName, DATA.secondsRemaining)
+    return CACHE.earnedThresholdAmount, CACHE.thresholdMax, CACHE.itemReward, CACHE.pendingReward, GetMonthlyActivitiesTimeInfo(CACHE.displayMonthName, CACHE.secondsRemaining)
 end

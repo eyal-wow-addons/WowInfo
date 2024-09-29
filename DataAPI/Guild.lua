@@ -2,13 +2,7 @@ local _, addon = ...
 local Friends = addon:GetObject("Friends")
 local Guild = addon:NewObject("Guild")
 
-local tinsert = table.insert
-
-Guild.GuildRoster = C_GuildInfo.GuildRoster
-Guild.GetNumGuildMembers = GetNumGuildMembers
-Guild.GetGuildRosterInfo = GetGuildRosterInfo
-
-local DATA = {}
+local INFO = {}
 
 local CACHE = {}
 
@@ -19,12 +13,12 @@ local function CacheGuildFriendsInfo()
         return
     end
 
-    local numTotal = Guild.GetNumGuildMembers()
+    local numTotal = GetNumGuildMembers()
     local i2 = 1
     local characterName, characterLevel, zoneName, online, status, classFilename, isMobile
 
     for i = 1, numTotal do
-        characterName, _, _, characterLevel, _, zoneName, _, _, online, status, classFilename, _, _, isMobile = Guild.GetGuildRosterInfo(i)
+        characterName, _, _, characterLevel, _, zoneName, _, _, online, status, classFilename, _, _, isMobile = GetGuildRosterInfo(i)
 
         if characterName then
             characterName = Ambiguate(characterName, "guild")
@@ -48,9 +42,8 @@ local function CacheGuildFriendsInfo()
                     CACHE[i2].status = status
                     CACHE[i2].classFilename = classFilename
                     CACHE[i2].isMobile = isMobile
-                    -- print("CacheGuildFriendsInfo", i2, "UPDATE")
                 else
-                    tinsert(CACHE, {
+                    table.insert(CACHE, {
                         characterName = characterName,
                         characterLevel = characterLevel,
                         zoneName = zoneName,
@@ -59,7 +52,6 @@ local function CacheGuildFriendsInfo()
                         classFilename = classFilename,
                         isMobile = isMobile
                     })
-                    -- print("CacheGuildFriendsInfo", #CACHE, numTotal, "INSERT")
                 end
 
                 i2 = i2 + 1
@@ -69,7 +61,6 @@ local function CacheGuildFriendsInfo()
 
     for i = i2, #CACHE do
         CACHE[i] = nil
-        -- print("CacheGuildFriendsInfo", i, "REMOVE")
     end
 
     Guild.__rosterCached = true
@@ -83,7 +74,7 @@ Guild:RegisterEvents(
     "BN_INFO_CHANGED", function(self, eventName, ...)
         local canRequestRosterUpdate = ...
         if (eventName == "GUILD_ROSTER_UPDATE" and canRequestRosterUpdate) or eventName ~= "GUILD_ROSTER_UPDATE" then
-            self.GuildRoster()
+            C_GuildInfo.GuildRoster()
             self.__rosterCached = false
         end
     end)
@@ -114,16 +105,16 @@ function Guild:IterableGuildFriendsInfo(index)
                 grouped = false
             end
 
-            DATA.characterName = memberInfo.characterName
-            DATA.characterLevel = memberInfo.characterLevel
-            DATA.classFilename = memberInfo.classFilename
-            DATA.grouped = grouped
-            DATA.zoneName = memberInfo.zoneName
-            DATA.sameZone = sameZone
-            DATA.status = memberInfo.status
-            DATA.isMobile = memberInfo.isMobile
+            INFO.characterName = memberInfo.characterName
+            INFO.characterLevel = memberInfo.characterLevel
+            INFO.classFilename = memberInfo.classFilename
+            INFO.grouped = grouped
+            INFO.zoneName = memberInfo.zoneName
+            INFO.sameZone = sameZone
+            INFO.status = memberInfo.status
+            INFO.isMobile = memberInfo.isMobile
 
-            return i, DATA
+            return i, INFO
         end
     end
 end

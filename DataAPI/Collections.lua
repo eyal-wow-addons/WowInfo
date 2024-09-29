@@ -1,7 +1,7 @@
 local _, addon = ...
 local Collections = addon:NewObject("Collections")
 
-local DATA = {
+local CACHE = {
     numCollectedMounts = 0
 }
 
@@ -17,9 +17,9 @@ local function CacheNumMounts()
                 numCollectedMounts = numCollectedMounts + 1
             end
         end
-        DATA.numCollectedMounts = numCollectedMounts
+        CACHE.numCollectedMounts = numCollectedMounts
     else
-        DATA.numCollectedMounts = 0
+        CACHE.numCollectedMounts = 0
     end
 end
 
@@ -27,8 +27,8 @@ Collections:RegisterEvents(
     "PLAYER_LOGIN", "COMPANION_LEARNED", "COMPANION_UNLEARNED", CacheNumMounts)
 
 function Collections:GetTotalMounts()
-    if DATA.numCollectedMounts > 0 then
-        return DATA.numCollectedMounts
+    if CACHE.numCollectedMounts > 0 then
+        return CACHE.numCollectedMounts
     end
     return nil
 end

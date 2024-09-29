@@ -24,7 +24,7 @@ local function GetPercentage(current, total)
         local fixed = perc
         -- Makes sure we never round down to 0 so we can distinguish between completely broken and fully functional
         if perc > 0 then
-            fixed = max(0.01, perc)
+            fixed = math.max(0.01, perc)
         end
         return fixed, perc
     end

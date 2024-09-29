@@ -3,8 +3,8 @@ local Money = addon:NewObject("Money")
 
 local CharacterInfo = LibStub("CharacterInfo-1.0")
 
-local floor = math.floor
-local GetMoneyString = GetMoneyString
+local COPPER_PER_SILVER = COPPER_PER_SILVER
+local SILVER_PER_GOLD = SILVER_PER_GOLD
 
 function Money:GetPlayerMoneyInfo()
     local charName, money = Money.storage:GetPlayerMoneyInfo()
@@ -25,7 +25,7 @@ function Money:IterableCharactersMoneyInfo()
                 charDisplayName = CharacterInfo:RemoveRealm(charDisplayName)
             end
 
-            local fraction = floor(money / (COPPER_PER_SILVER * SILVER_PER_GOLD))
+            local fraction = math.floor(money / (COPPER_PER_SILVER * SILVER_PER_GOLD))
 
             if not CharacterInfo:IsSameCharacter(charName)
                 and (fraction > Money.storage:GetMinMoneyAmount() or Money.storage:CanShowAllCharacters()) then

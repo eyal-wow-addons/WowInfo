@@ -9,7 +9,7 @@ Display:RegisterHookScript(GuildMicroButton, "OnEnter", function(self)
         return
     end
 
-    local numTotalGuildMembers, numOnlineGuildMembers = Guild:GetNumGuildMembers()
+    local numTotalGuildMembers, numOnlineGuildMembers = GetNumGuildMembers()
 
     if numTotalGuildMembers > 0 then
         Display:AddFormattedHeader(L["X Members Y Online"], numTotalGuildMembers, numOnlineGuildMembers)

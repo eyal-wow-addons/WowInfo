@@ -2,11 +2,6 @@ local _, addon = ...
 local CharacterInfo = LibStub("CharacterInfo-1.0")
 local Storage, DB = addon:NewStorage("Reputation")
 
-local GetNumFactions = C_Reputation.GetNumFactions
-local GetFactionDataByIndex = C_Reputation.GetFactionDataByIndex
-local GetFactionParagonInfo = C_Reputation.GetFactionParagonInfo
-local IsFactionParagon = C_Reputation.IsFactionParagon
-
 local defaults = {
     profile = {
         alwaysShowParagon = true

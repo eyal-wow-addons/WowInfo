@@ -1,27 +1,14 @@
 local _, addon = ...
 local Reputation = addon:NewObject("Reputation")
 
-local GetNumFactions = C_Reputation.GetNumFactions
-local ExpandFactionHeader = C_Reputation.ExpandFactionHeader
-local CollapseFactionHeader = C_Reputation.CollapseFactionHeader
-local GetFactionDataByIndex = C_Reputation.GetFactionDataByIndex
-local GetFactionDataByID = C_Reputation.GetFactionDataByID
-local GetFriendshipReputation = C_GossipInfo.GetFriendshipReputation
-local IsFactionParagon = C_Reputation.IsFactionParagon
-local GetFactionParagonInfo = C_Reputation.GetFactionParagonInfo
-local IsMajorFaction = C_Reputation.IsMajorFaction
-local GetMajorFactionData = C_MajorFactions.GetMajorFactionData
-local GetRenownRewardsForLevel = C_MajorFactions.GetRenownRewardsForLevel
-local HasMaximumRenown = C_MajorFactions.HasMaximumRenown
-local UnitSex = UnitSex
-local GetText = GetText
-
-local tinsert = table.insert
+local MAJOR_FACTION_MAX_RENOWN_REACHED = MAJOR_FACTION_MAX_RENOWN_REACHED
+local MAJOR_FACTION_RENOWN_LEVEL_TOAST = MAJOR_FACTION_RENOWN_LEVEL_TOAST
+local MAX_REPUTATION_REACTION = MAX_REPUTATION_REACTION
 
 local INFO = {}
 
 local CACHE = {
-    count = 0
+    numFactions = 0
 }
 
 local function CreateFactionProgressInfo(factionData)
@@ -36,10 +23,10 @@ local function CreateFactionProgressInfo(factionData)
     local renownLevel = 0
     local isCapped, hasReward = false, false
 
-    if IsMajorFaction(factionID) then
-        local majorFactionData = GetMajorFactionData(factionID)
+    if C_Reputation.IsMajorFaction(factionID) then
+        local majorFactionData = C_MajorFactions.GetMajorFactionData(factionID)
         repMin, repMax = 0, majorFactionData.renownLevelThreshold
-        isCapped = HasMaximumRenown(factionID)
+        isCapped = C_MajorFactions.HasMaximumRenown(factionID)
         repValue = isCapped and majorFactionData.renownLevelThreshold or majorFactionData.renownReputationEarned or 0
         renownLevel = majorFactionData.renownLevel
         if isCapped then
@@ -47,20 +34,20 @@ local function CreateFactionProgressInfo(factionData)
         else
             standing = MAJOR_FACTION_RENOWN_LEVEL_TOAST:format(renownLevel)
         end
-        local _, _, rewardQuestID, hasRewardPending, tooLowLevelForParagon = GetFactionParagonInfo(factionID)
+        local _, _, rewardQuestID, hasRewardPending, tooLowLevelForParagon = C_Reputation.GetFactionParagonInfo(factionID)
         if not tooLowLevelForParagon and (rewardQuestID or hasRewardPending) then
 			hasReward = true
 		end
         progressType = 3
-    elseif IsFactionParagon(factionID) then
-        local currentValue, threshold, _, hasRewardPending, tooLowLevelForParagon = GetFactionParagonInfo(factionID)
+    elseif C_Reputation.IsFactionParagon(factionID) then
+        local currentValue, threshold, _, hasRewardPending, tooLowLevelForParagon = C_Reputation.GetFactionParagonInfo(factionID)
         repMin, repMax, repValue = 0, threshold, currentValue % threshold
         if not tooLowLevelForParagon and hasRewardPending then
             hasReward = true
         end
         progressType = 2
     else
-        local repInfo = GetFriendshipReputation(factionID)
+        local repInfo = C_GossipInfo.GetFriendshipReputation(factionID)
         if repInfo and repInfo.friendshipFactionID and repInfo.friendshipFactionID > 0 then
             if repInfo.nextThreshold then
                 repMin, repMax, repValue = repInfo.reactionThreshold, repInfo.nextThreshold, repInfo.standing
@@ -95,8 +82,8 @@ end
 local function HasParagonRewardPending(factionID)
     local hasParagonRewardPending = false
     if factionID then
-        if IsFactionParagon(factionID) then
-            local _, _, _, hasRewardPending, tooLowLevelForParagon = GetFactionParagonInfo(factionID)
+        if C_Reputation.IsFactionParagon(factionID) then
+            local _, _, _, hasRewardPending, tooLowLevelForParagon = C_Reputation.GetFactionParagonInfo(factionID)
             if not tooLowLevelForParagon and hasRewardPending then
                 hasParagonRewardPending = true
             end
@@ -115,7 +102,7 @@ end
 
 local function CacheFactionData(self, eventName)
     local progressInfo
-    if self.__cachedNumFactions ~= CACHE.count then
+    if self.__cachedNumFactions ~= CACHE.numFactions then
         -- NOTE: 'ExpandFactionHeader' and 'CollapseFactionHeader' trigger UPDATE_FACTION and may cause infinite recursion,
         -- so we are unregistering the event before these functions are called and registering it again after they are called.
         self:UnregisterEvent("UPDATE_FACTION")
@@ -123,7 +110,7 @@ local function CacheFactionData(self, eventName)
         local i = 1
         local headerName
         local collapsedIndexes = {}
-        local factionData = GetFactionDataByIndex(i)
+        local factionData = C_Reputation.GetFactionDataByIndex(i)
         while factionData do
             if factionData then
                 if factionData.factionID == 0 then
@@ -132,8 +119,8 @@ local function CacheFactionData(self, eventName)
                 end
                 
                 if factionData.isCollapsed then
-                    ExpandFactionHeader(i)
-                    tinsert(collapsedIndexes, i)
+                    C_Reputation.ExpandFactionHeader(i)
+                    table.insert(collapsedIndexes, i)
                 end
 
                 local cachedData = CACHE[i]
@@ -169,24 +156,24 @@ local function CacheFactionData(self, eventName)
                 cachedData.progressInfo.maxValue = progressInfo.maxValue
                 cachedData.progressInfo.hasReward = progressInfo.hasReward
             end
-            CACHE.count = i
+            CACHE.numFactions = i
             i = i + 1
-            factionData = GetFactionDataByIndex(i)
+            factionData = C_Reputation.GetFactionDataByIndex(i)
         end
 
         for i = #collapsedIndexes, 1, -1 do
             local collapsedIndex = collapsedIndexes[i]
-            CollapseFactionHeader(collapsedIndex)
+            C_Reputation.CollapseFactionHeader(collapsedIndex)
             collapsedIndexes[i] = nil
         end
 
-        self.__cachedNumFactions = CACHE.count
+        self.__cachedNumFactions = CACHE.numFactions
         self:RegisterEvent("UPDATE_FACTION", CacheFactionData)
     end
-    for i = 1, CACHE.count do
+    for i = 1, CACHE.numFactions do
         local cachedData = CACHE[i]
         if cachedData then
-            local factionData = GetFactionDataByID(cachedData.factionID)
+            local factionData = C_Reputation.GetFactionDataByID(cachedData.factionID)
             if factionData then
                 progressInfo = CreateFactionProgressInfo(factionData)
                 cachedData.progressInfo.standing = progressInfo.standing
@@ -214,7 +201,7 @@ function Reputation:GetFactionDataByIndex(index)
 end
 
 function Reputation:GetNumFactions()
-    return CACHE.count
+    return CACHE.numFactions
 end
 
 function Reputation:HasTrackedFactions()

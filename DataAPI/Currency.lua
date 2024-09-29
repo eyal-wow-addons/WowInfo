@@ -3,6 +3,9 @@ local Currency = addon:NewObject("Currency")
 
 local CharacterInfo = LibStub("CharacterInfo-1.0")
 
+local _G = _G
+local PLAYER_V_PLAYER = PLAYER_V_PLAYER
+
 local DATA = {
     expansions = {},
     expansionCategory = "",
