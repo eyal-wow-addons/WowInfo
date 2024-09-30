@@ -198,6 +198,11 @@ function Currency:IterableCharactersCurrencyInfo(currencyID)
     end
 end
 
+function Currency:GetIDByIndex(index)
+    local link = C_CurrencyInfo.GetCurrencyListLink(index)
+    return link and C_CurrencyInfo.GetCurrencyIDFromLink(link)
+end
+
 function Currency:GetTotalQuantity(currencyID)
     if not currencyID or ACCOUNT_WIDE_CURRENCY[currencyID] then
         return -1
