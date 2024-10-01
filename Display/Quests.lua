@@ -1,44 +1,71 @@
 local _, addon = ...
-local L = addon.L
+local Quests = addon:GetObject("Quests")
 local Display = addon:NewDisplay("Quests")
-local Quests = addon.Quests
 
-local function AddCampaign(id, title, isCompleted, progressString, chaptersIterator, ...)
-    if id then
+local L = addon.L
+
+local function AddQuestHeader(headerInfo, progressString, progressIterator)
+    if headerInfo.ID then
         Display:AddEmptyLine()
-        if not isCompleted then
-            Display:AddHighlightLine(title)
-            Display:AddEmptyLine()
-            Display:AddLine(progressString)
-            for chapterName, isCurrentChapter, isChapterCompleted in chaptersIterator(Quests, id, ...) do
-                if isCurrentChapter then
-                    Display:AddHighlightLine(chapterName)
-                elseif isChapterCompleted then
-                    Display:AddLine(chapterName, GREEN_FONT_COLOR.r, GREEN_FONT_COLOR.g, GREEN_FONT_COLOR.b)
+        if not headerInfo.isCompleted then
+            Display
+                :SetLine(headerInfo.title)
+                :SetHighlight()
+                :ToLine()
+                :AddEmptyLine()
+                :AddLine(progressString)
+            for stepName, isCurrentStep, isStepCompleted in progressIterator(Quests) do
+                Display:SetLine(stepName)
+                if isCurrentStep then
+                    Display:SetHighlight()
+                elseif isStepCompleted then
+                    Display:SetGreenColor()
                 else
-                    Display:AddGrayLine(chapterName)
+                    Display:SetGrayColor()
                 end
+                Display:ToLine()
             end
         else
-            Display:AddLeftHighlightDoubleLine(title, L["Completed"], GREEN_FONT_COLOR.r, GREEN_FONT_COLOR.g, GREEN_FONT_COLOR.b)
+            Display
+                :SetLine(headerInfo.title)
+                :SetHighlight()
+                :SetLine(L["Completed"])
+                :SetGreenColor()
+                :ToLine()
         end
     end
 end
 
 Display:RegisterHookScript(QuestLogMicroButton, "OnEnter", function()
-    local quests, completedQuests, incompletedQuests = Quests:GetTotalQuests()
-    local campaignID, campaignTitle, isCampaignCompleted, campaignProgressString, campaignChapterIDs = Quests:GetCampaignInfo()
-    local storyAchievementID, storyTitle, isStoryCompleted, storyProgressString = Quests:GetZoneStoryInfo()
+    local questLogInfo = Quests:GetQuestLogInfo()
+    local campaignInfo = Quests:GetCampaignInfo()
+    local storyInfo = Quests:GetZoneStoryInfo()
 
-    if quests > 0 then
-        Display:AddTitleDoubleLine(L["Total Quests"], quests)
-        Display:AddRightHighlightDoubleLine(L["Completed"], completedQuests)
-        Display:AddRightHighlightDoubleLine(L["Incompleted"], incompletedQuests)
+    if questLogInfo.total > 0 then
+        Display
+            :SetDoubleLine(L["Total Quests"], questLogInfo.total)
+            :ToHeader()
+
+        Display
+            :SetDoubleLine(L["Completed"], questLogInfo.totalCompleted)
+            :SetHighlight()
+            :ToLine()
+
+         Display
+            :SetDoubleLine(L["Incompleted"], questLogInfo.totalIncompleted)
+            :SetHighlight()
+            :ToLine()
     end
 
-    AddCampaign(campaignID, campaignTitle, isCampaignCompleted, campaignProgressString, Quests.IterableCampaignChaptersInfo, campaignChapterIDs)
+    AddQuestHeader(
+        campaignInfo, 
+        L["Campaign Progress: X/Y Chapters"]:format(campaignInfo.numCompleted, #campaignInfo.chapterIDs), 
+        Quests.IterableCampaignChaptersInfo)
 
-    AddCampaign(storyAchievementID, storyTitle, isStoryCompleted, storyProgressString, Quests.IterableZoneStoryChaptersInfo)
+    AddQuestHeader(
+        storyInfo,
+        L["Story Progress: X/Y Chapters"]:format(storyInfo.numCompleted, storyInfo.numCriteria), 
+        Quests.IterableZoneStoryChaptersInfo)
 
     Display:Show()
 end)
