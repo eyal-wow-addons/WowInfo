@@ -1,17 +1,33 @@
 local _, addon = ...
-local L = addon.L
+local Professions = addon:GetObject("Professions")
 local Display = addon:NewDisplay("Spellbook")
-local Professions = addon.Professions
 
-Professions:RegisterEvent("PROFESSIONS_SHOW_PROGRESS", function()
-    Display:AddTitleLine(L["Professions:"], true)
-end)
+local L = addon.L
+
+local PROFESIONS_RANK_FORMAT = "%d / %d"
+local PROFESIONS_RANK_WITH_MODIFIER_FORMAT = "%d |cff20ff20+ %d|r / %d"
+local PROFESIONS_LABEL_FORMAT = "%s - %s"
 
 Display:RegisterHookScript(ProfessionMicroButton, "OnEnter", function()
-    for nameString, icon, progressString in Professions:IterableProfessionInfo() do
-        Display:AddRightHighlightDoubleLine(nameString, progressString)
-        Display:AddIcon(icon)
-    end
+    if Professions:HasProfessions() then
+        Display:AddHeader(L["Professions:"])
 
-    Display:Show()
+        for info in Professions:IterableProfessionInfo() do
+            Display:SetFormattedLine(PROFESIONS_LABEL_FORMAT, info.name, info.skillTitle)
+
+            if info.skillModifier > 0 then
+                Display:SetFormattedLine(PROFESIONS_RANK_WITH_MODIFIER_FORMAT, info.skillLevel, info.skillModifier, info.skillMaxLevel)
+            else
+                Display:SetFormattedLine(PROFESIONS_RANK_FORMAT, info.skillLevel, info.skillMaxLevel)
+            end
+
+            Display
+                :SetHighlight()
+                :ToLine()
+
+            Display:AddIcon(info.icon)
+        end
+
+        Display:Show()
+    end
 end)
