@@ -50,7 +50,7 @@ DataAPI\Quests.lua
 DataAPI\Reputation.lua
 # DataAPI\Speedometer.lua
 # DataAPI\Talents.lua
-# DataAPI\WeeklyRewards.lua
+DataAPI\WeeklyRewards.lua
 
 Locales\enUS.lua
 
@@ -64,7 +64,7 @@ Display\DailyReset.lua
 Display\Durability.lua
 Display\Experience.lua
 Display\Friends.lua
-# Display\GreatVaultProgress.lua
+Display\GreatVaultProgress.lua
 Display\GuildFriends.lua
 Display\Money.lua
 Display\MonthlyActivities.lua

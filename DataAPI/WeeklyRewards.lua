@@ -1,45 +1,20 @@
 local _, addon = ...
 local WeeklyRewards = addon:NewObject("WeeklyRewards")
 
-local GREAT_VAULT_UNLOCKED_1ST_REWARD_COLOR = "ff14b200"
-local GREAT_VAULT_UNLOCKED_2ND_REWARD_COLOR = "ff0091f2"
-local GREAT_VAULT_UNLOCKED_3RD_REWARD_COLOR = "ffc745f9"
+local INFO = {}
 
-local function GetGreatVaultProgressString(activityInfo)
-    local thresholdString, progressString
-    
-    if activityInfo.type == Enum.WeeklyRewardChestThresholdType.Raid then
-        if activityInfo.raidString then
-			thresholdString = activityInfo.raidString
-		else
-			thresholdString = WEEKLY_REWARDS_THRESHOLD_RAID
-		end
-    elseif activityInfo.type == Enum.WeeklyRewardChestThresholdType.Activities then
-        thresholdString = WEEKLY_REWARDS_THRESHOLD_DUNGEONS
-    elseif activityInfo.type == Enum.WeeklyRewardChestThresholdType.RankedPvP then
-        thresholdString = WEEKLY_REWARDS_THRESHOLD_PVP
-    end
+local CACHE = {
+    [Enum.WeeklyRewardChestThresholdType.Raid] = {},
+    [Enum.WeeklyRewardChestThresholdType.Activities] = {},
+    [Enum.WeeklyRewardChestThresholdType.RankedPvP] = {},
+    [Enum.WeeklyRewardChestThresholdType.World] = {}
+}
 
-    if thresholdString then
-        thresholdString = thresholdString:format(activityInfo.threshold)
-
-        if activityInfo.index == 1 and activityInfo.progress >= activityInfo.minThreshold then
-            thresholdString = WrapTextInColorCode(thresholdString, GREAT_VAULT_UNLOCKED_1ST_REWARD_COLOR)
-        elseif activityInfo.index == 2 and activityInfo.progress >= activityInfo.minThreshold then
-            thresholdString = WrapTextInColorCode(thresholdString, GREAT_VAULT_UNLOCKED_2ND_REWARD_COLOR)
-        elseif activityInfo.index == 3 and activityInfo.progress >= activityInfo.minThreshold then
-            thresholdString = WrapTextInColorCode(thresholdString, GREAT_VAULT_UNLOCKED_3RD_REWARD_COLOR)
-        end
-
-        if activityInfo.progress > 0 then
-            progressString = WrapTextInColorCode(activityInfo.progress, "ffffffff")
-        else
-            progressString = activityInfo.progress
-        end
-    end
-
-    return thresholdString, progressString
-end
+local GREAT_VAULT_ORDER_MAP = {
+    Enum.WeeklyRewardChestThresholdType.Raid,
+    Enum.WeeklyRewardChestThresholdType.Activities,
+    Enum.WeeklyRewardChestThresholdType.World
+}
 
 local function GetActivityInfo(type)
     local activityInfo
@@ -55,14 +30,62 @@ local function GetActivityInfo(type)
     return activityInfo
 end
 
-function WeeklyRewards:GetGreatVaultRaidProgressString()
-    return GetGreatVaultProgressString(GetActivityInfo(Enum.WeeklyRewardChestThresholdType.Raid))
+local function CacheWeeklyRewardProgressInfo(type)
+    if CACHE[type] then
+        local activityInfo = GetActivityInfo(type)
+
+        CACHE[type].thresholdString = nil
+        CACHE[type].progress = nil
+        CACHE[type].index = nil
+
+        if activityInfo then
+            local thresholdString
+
+            if activityInfo.type == Enum.WeeklyRewardChestThresholdType.Raid then
+                if activityInfo.raidString then
+                    thresholdString = activityInfo.raidString;
+                else
+                    thresholdString = WEEKLY_REWARDS_THRESHOLD_RAID
+                end
+            elseif activityInfo.type == Enum.WeeklyRewardChestThresholdType.Activities then
+                thresholdString = WEEKLY_REWARDS_THRESHOLD_DUNGEONS
+            elseif activityInfo.type == Enum.WeeklyRewardChestThresholdType.RankedPvP then
+                thresholdString = WEEKLY_REWARDS_THRESHOLD_PVP
+            elseif activityInfo.type == Enum.WeeklyRewardChestThresholdType.World then
+                thresholdString = WEEKLY_REWARDS_THRESHOLD_WORLD
+            end
+
+            if thresholdString then
+                CACHE[type].header = thresholdString:format(activityInfo.threshold)
+                CACHE[type].progress = activityInfo.progress
+                CACHE[type].index = activityInfo.index and activityInfo.progress >= activityInfo.minThreshold and activityInfo.index or 0
+            end
+        end
+    end
 end
 
-function WeeklyRewards:GetGreatVaultActivitiesProgressString()
-    return GetGreatVaultProgressString(GetActivityInfo(Enum.WeeklyRewardChestThresholdType.Activities))
+WeeklyRewards:RegisterEvents(
+    "PLAYER_LOGIN", 
+    "WEEKLY_REWARDS_UPDATE", function()
+        CacheWeeklyRewardProgressInfo(Enum.WeeklyRewardChestThresholdType.Raid)
+        CacheWeeklyRewardProgressInfo(Enum.WeeklyRewardChestThresholdType.Activities)
+        CacheWeeklyRewardProgressInfo(Enum.WeeklyRewardChestThresholdType.RankedPvP)
+        CacheWeeklyRewardProgressInfo(Enum.WeeklyRewardChestThresholdType.World)
+    end)
+
+function WeeklyRewards:GetProgressInfo(type)
+    INFO[type] = CACHE[type]
+    return INFO[type]
 end
 
-function WeeklyRewards:GetGreatVaultPvPProgressString()
-    return GetGreatVaultProgressString(GetActivityInfo(Enum.WeeklyRewardChestThresholdType.RankedPvP))
+function WeeklyRewards:IterableGreatVaultInfo()
+    local i = 0
+    local n = #GREAT_VAULT_ORDER_MAP
+    return function()
+        i = i + 1
+        if i <= n then
+            local type = GREAT_VAULT_ORDER_MAP[i]
+            return self:GetProgressInfo(type)
+        end
+    end
 end
