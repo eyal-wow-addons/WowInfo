@@ -60,7 +60,7 @@ Display\Achievements.lua
 Display\Collections.lua
 Display\Currency.lua
 Display\CurrencyTracker.lua
-# Display\DailyReset.lua
+Display\DailyReset.lua
 Display\Durability.lua
 Display\Experience.lua
 Display\Friends.lua

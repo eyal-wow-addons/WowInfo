@@ -1,9 +1,12 @@
 local _, addon = ...
-local L = addon.L
+local Quests = addon:GetObject("Quests")
 local Display = addon:NewDisplay("DailyReset")
-local Quests = addon.Quests
+
+local L = addon.L
 
 hooksecurefunc("GameTime_UpdateTooltip", function()
-    Display:AddTitleDoubleLine(L["Daily Reset:"], Quests:GetResetTimeString())
-    Display:Show()
+    Display
+        :SetDoubleLine(L["Daily Reset:"], Quests:GetResetTimeString())
+        :ToHeader()
+        :Show()
 end)
