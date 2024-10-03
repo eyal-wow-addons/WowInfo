@@ -1,7 +1,12 @@
 local _, addon = ...
 local WeeklyRewards = addon:NewObject("WeeklyRewards")
 
-local INFO = {}
+local INFO = {
+    [Enum.WeeklyRewardChestThresholdType.Raid] = {},
+    [Enum.WeeklyRewardChestThresholdType.Activities] = {},
+    [Enum.WeeklyRewardChestThresholdType.RankedPvP] = {},
+    [Enum.WeeklyRewardChestThresholdType.World] = {}
+}
 
 local CACHE = {
     [Enum.WeeklyRewardChestThresholdType.Raid] = {},
@@ -74,8 +79,13 @@ WeeklyRewards:RegisterEvents(
     end)
 
 function WeeklyRewards:GetProgressInfo(type)
-    INFO[type] = CACHE[type]
-    return INFO[type]
+    local data = CACHE[type]
+    if data then
+        INFO[type].header = data.header
+        INFO[type].progress = data.progress
+        INFO[type].index = data.index
+        return INFO[type]
+    end
 end
 
 function WeeklyRewards:IterableGreatVaultInfo()
