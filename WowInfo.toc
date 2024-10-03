@@ -44,7 +44,7 @@ DataAPI\Guild.lua
 DataAPI\Money.lua
 DataAPI\MonthlyActivities.lua
 DataAPI\Professions.lua
-# DataAPI\PvE.lua
+DataAPI\PvE.lua
 # DataAPI\PvP.lua
 DataAPI\Quests.lua
 DataAPI\Reputation.lua
@@ -69,7 +69,7 @@ Display\GuildFriends.lua
 Display\Money.lua
 Display\MonthlyActivities.lua
 Display\Professions.lua
-# Display\PvE.lua
+Display\PvE.lua
 # Display\PvP.lua
 Display\Quests.lua
 Display\Realms.lua

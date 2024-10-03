@@ -1,28 +1,39 @@
 local _, addon = ...
-local L = addon.L
+local PvE = addon:GetObject("PvE")
 local Display = addon:NewDisplay("PvE")
-local PvE = addon.PvE
+
+local L = addon.L
+
+local INSTANCE_NAME_FORMAT = "%s (%s)"
+local INSTANCE_PROGRESS_FORMAT = "%d / %d"
 
 Display:RegisterHookScript(LFDMicroButton, "OnEnter", function(self)
     if not self:IsEnabled() then
         return
     end
 
-    Display:AddTitleLine(L["Dungeons & Raids:"])
+    Display:AddHeader(L["Dungeons & Raids:"])
 
     local isSaved
 
-    for instanceNameString, isCleared, progressString in PvE:IterableInstanceInfo() do
-        if isCleared then
-            Display:AddDoubleLine(instanceNameString, progressString, nil, nil, nil, RED_FONT_COLOR:GetRGB())
+    for info in PvE:IterableInstanceInfo() do
+        Display:SetFormattedLine(INSTANCE_NAME_FORMAT, info.name, info.difficulty)
+        if info.isCleared then
+            Display
+                :SetLine(L["Cleared"])
+                :SetRedColor()
         else
-            Display:AddRightHighlightDoubleLine(instanceNameString, progressString)
+            Display:SetFormattedLine(INSTANCE_PROGRESS_FORMAT, Display:ToRed(info.defeatedBosses), Display:ToGreen(info.maxBosses))
         end
+        Display:ToLine()
         isSaved = true
     end
 
-    for bossName in PvE:IterableSavedWorldBossInfo() do
-        Display:AddDoubleLine(bossName, L["Defeated"], nil, nil, nil, RED_FONT_COLOR:GetRGB())
+    for info in PvE:IterableSavedWorldBossInfo() do
+        Display
+            :SetDoubleLine(info.name, L["Defeated"])
+            :SetRedColor()
+            :ToLine()
         isSaved = true
     end
 

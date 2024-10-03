@@ -1,9 +1,10 @@
 local _, addon = ...
-local L = addon.L
 local PvE = addon:NewObject("PvE")
 
-local INSTANCE_NAME_FORMAT = "%s (%s)"
-local INSTANCE_PROGRESS_FORMAT = "|cffff0000%d|r / |cff00ff00%d|r"
+local INFO = {
+    INSTANCE = {},
+    WORLD_BOSS = {}
+}
 
 PvE:RegisterEvent("PLAYER_LOGIN", function()
     RequestRaidInfo()
@@ -15,15 +16,17 @@ function PvE:IterableInstanceInfo()
     return function()
         i = i + 1
         while i <= n do
-            local instanceName, _, _, instanceDifficulty, locked, extended, _, _, _, _, maxBosses, defeatedBosses = GetSavedInstanceInfo(i)
+            local instanceName, _, reset, instanceDifficulty, locked, extended, _, _, _, _, maxBosses, defeatedBosses = GetSavedInstanceInfo(i)
+            local difficultyName = GetDifficultyInfo(instanceDifficulty)
             
             if locked or extended then
-                local instanceNameString = INSTANCE_NAME_FORMAT:format(instanceName, GetDifficultyInfo(instanceDifficulty))
-                if defeatedBosses < maxBosses then
-                    return instanceNameString, false, INSTANCE_PROGRESS_FORMAT:format(defeatedBosses, maxBosses)
-                else
-                    return instanceNameString, true, L["Cleared"]
-                end
+                INFO.INSTANCE.name = instanceName
+                INFO.INSTANCE.reset = reset
+                INFO.INSTANCE.difficulty = difficultyName
+                INFO.INSTANCE.isCleared = defeatedBosses >= maxBosses
+                INFO.INSTANCE.defeatedBosses = defeatedBosses
+                INFO.INSTANCE.maxBosses = maxBosses
+                return INFO.INSTANCE
             end
 
             i = i + 1
@@ -37,7 +40,10 @@ function PvE:IterableSavedWorldBossInfo()
     return function()
         i = i + 1
         if i <= n then
-            return GetSavedWorldBossInfo(i)
+            local name, _, reset = GetSavedWorldBossInfo(i)
+            INFO.WORLD_BOSS.name = name
+            INFO.WORLD_BOSS.reset = reset
+            return INFO.WORLD_BOSS
         end
     end
 end
