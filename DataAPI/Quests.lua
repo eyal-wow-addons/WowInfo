@@ -148,12 +148,18 @@ do
 end
 
 function Quests:GetQuestLogInfo()
-    INFO.QUESTS = CACHE.QUESTS
+    INFO.QUESTS.total = CACHE.QUESTS.total
+    INFO.QUESTS.totalCompleted = CACHE.QUESTS.totalCompleted
+    INFO.QUESTS.totalIncompleted = CACHE.QUESTS.totalIncompleted
     return INFO.QUESTS
 end
 
 function Quests:GetCampaignInfo()
-    INFO.CAMPAIGN = CACHE.CAMPAIGN
+    INFO.CAMPAIGN.ID = CACHE.CAMPAIGN.ID
+    INFO.CAMPAIGN.title = CACHE.CAMPAIGN.title
+    INFO.CAMPAIGN.chapterIDs = CACHE.CAMPAIGN.chapterIDs
+    INFO.CAMPAIGN.numCompleted = CACHE.CAMPAIGN.numCompleted
+    INFO.CAMPAIGN.isCompleted = CACHE.CAMPAIGN.isCompleted
     return INFO.CAMPAIGN
 end
 
@@ -180,7 +186,11 @@ function Quests:IterableCampaignChaptersInfo()
 end
 
 function Quests:GetZoneStoryInfo()
-    INFO.STORY = CACHE.STORY
+    INFO.STORY.ID = CACHE.STORY.ID
+    INFO.STORY.title = CACHE.STORY.title
+    INFO.STORY.numCriteria = CACHE.STORY.numCriteria
+    INFO.STORY.numCompleted = CACHE.STORY.numCompleted
+    INFO.STORY.isCompleted = CACHE.STORY.isCompleted
     return INFO.STORY 
 end
 
