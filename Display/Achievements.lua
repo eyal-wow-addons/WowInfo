@@ -5,6 +5,8 @@ local Display = addon:NewDisplay("Achievements")
 local L = addon.L
 local MicroMenu = addon.MicroMenu
 
+local PROGRESS_FORMAT = "%s / %s"
+
 function Display:AddAchievementSummaryProgressLine(guildOnly)
     local total, completed = Achievements:GetSummaryProgressInfo(guildOnly)
 
@@ -18,7 +20,7 @@ function Display:AddAchievementSummaryProgressLine(guildOnly)
     end
 
     self:SetLine(ACHIEVEMENTS_COMPLETED)
-        :SetFormattedLine(addon.PATTERNS.PROGRESS1, completed, total)
+        :SetFormattedLine(PROGRESS_FORMAT, completed, total)
         :SetHighlight()
         :ToLine()
         :AddEmptyLine()
@@ -31,7 +33,7 @@ function Display:AddAchievementCategoriesSummaryInfo(guildOnly)
         completed = BreakUpLargeNumbers(completed)
         
         self:SetLine(categoryName)
-            :SetFormattedLine(addon.PATTERNS.PROGRESS1, completed, total)
+            :SetFormattedLine(PROGRESS_FORMAT, completed, total)
             :SetHighlight()
             :ToLine()
     end

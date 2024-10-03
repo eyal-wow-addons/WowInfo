@@ -4,6 +4,8 @@ local Display = addon:NewDisplay("MonthlyActivities")
 
 local L = addon.L
 
+local PROGRESS_FORMAT = "%s / %s"
+
 Display:RegisterHookScript(EJMicroButton, "OnEnter", function(self)
     if not self:IsEnabled() then
         return
@@ -12,7 +14,7 @@ Display:RegisterHookScript(EJMicroButton, "OnEnter", function(self)
     local earnedThresholdAmount, thresholdMax, itemReward, pendingReward, monthString, timeString = MonthlyActivities:GetInfo()
   
     if earnedThresholdAmount then
-        local thresholdProgressString = addon.PATTERNS.PROGRESS1:format(earnedThresholdAmount, thresholdMax)
+        local thresholdProgressString = PROGRESS_FORMAT:format(earnedThresholdAmount, thresholdMax)
 
         if itemReward and not Display.itemDataLoadedCancelFunc then
             Display.itemDataLoadedCancelFunc = function()

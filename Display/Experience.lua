@@ -4,6 +4,7 @@ local Display = addon:NewDisplay("Experience")
 
 local L = addon.L
 
+local PROGRESS_FORMAT = "%s (%s)"
 local CURRENT_PROGRESS_LINE_FORMAT = "%s / %s (%s)"
 
 local function GetFormattedXpProgress(xp, xpMax, xpPct)
@@ -34,14 +35,14 @@ Display:RegisterHookScript(MainStatusTrackingBarContainer.bars[4], "OnEnter", fu
 
     Display
         :SetFormattedLine(L["To Next Level (X)"], UnitLevel("player") + 1)
-        :SetFormattedLine(addon.PATTERNS.PROGRESS2, GetFormattedProgress(tnl, tnlPct))
+        :SetFormattedLine(PROGRESS_FORMAT, GetFormattedProgress(tnl, tnlPct))
         :SetHighlight()
         :ToLine()
 
     if exhaustionThreshold then
         Display
             :SetLine(L["Rested"])
-            :SetFormattedLine(addon.PATTERNS.PROGRESS2, GetFormattedProgress(exhaustionThreshold, restedPct))
+            :SetFormattedLine(PROGRESS_FORMAT, GetFormattedProgress(exhaustionThreshold, restedPct))
             :SetHighlight()
             :ToLine()
     end
