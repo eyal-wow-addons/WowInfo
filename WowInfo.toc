@@ -49,7 +49,7 @@ DataAPI\Professions.lua
 DataAPI\Quests.lua
 DataAPI\Reputation.lua
 # DataAPI\Speedometer.lua
-# DataAPI\Talents.lua
+DataAPI\Talents.lua
 DataAPI\WeeklyRewards.lua
 
 Locales\enUS.lua
@@ -75,4 +75,4 @@ Display\Quests.lua
 Display\Realms.lua
 Display\Reputation.lua
 # Display\Speedometer.lua
-# Display\Talents.lua
+Display\Talents.lua
