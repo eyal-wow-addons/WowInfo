@@ -5,13 +5,20 @@ local MAJOR_FACTION_MAX_RENOWN_REACHED = MAJOR_FACTION_MAX_RENOWN_REACHED
 local MAJOR_FACTION_RENOWN_LEVEL_TOAST = MAJOR_FACTION_RENOWN_LEVEL_TOAST
 local MAX_REPUTATION_REACTION = MAX_REPUTATION_REACTION
 
-local INFO = {}
+local INFO = {
+    progressInfo = {}
+}
+
+local DATA = {
+    progressInfo = {},
+    collapsedIndexes = {}
+}
 
 local CACHE = {
     numFactions = 0
 }
 
-local function CreateFactionProgressInfo(factionData)
+local function FillFactionProgressInfo(factionData)
     local factionID = factionData.factionID
     local standingID = factionData.reaction
     local repMin, repMax, repValue = factionData.currentReactionThreshold, factionData.nextReactionThreshold, factionData.currentStanding
@@ -67,16 +74,14 @@ local function CreateFactionProgressInfo(factionData)
     repMax = repMax - repMin
     repValue = repValue - repMin
 
-    INFO.type = progressType
-    INFO.standing = standing
-    INFO.renownLevel = renownLevel
-    INFO.standingID = standingID
-    INFO.isCapped = isCapped
-    INFO.currentValue = repValue
-    INFO.maxValue = repMax
-    INFO.hasReward = hasReward
-
-    return INFO
+    DATA.progressInfo.type = progressType
+    DATA.progressInfo.standing = standing
+    DATA.progressInfo.renownLevel = renownLevel
+    DATA.progressInfo.standingID = standingID
+    DATA.progressInfo.isCapped = isCapped
+    DATA.progressInfo.currentValue = repValue
+    DATA.progressInfo.maxValue = repMax
+    DATA.progressInfo.hasReward = hasReward
 end
 
 local function HasParagonRewardPending(factionID)
@@ -101,7 +106,6 @@ local function IsTrackedFaction(factionID)
 end
 
 local function CacheFactionData(self, eventName)
-    local progressInfo
     if self.__cachedNumFactions ~= CACHE.numFactions then
         -- NOTE: 'ExpandFactionHeader' and 'CollapseFactionHeader' trigger UPDATE_FACTION and may cause infinite recursion,
         -- so we are unregistering the event before these functions are called and registering it again after they are called.
@@ -109,8 +113,8 @@ local function CacheFactionData(self, eventName)
 
         local i = 1
         local headerName
-        local collapsedIndexes = {}
         local factionData = C_Reputation.GetFactionDataByIndex(i)
+
         while factionData do
             if factionData then
                 if factionData.factionID == 0 then
@@ -120,16 +124,16 @@ local function CacheFactionData(self, eventName)
                 
                 if factionData.isCollapsed then
                     C_Reputation.ExpandFactionHeader(i)
-                    table.insert(collapsedIndexes, i)
+                    table.insert(DATA.collapsedIndexes, i)
                 end
 
-                local cachedData = CACHE[i]
+                local data = CACHE[i]
 
-                if not cachedData then
+                if not data then
                     CACHE[i] = {
                         progressInfo = {}
                     }
-                    cachedData = CACHE[i]
+                    data = CACHE[i]
                 end
 
                 -- Top level header
@@ -137,52 +141,55 @@ local function CacheFactionData(self, eventName)
                     headerName = factionData.name
                 end
 
-                cachedData.headerName = headerName
-                cachedData.factionName = factionData.name
-                cachedData.factionID = factionData.factionID
-                cachedData.isHeader = factionData.isHeader
-                cachedData.isHeaderWithRep = factionData.isHeaderWithRep
-                cachedData.isChild = factionData.isChild
-                cachedData.isAccountWide = factionData.isAccountWide
+                data.headerName = headerName
+                data.factionName = factionData.name
+                data.factionID = factionData.factionID
+                data.isHeader = factionData.isHeader
+                data.isHeaderWithRep = factionData.isHeaderWithRep
+                data.isChild = factionData.isChild
+                data.isAccountWide = factionData.isAccountWide
 
-                progressInfo = CreateFactionProgressInfo(factionData)
+                FillFactionProgressInfo(factionData)
 
-                cachedData.progressInfo.type = progressInfo.type
-                cachedData.progressInfo.standing = progressInfo.standing
-                cachedData.progressInfo.renownLevel = progressInfo.renownLevel
-                cachedData.progressInfo.standingID = progressInfo.standingID
-                cachedData.progressInfo.isCapped = progressInfo.isCapped
-                cachedData.progressInfo.currentValue = progressInfo.currentValue
-                cachedData.progressInfo.maxValue = progressInfo.maxValue
-                cachedData.progressInfo.hasReward = progressInfo.hasReward
+                data.progressInfo.type = DATA.progressInfo.type
+                data.progressInfo.standing = DATA.progressInfo.standing
+                data.progressInfo.renownLevel = DATA.progressInfo.renownLevel
+                data.progressInfo.standingID = DATA.progressInfo.standingID
+                data.progressInfo.isCapped = DATA.progressInfo.isCapped
+                data.progressInfo.currentValue = DATA.progressInfo.currentValue
+                data.progressInfo.maxValue = DATA.progressInfo.maxValue
+                data.progressInfo.hasReward = DATA.progressInfo.hasReward
             end
             CACHE.numFactions = i
             i = i + 1
             factionData = C_Reputation.GetFactionDataByIndex(i)
         end
 
-        for i = #collapsedIndexes, 1, -1 do
-            local collapsedIndex = collapsedIndexes[i]
+        for i = #DATA.collapsedIndexes, 1, -1 do
+            local collapsedIndex = DATA.collapsedIndexes[i]
             C_Reputation.CollapseFactionHeader(collapsedIndex)
-            collapsedIndexes[i] = nil
+            DATA.collapsedIndexes[i] = nil
         end
 
         self.__cachedNumFactions = CACHE.numFactions
         self:RegisterEvent("UPDATE_FACTION", CacheFactionData)
     end
     for i = 1, CACHE.numFactions do
-        local cachedData = CACHE[i]
-        if cachedData then
-            local factionData = C_Reputation.GetFactionDataByID(cachedData.factionID)
+        local data = CACHE[i]
+
+        if data then
+            local factionData = C_Reputation.GetFactionDataByID(data.factionID)
+
             if factionData then
-                progressInfo = CreateFactionProgressInfo(factionData)
-                cachedData.progressInfo.standing = progressInfo.standing
-                cachedData.progressInfo.renownLevel = progressInfo.renownLevel
-                cachedData.progressInfo.standingID = progressInfo.standingID
-                cachedData.progressInfo.isCapped = progressInfo.isCapped
-                cachedData.progressInfo.currentValue = progressInfo.currentValue
-                cachedData.progressInfo.maxValue = progressInfo.maxValue
-                cachedData.progressInfo.hasReward = progressInfo.hasReward
+                FillFactionProgressInfo(factionData)
+
+                data.progressInfo.standing = DATA.progressInfo.standing
+                data.progressInfo.renownLevel = DATA.progressInfo.renownLevel
+                data.progressInfo.standingID = DATA.progressInfo.standingID
+                data.progressInfo.isCapped = DATA.progressInfo.isCapped
+                data.progressInfo.currentValue = DATA.progressInfo.currentValue
+                data.progressInfo.maxValue = DATA.progressInfo.maxValue
+                data.progressInfo.hasReward = DATA.progressInfo.hasReward
             end
         end
     end
@@ -196,8 +203,25 @@ Reputation:RegisterEvent("PLAYER_LOGIN", function(self, eventName)
         "UPDATE_FACTION", CacheFactionData)
 end)
 
-function Reputation:GetFactionDataByIndex(index)
-    return CACHE[index]
+function Reputation:GetFactionInfoByIndex(index)
+    local data = CACHE[index]
+    if data then
+        INFO.headerName = data.headerName
+        INFO.factionName = data.factionName
+        INFO.factionID = data.factionID
+        INFO.isHeader = data.isHeader
+        INFO.isHeaderWithRep = data.isHeaderWithRep
+        INFO.isChild = data.isChild
+        INFO.isAccountWide = data.isAccountWide
+        INFO.progressInfo.standing = data.progressInfo.standing
+        INFO.progressInfo.renownLevel = data.progressInfo.renownLevel
+        INFO.progressInfo.standingID = data.progressInfo.standingID
+        INFO.progressInfo.isCapped = data.progressInfo.isCapped
+        INFO.progressInfo.currentValue = data.progressInfo.currentValue
+        INFO.progressInfo.maxValue = data.progressInfo.maxValue
+        INFO.progressInfo.hasReward = data.progressInfo.hasReward
+        return INFO
+    end
 end
 
 function Reputation:GetNumFactions()
@@ -206,23 +230,23 @@ end
 
 function Reputation:HasTrackedFactions()
     for i = 1, self:GetNumFactions() do
-        local data = self:GetFactionDataByIndex(i)
-        if data and IsTrackedFaction(data.factionID) then
+        local info = self:GetFactionInfoByIndex(i)
+        if info and IsTrackedFaction(info.factionID) then
             return true
         end
     end
     return false
 end
 
-function Reputation:IterableTrackedFactionsData()
+function Reputation:IterableTrackedFactionsInfo()
     local i = 0
     local n = self:GetNumFactions()
     return function()
         i = i + 1
         while i <= n do
-            local data = self:GetFactionDataByIndex(i)
-            if data and IsTrackedFaction(data.factionID) then
-                return data, data.progressInfo
+            local info = self:GetFactionInfoByIndex(i)
+            if info and IsTrackedFaction(info.factionID) then
+                return info, info.progressInfo
             end
             i = i + 1
         end
