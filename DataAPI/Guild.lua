@@ -63,7 +63,7 @@ local function CacheGuildFriendsInfo()
         CACHE[i] = nil
     end
 
-    Guild.__rosterCached = true
+    Guild.__updateCache = false
 end
 
 Guild:RegisterEvents(
@@ -71,16 +71,17 @@ Guild:RegisterEvents(
     "FRIENDLIST_UPDATE",
     "GUILD_ROSTER_UPDATE",
     "BN_FRIEND_INFO_CHANGED",
-    "BN_INFO_CHANGED", function(self, eventName, ...)
+    "BN_INFO_CHANGED", 
+    function(self, eventName, ...)
         local canRequestRosterUpdate = ...
         if (eventName == "GUILD_ROSTER_UPDATE" and canRequestRosterUpdate) or eventName ~= "GUILD_ROSTER_UPDATE" then
             C_GuildInfo.GuildRoster()
-            self.__rosterCached = false
+            self.__updateCache = true
         end
     end)
 
 function Guild:IterableGuildFriendsInfo(index)
-    if not self.__rosterCached then
+    if self.__updateCache then
         CacheGuildFriendsInfo()
     end
     local memberInfo, sameZone, grouped
