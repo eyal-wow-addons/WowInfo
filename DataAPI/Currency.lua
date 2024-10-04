@@ -143,7 +143,8 @@ end
 Currency:RegisterEvents(
     "PLAYER_LOGIN",
     "PLAYER_LOGOUT",
-    "CURRENCY_DISPLAY_UPDATE", function(_, eventName)
+    "CURRENCY_DISPLAY_UPDATE", 
+    function(_, eventName)
         if eventName == "PLAYER_LOGIN" then
             Currency.storage:ClearCurrencyData()
             CacheCategories()
