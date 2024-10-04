@@ -24,7 +24,11 @@ local function CacheNumMounts()
 end
 
 Collections:RegisterEvents(
-    "PLAYER_LOGIN", "COMPANION_LEARNED", "COMPANION_UNLEARNED", CacheNumMounts)
+    "PLAYER_LOGIN",
+    "COMPANION_LEARNED",
+    "COMPANION_UNLEARNED", function(_, eventName)
+        CacheNumMounts()
+    end)
 
 function Collections:GetTotalMounts()
     if CACHE.numCollectedMounts > 0 then
