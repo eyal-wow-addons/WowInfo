@@ -63,7 +63,7 @@ do
     end
 end
 
-local function CacheInfo()
+local function CacheActivitiesInfo()
     local activitiesInfo = C_PerksActivities.GetPerksActivitiesInfo()
     local pendingRewards = C_PerksProgram.GetPendingChestRewards()
 
@@ -104,8 +104,9 @@ MonthlyActivities:RegisterEvents(
     "CHEST_REWARDS_UPDATED_FROM_SERVER",
     "PERKS_ACTIVITIES_TRACKED_LIST_CHANGED",
     "PERKS_ACTIVITIES_UPDATED",
-    "PERKS_ACTIVITY_COMPLETED", function(_, eventName, ...)
-        CacheInfo()
+    "PERKS_ACTIVITY_COMPLETED", 
+    function(_, eventName)
+        CacheActivitiesInfo()
     end)
 
 function MonthlyActivities:GetInfo()
