@@ -71,7 +71,8 @@ end
 
 WeeklyRewards:RegisterEvents(
     "PLAYER_LOGIN", 
-    "WEEKLY_REWARDS_UPDATE", function()
+    "WEEKLY_REWARDS_UPDATE", 
+    function(_, eventName)
         CacheWeeklyRewardProgressInfo(Enum.WeeklyRewardChestThresholdType.Raid)
         CacheWeeklyRewardProgressInfo(Enum.WeeklyRewardChestThresholdType.Activities)
         CacheWeeklyRewardProgressInfo(Enum.WeeklyRewardChestThresholdType.RankedPvP)
