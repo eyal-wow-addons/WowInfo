@@ -105,11 +105,11 @@ local function IsTrackedFaction(factionID)
     return false
 end
 
-local function CacheFactionData(self, eventName)
-    if self.__cachedNumFactions ~= CACHE.numFactions then
+local function CacheFactionData()
+    if Reputation.__cachedNumFactions ~= CACHE.numFactions then
         -- NOTE: 'ExpandFactionHeader' and 'CollapseFactionHeader' trigger UPDATE_FACTION and may cause infinite recursion,
         -- so we are unregistering the event before these functions are called and registering it again after they are called.
-        self:UnregisterEvent("UPDATE_FACTION")
+        Reputation:UnregisterEvent("UPDATE_FACTION")
 
         local i = 1
         local headerName
@@ -171,8 +171,8 @@ local function CacheFactionData(self, eventName)
             DATA.collapsedIndexes[i] = nil
         end
 
-        self.__cachedNumFactions = CACHE.numFactions
-        self:RegisterEvent("UPDATE_FACTION", CacheFactionData)
+        Reputation.__cachedNumFactions = CACHE.numFactions
+        Reputation:RegisterEvent("UPDATE_FACTION", CacheFactionData)
     end
     for i = 1, CACHE.numFactions do
         local data = CACHE[i]
@@ -196,7 +196,7 @@ local function CacheFactionData(self, eventName)
 end
 
 Reputation:RegisterEvent("PLAYER_LOGIN", function(self, eventName)
-    CacheFactionData(self, eventName)
+    CacheFactionData()
     self:RegisterEvents(
         "MAJOR_FACTION_RENOWN_LEVEL_CHANGED", 
         "MAJOR_FACTION_UNLOCKED",
