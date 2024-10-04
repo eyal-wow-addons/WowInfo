@@ -109,13 +109,16 @@ local MOUNTS_BASE_ACHIEVEMENT_ID = 2143 -- Leading the Cavalry
 local PETS_BASE_ACHIEVEMENT_ID = 1017 -- Can I Keep Him?
 local TOYBOX_BASE_ACHIEVEMENT_ID = 9670 -- Toying Around
 
-Achievements:RegisterEvents("PLAYER_LOGIN", "ACHIEVEMENT_EARNED", function()
-    CacheAchievementInfo("MOUNTS", MOUNTS_BASE_ACHIEVEMENT_ID)
-    CacheAchievementInfo("PETS", PETS_BASE_ACHIEVEMENT_ID)
-    CacheAchievementInfo("TOYS", TOYBOX_BASE_ACHIEVEMENT_ID)
-    CacheAchievementsCategoriesSummaryInfo()
-    CacheAchievementsCategoriesSummaryInfo(true)
-end)
+Achievements:RegisterEvents(
+    "PLAYER_LOGIN", 
+    "ACHIEVEMENT_EARNED",
+    function(_, eventName)
+        CacheAchievementInfo("MOUNTS", MOUNTS_BASE_ACHIEVEMENT_ID)
+        CacheAchievementInfo("PETS", PETS_BASE_ACHIEVEMENT_ID)
+        CacheAchievementInfo("TOYS", TOYBOX_BASE_ACHIEVEMENT_ID)
+        CacheAchievementsCategoriesSummaryInfo()
+        CacheAchievementsCategoriesSummaryInfo(true)
+    end)
 
 function Achievements:GetMountAchievementInfo()
     return CACHE["MOUNTS"].name, CACHE["MOUNTS"].currentAmount, CACHE["MOUNTS"].reqAmount
