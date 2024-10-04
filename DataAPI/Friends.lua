@@ -42,7 +42,8 @@ Friends:RegisterEvents(
     "PLAYER_LOGIN",
     "FRIENDLIST_UPDATE",
     "BN_FRIEND_INFO_CHANGED",
-    "BN_INFO_CHANGED", function(self, eventName)
+    "BN_INFO_CHANGED", 
+    function(_, eventName)
         if eventName == "PLAYER_LOGIN" or eventName == "FRIENDLIST_UPDATE" then
             CacheFriendsInfo()
             CacheFriendsAccountInfo()
