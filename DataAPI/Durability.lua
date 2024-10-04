@@ -1,6 +1,11 @@
 local _, addon = ...
 local Durability = addon:NewObject("Durability")
 
+local CACHE = {
+    inventoryPct = 0, 
+    bagsPct = 0
+}
+
 local NUM_BAG_FRAMES = 4
 
 local SLOTS = {
@@ -16,8 +21,6 @@ local SLOTS = {
     "SecondaryHandSlot"
 }
 
-local inventoryPct, bagsPct
-
 local function GetPercentage(current, total)
     if current and total > 0 then
         local perc = current / total
@@ -30,7 +33,7 @@ local function GetPercentage(current, total)
     end
 end
 
-local function UpdateDurability()
+local function CacheDurabilityInfo()
     local inventory, inventoryMax = 0, 0
     local bags, bagsMax = 0, 0
 
@@ -55,14 +58,17 @@ local function UpdateDurability()
         end
     end
 
-    inventoryPct = GetPercentage(inventory, inventoryMax)
-    bagsPct = GetPercentage(bags, bagsMax)
+    CACHE.inventoryPct = GetPercentage(inventory, inventoryMax)
+    CACHE.bagsPct = GetPercentage(bags, bagsMax)
 end
 
 Durability:RegisterEvents(
     "UPDATE_INVENTORY_DURABILITY",
-    "PLAYER_EQUIPMENT_CHANGED", UpdateDurability)
+    "PLAYER_EQUIPMENT_CHANGED",
+    function(_, eventName)
+        CacheDurabilityInfo()
+    end)
 
 function Durability:GetPercentages()
-    return inventoryPct, bagsPct
+    return CACHE.inventoryPct, CACHE.bagsPct
 end
