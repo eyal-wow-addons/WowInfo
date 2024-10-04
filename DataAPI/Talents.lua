@@ -42,7 +42,10 @@ Talents:RegisterEvents(
     "TRAIT_CONFIG_CREATED",
     "TRAIT_CONFIG_DELETED",
     "TRAIT_CONFIG_UPDATED",
-    "TRAIT_CONFIG_LIST_UPDATED", CacheLoadoutsInfo)
+    "TRAIT_CONFIG_LIST_UPDATED",
+    function(_, eventName)
+        CacheLoadoutsInfo()
+    end)
 
 function Talents:GetCurrentSpec()
     local _, classFilename = UnitClass("player")
