@@ -49,8 +49,15 @@ local function CacheCampaignInfo()
     CACHE.CAMPAIGN.ID = nil
     CACHE.CAMPAIGN.title = nil
     CACHE.CAMPAIGN.chapterIDs = nil
-    CACHE.CAMPAIGN.numCompleted = nil
-    CACHE.CAMPAIGN.isCompleted = nil
+    CACHE.CAMPAIGN.numChapters = 0
+    CACHE.CAMPAIGN.numCompleted = 0
+    CACHE.CAMPAIGN.isCompleted = false
+
+    -- NOTE: When logging in for the first time, C_QuestLog.GetInfo does not return any data for campaignID. 
+    -- To retrieve this data, you need to call C_QuestLog.UpdateCampaignHeaders. 
+    -- However, this function should be called after the QUEST_POI_UPDATE event has fired. 
+    -- Calling it before this event will result in no updates being made.
+    C_QuestLog.UpdateCampaignHeaders()
 
     for i = 1, C_QuestLog.GetNumQuestLogEntries() do
         local questInfo = C_QuestLog.GetInfo(i)
@@ -75,6 +82,7 @@ local function CacheCampaignInfo()
             CACHE.CAMPAIGN.ID = campaignID
             CACHE.CAMPAIGN.title = questInfo.title
             CACHE.CAMPAIGN.chapterIDs = chapterIDs
+            CACHE.CAMPAIGN.numChapters = #chapterIDs
             CACHE.CAMPAIGN.numCompleted = completedChapters
             CACHE.CAMPAIGN.isCompleted = state == Enum.CampaignState.Complete 
         end
@@ -84,9 +92,9 @@ end
 local function CacheZoneStoryInfo()
     CACHE.STORY.ID = nil
     CACHE.STORY.title = nil
-    CACHE.STORY.numCriteria = nil
-    CACHE.STORY.numCompleted = nil
-    CACHE.STORY.isCompleted = nil
+    CACHE.STORY.numCriteria = 0
+    CACHE.STORY.numCompleted = 0
+    CACHE.STORY.isCompleted = false
 
     local mapID = C_Map.GetBestMapForUnit("player")
 
@@ -114,29 +122,27 @@ local function CacheZoneStoryInfo()
     end
 end
 
-local function CacheQuestsData(_, eventName, ...)
-    if eventName == "UNIT_QUEST_LOG_CHANGED" then
-        local arg1 = ...
-        if arg1 ~= "player" then return end
-    elseif eventName == "ZONE_CHANGED" or eventName == "ZONE_CHANGED_NEW_AREA" then
-        CacheZoneStoryInfo()
-    else
-        CacheZoneStoryInfo()
-        CacheQuestLogInfo()
-        CacheCampaignInfo()
-    end
-end
-
-Quests:RegisterEvent("PLAYER_LOGIN", function(self, ...)
-    CacheQuestsData(self, ...)
-    self:RegisterEvents(
-        "QUEST_ACCEPTED",
-        "QUEST_REMOVED", 
-        "QUEST_TURNED_IN",
-        "ZONE_CHANGED",
-        "ZONE_CHANGED_NEW_AREA",
-        "UNIT_QUEST_LOG_CHANGED", CacheQuestsData)
-end)
+Quests:RegisterEvents(
+    "PLAYER_LOGIN",
+    "QUEST_ACCEPTED",
+    "QUEST_REMOVED", 
+    "QUEST_TURNED_IN",
+    "QUEST_POI_UPDATE",
+    "ZONE_CHANGED",
+    "ZONE_CHANGED_NEW_AREA",
+    "UNIT_QUEST_LOG_CHANGED", 
+    function(_, eventName, ...)
+        if eventName == "UNIT_QUEST_LOG_CHANGED" then
+            local arg1 = ...
+            if arg1 ~= "player" then return end
+        elseif eventName == "ZONE_CHANGED" or eventName == "ZONE_CHANGED_NEW_AREA" then
+            CacheZoneStoryInfo()
+        else
+            CacheZoneStoryInfo()
+            CacheQuestLogInfo()
+            CacheCampaignInfo()
+        end
+    end)
 
 do
     local QuestResetTimeSecondsFormatter = CreateFromMixins(SecondsFormatterMixin)
@@ -158,6 +164,7 @@ function Quests:GetCampaignInfo()
     INFO.CAMPAIGN.ID = CACHE.CAMPAIGN.ID
     INFO.CAMPAIGN.title = CACHE.CAMPAIGN.title
     INFO.CAMPAIGN.chapterIDs = CACHE.CAMPAIGN.chapterIDs
+    INFO.CAMPAIGN.numChapters = CACHE.CAMPAIGN.numChapters
     INFO.CAMPAIGN.numCompleted = CACHE.CAMPAIGN.numCompleted
     INFO.CAMPAIGN.isCompleted = CACHE.CAMPAIGN.isCompleted
     return INFO.CAMPAIGN

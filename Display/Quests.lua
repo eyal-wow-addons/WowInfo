@@ -5,34 +5,35 @@ local Display = addon:NewDisplay("Quests")
 local L = addon.L
 
 local function AddQuestHeader(headerInfo, progressString, progressIterator)
-    if headerInfo.ID then
-        Display:AddEmptyLine()
-        if not headerInfo.isCompleted then
-            Display
-                :SetLine(headerInfo.title)
-                :SetHighlight()
-                :ToLine()
-                :AddEmptyLine()
-                :AddLine(progressString)
-            for stepName, isCurrentStep, isStepCompleted in progressIterator(Quests) do
-                Display:SetLine(stepName)
-                if isCurrentStep then
-                    Display:SetHighlight()
-                elseif isStepCompleted then
-                    Display:SetGreenColor()
-                else
-                    Display:SetGrayColor()
-                end
-                Display:ToLine()
+    if not headerInfo.ID then
+        return
+    end
+    Display:AddEmptyLine()
+    if not headerInfo.isCompleted then
+        Display
+            :SetLine(headerInfo.title)
+            :SetHighlight()
+            :ToLine()
+            :AddEmptyLine()
+            :AddLine(progressString)
+        for stepName, isCurrentStep, isStepCompleted in progressIterator(Quests) do
+            Display:SetLine(stepName)
+            if isCurrentStep then
+                Display:SetHighlight()
+            elseif isStepCompleted then
+                Display:SetGreenColor()
+            else
+                Display:SetGrayColor()
             end
-        else
-            Display
-                :SetLine(headerInfo.title)
-                :SetHighlight()
-                :SetLine(L["Completed"])
-                :SetGreenColor()
-                :ToLine()
+            Display:ToLine()
         end
+    else
+        Display
+            :SetLine(headerInfo.title)
+            :SetHighlight()
+            :SetLine(L["Completed"])
+            :SetGreenColor()
+            :ToLine()
     end
 end
 
@@ -59,7 +60,7 @@ Display:RegisterHookScript(QuestLogMicroButton, "OnEnter", function()
 
     AddQuestHeader(
         campaignInfo, 
-        L["Campaign Progress: X/Y Chapters"]:format(campaignInfo.numCompleted, #campaignInfo.chapterIDs), 
+        L["Campaign Progress: X/Y Chapters"]:format(campaignInfo.numCompleted, campaignInfo.numChapters), 
         Quests.IterableCampaignChaptersInfo)
 
     AddQuestHeader(
