@@ -132,12 +132,13 @@ Quests:RegisterEvents(
     "ZONE_CHANGED_NEW_AREA",
     "UNIT_QUEST_LOG_CHANGED", 
     function(_, eventName, ...)
-        if eventName == "UNIT_QUEST_LOG_CHANGED" then
-            local arg1 = ...
-            if arg1 ~= "player" then return end
-        elseif eventName == "ZONE_CHANGED" or eventName == "ZONE_CHANGED_NEW_AREA" then
+        if eventName == "ZONE_CHANGED" or eventName == "ZONE_CHANGED_NEW_AREA" then
             CacheZoneStoryInfo()
         else
+            if eventName == "UNIT_QUEST_LOG_CHANGED" then
+                local arg1 = ...
+                if arg1 ~= "player" then return end
+            end
             CacheZoneStoryInfo()
             CacheQuestLogInfo()
             CacheCampaignInfo()
