@@ -12,7 +12,9 @@ local DATA = {
     currentExpansionLevel = 0
 }
 
-local CACHE = {}
+local CACHE = {
+    CURRENCY_LIST = {}
+}
 
 local ACCOUNT_WIDE_CURRENCY = {
     [2032] = true -- Trader's Tender
@@ -38,9 +40,9 @@ local function IterableCurrencyInfo()
     end
 end
 
-local function GetCurrencyQuantity(currencyID)
+local function GetPlayerCurrencyQuantity(currencyID)
     if not currencyID or ACCOUNT_WIDE_CURRENCY[currencyID] then
-        return -1
+        return 0
     end
     for id, quantity in IterableCurrencyInfo() do
         if id == currencyID then
@@ -94,7 +96,7 @@ local function GetExpansionCategory()
     return categoryName
 end
 
-local function CacheCurrency(categoryName)
+local function CacheCurrencyInfoByCategory(categoryName)
     local index = 1
     CACHE[categoryName] = CACHE[categoryName] or {}
     for name, isHeader, icon, quantity, maxQuantity in IterableCurrencyInfoByCategory(categoryName) do
@@ -110,25 +112,41 @@ local function CacheCurrency(categoryName)
     end
 end
 
-local function CacheCategories()
+local function CacheCategoriesCurrencyInfo()
     local expansionCategory = GetExpansionCategory()
     if not expansionCategory then
         return
     end
-    CacheCurrency(expansionCategory)
-    CacheCurrency(PLAYER_V_PLAYER)
+    CacheCurrencyInfoByCategory(expansionCategory)
+    CacheCurrencyInfoByCategory(PLAYER_V_PLAYER)
     DATA.expansionCategory = expansionCategory
 end
 
-local function CachedIterableCurrencyInfoByCategory(categoryName)
-    local category = CACHE[categoryName]
-    local index = 1
-    return function()
-        for name, currencyData in next, category do
-            if currencyData[1] == index then
-                index = index + 1
-                return name, currencyData[2], currencyData[3], currencyData[4], currencyData[5]
+local function CacheCharactersCurrencyInfo()
+    local charName, data
+    local charDisplayName
+    for currencyID in IterableCurrencyInfo() do
+        charName, data = Currency.storage:GetCharacterCurrencyInfo(charName)
+        while charName do
+            local onCurrentRealm = CharacterInfo:IsCharacterOnCurrentRealm(charName)
+            local onConnectedRealm = CharacterInfo:IsCharacterOnConnectedRealm(charName)
+            if onCurrentRealm or onConnectedRealm then
+                for id, quantity in pairs(data) do
+                    if id == currencyID then
+                        charDisplayName = charName
+                        if onConnectedRealm then
+                            charDisplayName = CharacterInfo:ShortConnectedRealm(charDisplayName)
+                        else
+                            charDisplayName = CharacterInfo:RemoveRealm(charDisplayName)
+                        end
+                        if not CACHE.CURRENCY_LIST[currencyID] then
+                            CACHE.CURRENCY_LIST[currencyID] = {}
+                        end
+                        CACHE.CURRENCY_LIST[currencyID][charDisplayName] = quantity
+                    end
+                end
             end
+            charName, data = Currency.storage:GetCharacterCurrencyInfo(charName)
         end
     end
 end
@@ -147,55 +165,54 @@ Currency:RegisterEvents(
     function(_, eventName)
         if eventName == "PLAYER_LOGIN" then
             Currency.storage:ClearCurrencyData()
-            CacheCategories()
+            CacheCategoriesCurrencyInfo()
+            CacheCharactersCurrencyInfo()
         elseif eventName == "PLAYER_LOGOUT" then
             Currency.storage:StoreCurrencyData(IterableCurrencyInfo)
         elseif eventName == "CURRENCY_DISPLAY_UPDATE" then
-            CacheCategories()
+            CacheCategoriesCurrencyInfo()
+            CacheCharactersCurrencyInfo()
         end
     end)
 
-function Currency:IterableLatestExpansionInfo()
-    return CachedIterableCurrencyInfoByCategory(DATA.expansionCategory)
-end
+do
+    local function IterableCurrencyInfoByCategory(categoryName)
+        local category = CACHE[categoryName]
+        local index = 1
+        return function()
+            for name, currencyData in next, category do
+                if currencyData[1] == index then
+                    index = index + 1
+                    return name, currencyData[2], currencyData[3], currencyData[4], currencyData[5]
+                end
+            end
+        end
+    end
 
-function Currency:IterablePvPInfo()
-    return CachedIterableCurrencyInfoByCategory(PLAYER_V_PLAYER)
+    function Currency:IterableLatestExpansionInfo()
+        return IterableCurrencyInfoByCategory(DATA.expansionCategory)
+    end
+    
+    function Currency:IterablePvPInfo()
+        return IterableCurrencyInfoByCategory(PLAYER_V_PLAYER)
+    end
 end
 
 function Currency:GetPlayerCurrencyInfo(currencyID)
-    if not currencyID or ACCOUNT_WIDE_CURRENCY[currencyID] then
-        return
-    end
-    return CharacterInfo:GetName(), GetCurrencyQuantity(currencyID)
+    return CharacterInfo:GetName(), GetPlayerCurrencyQuantity(currencyID)
 end
 
 function Currency:IterableCharactersCurrencyInfo(currencyID)
-    local charDisplayName
-    local charName, data
+    local data = CACHE.CURRENCY_LIST[currencyID]
+    local key, value
     return function()
-        if not currencyID or ACCOUNT_WIDE_CURRENCY[currencyID] then
-            return
-        end
-        charName, data = self.storage:GetCharacterCurrencyInfo(charName)
-        while charName do
-            local onCurrentRealm = CharacterInfo:IsCharacterOnCurrentRealm(charName)
-            local onConnectedRealm = CharacterInfo:IsCharacterOnConnectedRealm(charName)
-            if onCurrentRealm or onConnectedRealm then
-                for id, quantity in pairs(data) do
-                    if id == currencyID then
-                        charDisplayName = charName
-                        if onConnectedRealm then
-                            charDisplayName = CharacterInfo:ShortConnectedRealm(charDisplayName)
-                        else
-                            charDisplayName = CharacterInfo:RemoveRealm(charDisplayName)
-                        end
-                        return charDisplayName, quantity
-                    end
-                end
+        if data then
+            key, value = next(data, key)
+            if key then
+                return key, value
             end
-            charName, data = self.storage:GetCharacterCurrencyInfo(charName)
         end
+        return nil, 0
     end
 end
 
@@ -205,12 +222,16 @@ function Currency:GetIDByIndex(index)
 end
 
 function Currency:GetTotalQuantity(currencyID)
-    if not currencyID or ACCOUNT_WIDE_CURRENCY[currencyID] then
-        return -1
-    end
-    local totalQuantity = GetCurrencyQuantity(currencyID)
+    local totalQuantity = GetPlayerCurrencyQuantity(currencyID)
     for _, quantity in self:IterableCharactersCurrencyInfo(currencyID) do
         totalQuantity = totalQuantity + quantity
     end
     return totalQuantity
+end
+
+function Currency:Reset()
+    self.storage:Reset()
+    for currencyID in IterableCurrencyInfo() do
+        CACHE.CURRENCY_LIST[currencyID] = nil
+    end
 end

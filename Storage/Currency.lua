@@ -45,6 +45,7 @@ function Storage:StoreCurrencyData(iterableCurrencyInfo)
 end
 
 function Storage:GetCharacterCurrencyInfo(charName)
+    if not DB or not DB.__data then return end
     return next(DB.__data, charName)
 end
 
