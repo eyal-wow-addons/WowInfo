@@ -1,66 +1,101 @@
 local _, addon = ...
-local L = addon.L
+local PvP = addon:GetObject("PvP")
 local Display = addon:NewDisplay("PvP")
-local PvP = addon.PvP
 
-local PVP_RATED_NEXT_RANK = "%s > %s"
+local L = addon.L
+
+local STANDING_FORMAT = "%s / %s"
+local RATED_PVP_LABEL_FORMAT = "%s: |cff00ff00%d|r"
+local RATED_PVP_WEEKLY_STATUS_FORMAT = "%d (|cff00ff00%d|r + |cffff0000%d|r)"
+local RATED_PVP_NEXT_RANK = "%s > %s"
 
 Display:RegisterHookScript(LFDMicroButton, "OnEnter", function(self)
     if not self:IsEnabled() then
         return
     end
 
-    Display:AddTitleLine(L["PvP Progress:"])
+    Display:AddHeader(L["PvP Progress:"])
 
-    local isActiveSeason, isOffSeason, isPreseason = PvP:GetRatedPvPSeasonStateInfo()
-    local honorLevel, honorProgressString, conquestProgressString = PvP:GetPlayerProgressInfo(isActiveSeason, isOffSeason)
+    local honorInfo = PvP:GetHonorProgressInfo()
 
-    Display:AddRightHighlightDoubleLine(L["Honor Level X"]:format(honorLevel), honorProgressString)
+    Display
+        :SetFormattedLine(L["Honor Level X"], honorInfo.level)
+        :SetFormattedLine(STANDING_FORMAT, honorInfo.currentValue, honorInfo.maxValue)
+        :SetHighlight()
+        :ToLine()
 
-    if isActiveSeason or isOffSeason then
-        Display:AddRightHighlightDoubleLine(L["Conquest"], conquestProgressString)
+    if IsPlayerAtEffectiveMaxLevel() then
+        local conquestInfo = PvP:GetConquestProgressInfo()
 
-        Display:AddTitleDoubleLine(L["Rated PvP"], L["Weekly Stats"])
-
-        for ratingString, weeklyStatusString, tierName, tierIcon, nextTierName in PvP:IterableArenaProgressInfo() do
-            Display:AddRightHighlightDoubleLine(ratingString, weeklyStatusString)
-            if tierName and IsShiftKeyDown() then
-                Display:AddLine(PVP_RATED_NEXT_RANK:format(tierName, nextTierName))
-                Display:AddIcon(tierIcon)
+        if conquestInfo then
+            Display:SetLine(L["Conquest"])
+            if not conquestInfo.isCapped then
+                Display:SetFormattedLine(STANDING_FORMAT, conquestInfo.currentValue, conquestInfo.maxValue)
+                if conquestInfo.displayType == Enum.ConquestProgressBarDisplayType.Seasonal then
+                    Display:SetYellowColor()
+                else
+                    Display:SetBlueColor()
+                end
+            else
+                Display
+                    :SetFormattedLine(conquestInfo.currentValue)
+                    :SetGrayColor()
             end
-        end
+            Display:ToLine()
 
-        local itemReward, progress = PvP:GetSeasonItemRewardInfo()
+            Display
+                :SetDoubleLine(L["Rated PvP"], L["Weekly Stats"])
+                :ToHeader()
 
-        if itemReward then
-            if not Display.itemDataLoadedCancelFunc then
-                Display.itemDataLoadedCancelFunc = function()
-                    local itemQuality = itemReward:GetItemQuality()
-                    local itemQualityColor = itemQuality and BAG_ITEM_QUALITY_COLORS[itemQuality] or HIGHLIGHT_FONT_COLOR
-                    local itemName = itemReward:GetItemName()
-                    local itemIcon = itemReward:GetItemIcon()
-                    if itemName and itemIcon then
-                        itemName = itemQualityColor:WrapTextInColorCode(itemName)
-                        Display:AddEmptyLine()
-                        Display:AddRightHighlightDoubleLine(itemName, progress)
-                        Display:AddIcon(itemIcon)
-                        Display:Show()
-                    end
+            for info in PvP:IterableBracketInfo() do
+                if info.rating > 0 then
+                    Display
+                        :SetFormattedLine(RATED_PVP_LABEL_FORMAT, info.name, info.rating)
+                        :SetFormattedLine(RATED_PVP_WEEKLY_STATUS_FORMAT, info.weeklyPlayed, info.weeklyWon, info.weeklyLost)
+                        :SetHighlight()
+                else
+                    Display
+                        :SetLine(info.name)
+                        :SetGrayColor()
+                        :SetLine(0)
+                        :SetGrayColor()
+                end
+                Display:ToLine()
+
+                if info.tierName and IsShiftKeyDown() then
+                    Display
+                        :SetFormattedLine(RATED_PVP_NEXT_RANK, info.tierName, info.nextTierName)
+                        :ToLine()
+
+                    Display:AddIcon(info.tierIcon)
                 end
             end
-            itemReward:ContinueWithCancelOnItemLoad(Display.itemDataLoadedCancelFunc)
+
+            PvP:TryLoadSeasonItemReward()
+        elseif PvP:IsPreseason() then
+            Display:AddLine(L["Player vs. Player (Preseason)"])
         end
-    elseif isPreseason then
-        Display:AddLine(L["Player vs. Player (Preseason)"])
     end
 
     Display:Show()
 end)
 
+PvP:RegisterEvent("WOWINFO_PVP_SEASON_REWARD", function(_, _, itemName, itemQuality, itemIcon, progress)
+    local itemQualityColor = itemQuality and BAG_ITEM_QUALITY_COLORS[itemQuality] or HIGHLIGHT_FONT_COLOR
+    local progressPct = FormatPercentage(progress)
+
+    Display
+        :AddEmptyLine()
+        :SetLine(itemName)
+        :SetColor(itemQualityColor)
+        :SetLine(progressPct)
+        :SetHighlight()
+        :ToLine()
+        :AddIcon(itemIcon)
+        :Show()
+end)
+
 Display:RegisterHookScript(LFDMicroButton, "OnLeave", function(self)
     Display:Hide()
-	if Display.itemDataLoadedCancelFunc then
-		Display.itemDataLoadedCancelFunc()
-		Display.itemDataLoadedCancelFunc = nil
-	end
+	PvP:CancelSeasonItemReward()
 end)

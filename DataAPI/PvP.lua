@@ -1,87 +1,57 @@
 local _, addon = ...
 local PvP = addon:NewObject("PvP")
 
-local NO_ARENA_SEASON = 0
+local INFO = {
+    Honor = {},
+    Rated = {
+        Bracket = {},
+        Conquest = {}
+    }
+}
 
-local SEASON_STATE_OFFSEASON = 1
-local SEASON_STATE_PRESEASON = 2
-local SEASON_STATE_ACTIVE = 3
-local SEASON_STATE_DISABLED = 4
+local DATA = {
+    SeasonState = 0
+}
 
-local STANDING_FORMAT = "%s / %s"
-local CONQUEST_PROGRESS_FORMAT = "%s (%s)"
-local RATED_PVP_LABEL_FORMAT = "%s: |cff00ff00%d|r"
-local RATED_PVP_WEEKLY_STATUS_FORMAT = "%d (|cff00ff00%d|r + |cffff0000%d|r)"
+local ArenaSeasonState = {
+    NoSeason = 0,           -- NO_ARENA_SEASON
+    OffSeason = 1,          -- SEASON_STATE_OFFSEASON
+    Preseason = 2,          -- SEASON_STATE_PRESEASON
+    Active = 3,             -- SEASON_STATE_ACTIVE
+    Disabled = 4            -- SEASON_STATE_DISABLED
+}
 
-PvP:RegisterEvent("PLAYER_LOGIN", function()
-    RequestRatedInfo()
-end)
+local BracketNames = {      -- CONQUEST_SIZE_STRINGS
+    ARENA .. ": " .. RATED_SOLO_SHUFFLE_SIZE, 
+    ARENA .. ": " .. ARENA_2V2, 
+    ARENA .. ": " .. ARENA_3V3, 
+    BATTLEGROUNDS .. ": " .. RATED_BG_BLITZ_SIZE, 
+    BATTLEGROUNDS .. ": " .. BATTLEGROUND_10V10 
+}
 
-do
-    local ratedPvPDisabled
+local BracketIndexes = {    -- CONQUEST_BRACKET_INDEXES
+    7,  -- Solo Shuffle
+    1,  -- 2v2
+    2,  -- 3v3
+    9,  -- Blitz 
+    4   -- 10v10
+}
 
-    local function GetRatedPvPSeasonState()
-        local season = GetCurrentArenaSeason()
-        if season == NO_ARENA_SEASON then
-            if ratedPvPDisabled then
-                return SEASON_STATE_PRESEASON
-            else
-                return SEASON_STATE_OFFSEASON
-            end
+local function GetRatedPvPSeasonState(isRatedPvPDisabled)
+    local season = GetCurrentArenaSeason()
+    if season == ArenaSeasonState.NoSeason then
+        if isRatedPvPDisabled then
+            return ArenaSeasonState.Preseason
         else
-            if ratedPvPDisabled then
-                return SEASON_STATE_DISABLED
-            else
-                return SEASON_STATE_ACTIVE
-            end
+            return ArenaSeasonState.OffSeason
         end
-    end
-
-    PvP:RegisterEvent("PVP_TYPES_ENABLED", function(_, _, _, ratedBattlegrounds, ratedArenas)
-        ratedPvPDisabled = not ratedBattlegrounds and not ratedArenas
-    end)
-
-    function PvP:GetRatedPvPSeasonStateInfo()
-        if IsPlayerAtEffectiveMaxLevel() then
-            local seasonState = GetRatedPvPSeasonState()
-            return seasonState == SEASON_STATE_ACTIVE, seasonState == SEASON_STATE_OFFSEASON, seasonState == SEASON_STATE_PRESEASON
-        end
-    end
-end
-
-function PvP:GetPlayerProgressInfo(isActiveSeason, isOffSeason)
-    local currentHonor = UnitHonor("player")
-    local maxHonor = UnitHonorMax("player")
-    local honorLevel = UnitHonorLevel("player")
-
-    if isActiveSeason or isOffSeason then
-        local currencyInfo = C_CurrencyInfo.GetCurrencyInfo(Constants.CurrencyConsts.CONQUEST_CURRENCY_ID)
-
-        local totalEarned = currencyInfo.totalEarned
-        local maxProgress = currencyInfo.maxQuantity
-		local progress = math.min(totalEarned, maxProgress)
-        local conquestStandingString
-
-        local weeklyProgress = C_WeeklyRewards.GetConquestWeeklyProgress()
-	    local displayType = weeklyProgress.displayType
-        local isAtMax = progress >= maxProgress
-
-        if not isAtMax then
-            conquestStandingString = STANDING_FORMAT:format(progress, maxProgress)
-            if displayType == Enum.ConquestProgressBarDisplayType.Seasonal then
-                conquestStandingString = YELLOW_FONT_COLOR:WrapTextInColorCode(conquestStandingString)
-            else
-                conquestStandingString = BLUE_FONT_COLOR:WrapTextInColorCode(conquestStandingString)
-            end
-            conquestStandingString = CONQUEST_PROGRESS_FORMAT:format(totalEarned, conquestStandingString)
+    else
+        if isRatedPvPDisabled then
+            return ArenaSeasonState.Disabled
         else
-            conquestStandingString = GRAY_FONT_COLOR:WrapTextInColorCode(totalEarned)
+            return ArenaSeasonState.Active
         end
-
-        return honorLevel, STANDING_FORMAT:format(currentHonor, maxHonor), conquestStandingString
     end
-
-    return honorLevel, STANDING_FORMAT:format(currentHonor, maxHonor)
 end
 
 local function GetSeasonTierInfo(bracketTierID)
@@ -89,47 +59,114 @@ local function GetSeasonTierInfo(bracketTierID)
     if tierInfo then
         local ascendTierInfo = tierInfo.ascendTier and C_PvP.GetPvpTierInfo(tierInfo.ascendTier)
         local ascendTierName
+
         if ascendTierInfo then
             ascendTierName = PVPUtil.GetTierName(ascendTierInfo.pvpTierEnum)
         end
+
         return PVPUtil.GetTierName(tierInfo.pvpTierEnum), tierInfo.tierIconID, ascendTierName
     end
 end
 
-function PvP:IterableArenaProgressInfo()
+PvP:RegisterEvents(
+    "PLAYER_LOGIN",
+    "PLAYER_SPECIALIZATION_CHANGED",
+    "PVP_TYPES_ENABLED",
+    --"PVP_RATED_STATS_UPDATE",
+    function(_, eventName, ...) 
+        if eventName == "PLAYER_LOGIN" then
+            RequestRatedInfo()
+            RequestPVPOptionsEnabled()
+        elseif eventName == "PLAYER_SPECIALIZATION_CHANGED" then
+            RequestRatedInfo()
+        elseif eventName == "PVP_TYPES_ENABLED" then
+            local _, ratedBgs, ratedArenas, ratedSoloShuffle, ratedBGBlitz = ...;
+            local isRatedPvPDisabled = not ratedBgs and not ratedArenas and not ratedSoloShuffle and not ratedBGBlitz 
+            DATA.SeasonState = GetRatedPvPSeasonState(isRatedPvPDisabled)
+        end        
+    end)
+
+function PvP:GetHonorProgressInfo()
+    INFO.Honor.currentValue = UnitHonor("player")
+    INFO.Honor.maxValue = UnitHonorMax("player")
+    INFO.Honor.level = UnitHonorLevel("player")
+    return INFO.Honor
+end
+
+function PvP:GetConquestProgressInfo()
+    INFO.Rated.Conquest.currentValue = nil
+    INFO.Rated.Conquest.maxValue = nil
+    INFO.Rated.Conquest.isCapped = false
+    INFO.Rated.Conquest.displayType = nil
+
+    if DATA.SeasonState == ArenaSeasonState.Active or DATA.SeasonState == ArenaSeasonState.OffSeason then
+        local currencyInfo = C_CurrencyInfo.GetCurrencyInfo(Constants.CurrencyConsts.CONQUEST_CURRENCY_ID)
+
+        local currentValue = currencyInfo.totalEarned
+        local maxValue = currencyInfo.maxQuantity
+        local isCapped = currentValue >= maxValue
+
+        local weeklyProgress = C_WeeklyRewards.GetConquestWeeklyProgress()
+	    local displayType = weeklyProgress.displayType
+        
+        INFO.Rated.Conquest.currentValue = currentValue
+        INFO.Rated.Conquest.maxValue = maxValue
+        INFO.Rated.Conquest.isCapped = isCapped
+        INFO.Rated.Conquest.displayType = Enum.ConquestProgressBarDisplayType
+
+        return INFO.Rated.Conquest
+    end
+end
+
+function PvP:IsPreseason()
+    return DATA.SeasonState == ArenaSeasonState.Preseason
+end
+
+function PvP:IterableBracketInfo()
     local i = 0
-    local n = #CONQUEST_SIZE_STRINGS
+    local n = #BracketNames
     return function()
         i = i + 1
         if i <= n then
-            local name = CONQUEST_SIZE_STRINGS[i]
-            local bracketIndex = CONQUEST_BRACKET_INDEXES[i]
+            local name = BracketNames[i]
+            local bracketIndex = BracketIndexes[i]
             local rating, _, _, _, _, weeklyPlayed, weeklyWon,_, _, pvpTier = GetPersonalRatedInfo(bracketIndex)
-            local ratingString, weeklyStatusString
-            if rating > 0 then
-                ratingString = RATED_PVP_LABEL_FORMAT:format(name, rating)
-                weeklyStatusString = RATED_PVP_WEEKLY_STATUS_FORMAT:format(weeklyPlayed, weeklyWon, weeklyPlayed - weeklyWon)
-            else
-                ratingString = GRAY_FONT_COLOR:WrapTextInColorCode(name)
-                weeklyStatusString = GRAY_FONT_COLOR:WrapTextInColorCode(0)
+            local tierName, tierIconID, nextTierName = GetSeasonTierInfo(pvpTier)
+            local info = INFO.Rated[i]
+
+            if not info then
+                INFO.Rated[i] = {}
+                info = INFO.Rated[i]
             end
-            return ratingString, weeklyStatusString, GetSeasonTierInfo(pvpTier)
+
+            info.name = name
+            info.rating = rating
+            info.weeklyPlayed = weeklyPlayed
+            info.weeklyWon = weeklyWon
+            info.weeklyLost = weeklyPlayed - weeklyWon
+            info.tierName = tierName
+            info.tierIcon = tierIconID
+            info.nextTierName = nextTierName
+
+            return info
         end
     end
 end
 
-function PvP:GetSeasonItemRewardInfo()
+function PvP:TryLoadSeasonItemReward()
 	local achievementID = C_PvP.GetPVPSeasonRewardAchievementID()
 
 	if achievementID then
 		while true do
 			local completed = select(4, GetAchievementInfo(achievementID))
+
 			if not completed then
 				break
 			end
 
 			local supercedingAchievements = C_AchievementInfo.GetSupercedingAchievements(achievementID)
-			if not supercedingAchievements[1] then
+			
+            if not supercedingAchievements[1] then
 				break
 			end
 
@@ -142,14 +179,35 @@ function PvP:GetSeasonItemRewardInfo()
 	end
 
     local criteriaString, _, completed, quantity, reqQuantity = GetAchievementCriteriaInfo(achievementID, 1)
-
+    
     if criteriaString and not completed then
         local rewardItemID = C_AchievementInfo.GetRewardItemID(achievementID)
+
         if rewardItemID then
             local itemReward = Item:CreateFromItemID(rewardItemID)
+
             if itemReward then
-                return itemReward, FormatPercentage(quantity / reqQuantity)
+                if not self.__itemDataLoadedCancelFunc then
+                    self.__itemDataLoadedCancelFunc = function()
+                        local itemQuality = itemReward:GetItemQuality()
+                        local itemName = itemReward:GetItemName()
+                        local itemIcon = itemReward:GetItemIcon()
+                        if itemName and itemIcon then
+                            local progress =  quantity / reqQuantity
+                            PvP:TriggerEvent("WOWINFO_PVP_SEASON_REWARD", itemName, itemQuality, itemIcon, progress)
+                        end
+                    end
+                end
+
+                itemReward:ContinueWithCancelOnItemLoad(self.__itemDataLoadedCancelFunc)
             end
         end
     end
+end
+
+function PvP:CancelSeasonItemReward()
+    if self.__itemDataLoadedCancelFunc then
+		self.__itemDataLoadedCancelFunc()
+		self.__itemDataLoadedCancelFunc = nil
+	end
 end
