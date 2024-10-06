@@ -22,6 +22,10 @@ function Colorizer:ToGreen(text)
     return WrapText(GREEN_FONT_COLOR, text)
 end
 
+function Colorizer:ToBlue(text)
+    return WrapText(BLUE_FONT_COLOR, text)
+end
+
 function Colorizer:ToGray(text)
     return WrapText(GRAY_FONT_COLOR, text)
 end
