@@ -1,20 +1,29 @@
 local _, addon = ...
 local Achievements = addon:NewObject("Achievements")
 
-local ACHIEVEMENTUI_SUMMARYCATEGORIES = {92, 96, 97, 15522, 95, 168, 169, 201, 155, 15117, 15246}
-local ACHIEVEMENTUI_GUILDSUMMARYCATEGORIES = {15088, 15077, 15078, 15079, 15080, 15089}
-
 local CACHE = {
-    MOUNTS = {},
-    PETS = {},
-    TOYS = {},
-    SUMMARY = {
-        categoriesSummaryInfo = {}
+    Mounts = {},
+    Pets = {},
+    Toys = {},
+    Summary = {
+        CategoriesInfo = {}
     },
-    GUILDSUMMARY = {
-        categoriesSummaryInfo = {}
+    GuildSummary = {
+        CategoriesInfo = {}
     }
 }
+
+local SUMMARY_CATEGORIES = {                 -- ACHIEVEMENTUI_SUMMARYCATEGORIES
+    92, 96, 97, 15522, 95, 168, 169, 201, 155, 15117, 15246
+}
+
+local GUILD_SUMMARY_CATEGORIES = {            -- ACHIEVEMENTUI_GUILDSUMMARYCATEGORIES
+    15088, 15077, 15078, 15079, 15080, 15089
+}
+
+local MOUNTS_BASE_ACHIEVEMENT_ID = 2143     -- Leading the Cavalry
+local PETS_BASE_ACHIEVEMENT_ID = 1017       -- Can I Keep Him?
+local TOYBOX_BASE_ACHIEVEMENT_ID = 9670     -- Toying Around
 
 -- I've checked Blizzard's code and it seems like GetNextAchievement returns completed as the 2nd return value
 -- however, it seems to returns nil for achievements I've completed with one faction but not the other,
@@ -84,69 +93,65 @@ local function CacheAchievementInfo(key, id)
 end
 
 local function CacheAchievementsCategoriesSummaryInfo(guildOnly)
-    local cacheKey = guildOnly and "GUILDSUMMARY" or "SUMMARY"
+    local cacheKey = guildOnly and "GuildSummary" or "Summary"
     local total, completed = GetNumCompletedAchievements(guildOnly)
 
     CACHE[cacheKey].total = total
     CACHE[cacheKey].completed = completed
 
-    local categoriesSummaryInfo = CACHE[cacheKey].categoriesSummaryInfo
-    local categories = guildOnly and ACHIEVEMENTUI_GUILDSUMMARYCATEGORIES or ACHIEVEMENTUI_SUMMARYCATEGORIES
+    local catInfo = CACHE[cacheKey].CategoriesInfo
+    local categories = guildOnly and GUILD_SUMMARY_CATEGORIES or SUMMARY_CATEGORIES
     local categoryId, categoryName
     
     for i = 1, #categories do
         categoryId = categories[i]
         categoryName = GetCategoryInfo(categoryId)
         total, completed = GetCategoryTotalNumAchievements(categoryId, guildOnly)
-        categoriesSummaryInfo[i] = categoriesSummaryInfo[i] or {}
-        categoriesSummaryInfo[i].name = categoryName
-        categoriesSummaryInfo[i].total = total
-        categoriesSummaryInfo[i].completed = completed
+        catInfo[i] = catInfo[i] or {}
+        catInfo[i].name = categoryName
+        catInfo[i].total = total
+        catInfo[i].completed = completed
     end
 end
-
-local MOUNTS_BASE_ACHIEVEMENT_ID = 2143 -- Leading the Cavalry
-local PETS_BASE_ACHIEVEMENT_ID = 1017 -- Can I Keep Him?
-local TOYBOX_BASE_ACHIEVEMENT_ID = 9670 -- Toying Around
 
 Achievements:RegisterEvents(
     "PLAYER_LOGIN", 
     "ACHIEVEMENT_EARNED",
     function(_, eventName)
-        CacheAchievementInfo("MOUNTS", MOUNTS_BASE_ACHIEVEMENT_ID)
-        CacheAchievementInfo("PETS", PETS_BASE_ACHIEVEMENT_ID)
-        CacheAchievementInfo("TOYS", TOYBOX_BASE_ACHIEVEMENT_ID)
+        CacheAchievementInfo("Mounts", MOUNTS_BASE_ACHIEVEMENT_ID)
+        CacheAchievementInfo("Pets", PETS_BASE_ACHIEVEMENT_ID)
+        CacheAchievementInfo("Toys", TOYBOX_BASE_ACHIEVEMENT_ID)
         CacheAchievementsCategoriesSummaryInfo()
         CacheAchievementsCategoriesSummaryInfo(true)
     end)
 
 function Achievements:GetMountAchievementInfo()
-    return CACHE["MOUNTS"].name, CACHE["MOUNTS"].currentAmount, CACHE["MOUNTS"].reqAmount
+    return CACHE.Mounts.name, CACHE.Mounts.currentAmount, CACHE.Mounts.reqAmount
 end
 
 function Achievements:GetPetsAchievementInfo()
-    return CACHE["PETS"].name, CACHE["PETS"].currentAmount, CACHE["PETS"].reqAmount
+    return CACHE.Pets.name, CACHE.Pets.currentAmount, CACHE.Pets.reqAmount
 end
 
 function Achievements:GetToysAchievementInfo()
-    return CACHE["TOYS"].name, CACHE["TOYS"].currentAmount, CACHE["TOYS"].reqAmount
+    return CACHE.Toys.name, CACHE.Toys.currentAmount, CACHE.Toys.reqAmount
 end
 
 function Achievements:GetSummaryProgressInfo(guildOnly)
-    local cacheKey = guildOnly and "GUILDSUMMARY" or "SUMMARY"
+    local cacheKey = guildOnly and "GuildSummary" or "Summary"
     return CACHE[cacheKey].total, CACHE[cacheKey].completed
 end
 
 function Achievements:IterableCategoriesSummaryInfo(guildOnly)
-    local cacheKey = guildOnly and "GUILDSUMMARY" or "SUMMARY"
-    local categoriesSummaryInfo = CACHE[cacheKey].categoriesSummaryInfo
+    local cacheKey = guildOnly and "GuildSummary" or "Summary"
+    local catInfo = CACHE[cacheKey].CategoriesInfo
     local info
     local i = 0
-    local n = #categoriesSummaryInfo
+    local n = #catInfo
     return function()
         i = i + 1
         if i <= n then
-            info = categoriesSummaryInfo[i]
+            info = catInfo[i]
             return info.name, info.total, info.completed
         end
     end

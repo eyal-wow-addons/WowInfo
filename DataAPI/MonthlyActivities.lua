@@ -1,8 +1,6 @@
 local _, addon = ...
 local MonthlyActivities = addon:NewObject("MonthlyActivities")
 
-local MONTHLY_ACTIVITIES_DAYS = MONTHLY_ACTIVITIES_DAYS
-
 local CACHE = {}
 
 local MONTHLY_ACTIVITIES_MONTH_NAMES = {
@@ -19,6 +17,8 @@ local MONTHLY_ACTIVITIES_MONTH_NAMES = {
 	MONTH_NOVEMBER,
 	MONTH_DECEMBER,
 }
+
+local MONTHLY_ACTIVITIES_DAYS = MONTHLY_ACTIVITIES_DAYS
 
 local function AreMonthlyActivitiesRestricted()
 	return IsTrialAccount() or IsVeteranTrialAccount()

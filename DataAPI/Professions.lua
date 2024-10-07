@@ -1,6 +1,10 @@
 local _, addon = ...
 local Professions = addon:NewObject("Professions")
 
+local DATA = {
+    OrderIndex = {}
+}
+
 local INFO = {}
 
 local PROFESSION_RANKS =  {
@@ -17,8 +21,6 @@ local PROFESSION_RANKS =  {
     {950, BATTLE_FOR_AZEROTH_MASTER}
 }
 
-local PROFESIONS_ORDER_INDEX = {}
-
 function Professions:HasProfessions()
     for info in self:IterableProfessionInfo() do
         if info then
@@ -30,17 +32,17 @@ end
 
 function Professions:IterableProfessionInfo()
     local prof1, prof2, arch, fish, cook = GetProfessions()
-    PROFESIONS_ORDER_INDEX[1] = prof1 or -1
-    PROFESIONS_ORDER_INDEX[2] = prof2 or -1
-    PROFESIONS_ORDER_INDEX[3] = cook or -1
-    PROFESIONS_ORDER_INDEX[4] = fish or -1
-    PROFESIONS_ORDER_INDEX[5] = arch or -1
+    DATA.OrderIndex[1] = prof1 or -1
+    DATA.OrderIndex[2] = prof2 or -1
+    DATA.OrderIndex[3] = cook or -1
+    DATA.OrderIndex[4] = fish or -1
+    DATA.OrderIndex[5] = arch or -1
     local i = 0
-    local n = #PROFESIONS_ORDER_INDEX
+    local n = #DATA.OrderIndex
     return function()
         i = i + 1
         while i <= n do
-            local index = PROFESIONS_ORDER_INDEX[i]
+            local index = DATA.OrderIndex[i]
 
             if index > -1 then
                 local skillTitle

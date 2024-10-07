@@ -1,22 +1,22 @@
 local _, addon = ...
 local Reputation = addon:NewObject("Reputation")
 
-local MAJOR_FACTION_MAX_RENOWN_REACHED = MAJOR_FACTION_MAX_RENOWN_REACHED
-local MAJOR_FACTION_RENOWN_LEVEL_TOAST = MAJOR_FACTION_RENOWN_LEVEL_TOAST
-local MAX_REPUTATION_REACTION = MAX_REPUTATION_REACTION
-
 local INFO = {
-    progressInfo = {}
+    ProgressInfo = {}
 }
 
 local DATA = {
-    progressInfo = {},
-    collapsedIndexes = {}
+    ProgressInfo = {},
+    CollapsedIndexes = {}
 }
 
 local CACHE = {
     numFactions = 0
 }
+
+local MAJOR_FACTION_MAX_RENOWN_REACHED = MAJOR_FACTION_MAX_RENOWN_REACHED
+local MAJOR_FACTION_RENOWN_LEVEL_TOAST = MAJOR_FACTION_RENOWN_LEVEL_TOAST
+local MAX_REPUTATION_REACTION = MAX_REPUTATION_REACTION
 
 local function FillFactionProgressInfo(factionData)
     local factionID = factionData.factionID
@@ -74,14 +74,14 @@ local function FillFactionProgressInfo(factionData)
     repMax = repMax - repMin
     repValue = repValue - repMin
 
-    DATA.progressInfo.type = progressType
-    DATA.progressInfo.standing = standing
-    DATA.progressInfo.renownLevel = renownLevel
-    DATA.progressInfo.standingID = standingID
-    DATA.progressInfo.isCapped = isCapped
-    DATA.progressInfo.currentValue = repValue
-    DATA.progressInfo.maxValue = repMax
-    DATA.progressInfo.hasReward = hasReward
+    DATA.ProgressInfo.type = progressType
+    DATA.ProgressInfo.standing = standing
+    DATA.ProgressInfo.renownLevel = renownLevel
+    DATA.ProgressInfo.standingID = standingID
+    DATA.ProgressInfo.isCapped = isCapped
+    DATA.ProgressInfo.currentValue = repValue
+    DATA.ProgressInfo.maxValue = repMax
+    DATA.ProgressInfo.hasReward = hasReward
 end
 
 local function HasParagonRewardPending(factionID)
@@ -124,14 +124,14 @@ local function CacheFactionData()
                 
                 if factionData.isCollapsed then
                     C_Reputation.ExpandFactionHeader(i)
-                    table.insert(DATA.collapsedIndexes, i)
+                    table.insert(DATA.CollapsedIndexes, i)
                 end
 
                 local data = CACHE[i]
 
                 if not data then
                     CACHE[i] = {
-                        progressInfo = {}
+                        ProgressInfo = {}
                     }
                     data = CACHE[i]
                 end
@@ -151,24 +151,24 @@ local function CacheFactionData()
 
                 FillFactionProgressInfo(factionData)
 
-                data.progressInfo.type = DATA.progressInfo.type
-                data.progressInfo.standing = DATA.progressInfo.standing
-                data.progressInfo.renownLevel = DATA.progressInfo.renownLevel
-                data.progressInfo.standingID = DATA.progressInfo.standingID
-                data.progressInfo.isCapped = DATA.progressInfo.isCapped
-                data.progressInfo.currentValue = DATA.progressInfo.currentValue
-                data.progressInfo.maxValue = DATA.progressInfo.maxValue
-                data.progressInfo.hasReward = DATA.progressInfo.hasReward
+                data.ProgressInfo.type = DATA.ProgressInfo.type
+                data.ProgressInfo.standing = DATA.ProgressInfo.standing
+                data.ProgressInfo.renownLevel = DATA.ProgressInfo.renownLevel
+                data.ProgressInfo.standingID = DATA.ProgressInfo.standingID
+                data.ProgressInfo.isCapped = DATA.ProgressInfo.isCapped
+                data.ProgressInfo.currentValue = DATA.ProgressInfo.currentValue
+                data.ProgressInfo.maxValue = DATA.ProgressInfo.maxValue
+                data.ProgressInfo.hasReward = DATA.ProgressInfo.hasReward
             end
             CACHE.numFactions = i
             i = i + 1
             factionData = C_Reputation.GetFactionDataByIndex(i)
         end
 
-        for i = #DATA.collapsedIndexes, 1, -1 do
-            local collapsedIndex = DATA.collapsedIndexes[i]
+        for i = #DATA.CollapsedIndexes, 1, -1 do
+            local collapsedIndex = DATA.CollapsedIndexes[i]
             C_Reputation.CollapseFactionHeader(collapsedIndex)
-            DATA.collapsedIndexes[i] = nil
+            DATA.CollapsedIndexes[i] = nil
         end
 
         Reputation.__cachedNumFactions = CACHE.numFactions
@@ -183,13 +183,13 @@ local function CacheFactionData()
             if factionData then
                 FillFactionProgressInfo(factionData)
 
-                data.progressInfo.standing = DATA.progressInfo.standing
-                data.progressInfo.renownLevel = DATA.progressInfo.renownLevel
-                data.progressInfo.standingID = DATA.progressInfo.standingID
-                data.progressInfo.isCapped = DATA.progressInfo.isCapped
-                data.progressInfo.currentValue = DATA.progressInfo.currentValue
-                data.progressInfo.maxValue = DATA.progressInfo.maxValue
-                data.progressInfo.hasReward = DATA.progressInfo.hasReward
+                data.ProgressInfo.standing = DATA.ProgressInfo.standing
+                data.ProgressInfo.renownLevel = DATA.ProgressInfo.renownLevel
+                data.ProgressInfo.standingID = DATA.ProgressInfo.standingID
+                data.ProgressInfo.isCapped = DATA.ProgressInfo.isCapped
+                data.ProgressInfo.currentValue = DATA.ProgressInfo.currentValue
+                data.ProgressInfo.maxValue = DATA.ProgressInfo.maxValue
+                data.ProgressInfo.hasReward = DATA.ProgressInfo.hasReward
             end
         end
     end
@@ -213,13 +213,13 @@ function Reputation:GetFactionInfoByIndex(index)
         INFO.isHeaderWithRep = data.isHeaderWithRep
         INFO.isChild = data.isChild
         INFO.isAccountWide = data.isAccountWide
-        INFO.progressInfo.standing = data.progressInfo.standing
-        INFO.progressInfo.renownLevel = data.progressInfo.renownLevel
-        INFO.progressInfo.standingID = data.progressInfo.standingID
-        INFO.progressInfo.isCapped = data.progressInfo.isCapped
-        INFO.progressInfo.currentValue = data.progressInfo.currentValue
-        INFO.progressInfo.maxValue = data.progressInfo.maxValue
-        INFO.progressInfo.hasReward = data.progressInfo.hasReward
+        INFO.ProgressInfo.standing = data.ProgressInfo.standing
+        INFO.ProgressInfo.renownLevel = data.ProgressInfo.renownLevel
+        INFO.ProgressInfo.standingID = data.ProgressInfo.standingID
+        INFO.ProgressInfo.isCapped = data.ProgressInfo.isCapped
+        INFO.ProgressInfo.currentValue = data.ProgressInfo.currentValue
+        INFO.ProgressInfo.maxValue = data.ProgressInfo.maxValue
+        INFO.ProgressInfo.hasReward = data.ProgressInfo.hasReward
         return INFO
     end
 end
@@ -246,7 +246,7 @@ function Reputation:IterableTrackedFactionsInfo()
         while i <= n do
             local info = self:GetFactionInfoByIndex(i)
             if info and IsTrackedFaction(info.factionID) then
-                return info, info.progressInfo
+                return info, info.ProgressInfo
             end
             i = i + 1
         end

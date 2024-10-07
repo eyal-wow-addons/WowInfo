@@ -3,9 +3,6 @@ local Currency = addon:NewObject("Currency")
 
 local CharacterInfo = LibStub("CharacterInfo-1.0")
 
-local _G = _G
-local PLAYER_V_PLAYER = PLAYER_V_PLAYER
-
 local DATA = {
     expansions = {},
     expansionCategory = "",
@@ -13,12 +10,15 @@ local DATA = {
 }
 
 local CACHE = {
-    CURRENCY_LIST = {}
+    CurrencyList = {}
 }
 
 local ACCOUNT_WIDE_CURRENCY = {
     [2032] = true -- Trader's Tender
 }
+
+local _G = _G
+local PLAYER_V_PLAYER = PLAYER_V_PLAYER
 
 local function IterableCurrencyInfo()
     local i = 0
@@ -139,10 +139,10 @@ local function CacheCharactersCurrencyInfo()
                         else
                             charDisplayName = CharacterInfo:RemoveRealm(charDisplayName)
                         end
-                        if not CACHE.CURRENCY_LIST[currencyID] then
-                            CACHE.CURRENCY_LIST[currencyID] = {}
+                        if not CACHE.CurrencyList[currencyID] then
+                            CACHE.CurrencyList[currencyID] = {}
                         end
-                        CACHE.CURRENCY_LIST[currencyID][charDisplayName] = quantity
+                        CACHE.CurrencyList[currencyID][charDisplayName] = quantity
                     end
                 end
             end
@@ -203,7 +203,7 @@ function Currency:GetPlayerCurrencyInfo(currencyID)
 end
 
 function Currency:IterableCharactersCurrencyInfo(currencyID)
-    local data = CACHE.CURRENCY_LIST[currencyID]
+    local data = CACHE.CurrencyList[currencyID]
     local key, value
     return function()
         if data then
@@ -232,6 +232,6 @@ end
 function Currency:Reset()
     self.storage:Reset()
     for currencyID in IterableCurrencyInfo() do
-        CACHE.CURRENCY_LIST[currencyID] = nil
+        CACHE.CurrencyList[currencyID] = nil
     end
 end

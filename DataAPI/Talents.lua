@@ -2,27 +2,27 @@ local _, addon = ...
 local Talents = addon:NewObject("Talents")
 
 local INFO = {
-    TRAIT = {}
+    Trait = {}
 }
 
 local CACHE = {
-    TRAITS = {}
+    Traits = {}
 }
 
 local function CacheLoadoutsInfo()
     local specID = specID or PlayerUtil.GetCurrentSpecID()
     local configIDs = C_ClassTalents.GetConfigIDsBySpecID(specID)
-    local size = math.max(#configIDs, #CACHE.TRAITS)
+    local size = math.max(#configIDs, #CACHE.Traits)
     for i = 1, size do
         local configID = configIDs[i]
-        local data = CACHE.TRAITS[i]
+        local data = CACHE.Traits[i]
         if configID then
             local isActive = false
             local configInfo = C_Traits.GetConfigInfo(configID)
             
             if not data then
-                CACHE.TRAITS[i] = {}
-                data = CACHE.TRAITS[i]
+                CACHE.Traits[i] = {}
+                data = CACHE.Traits[i]
             end
 
             data.name = configInfo.name
@@ -30,7 +30,7 @@ local function CacheLoadoutsInfo()
             data.configID = configID
             data.specID = specID
         else
-            CACHE.TRAITS[i] = nil
+            CACHE.Traits[i] = nil
         end
     end
 end
@@ -64,34 +64,34 @@ function Talents:GetCurrentSpec()
 end
 
 function Talents:HasLoadouts()
-    return #CACHE.TRAITS > 0 and true or false
+    return #CACHE.Traits > 0 and true or false
 end
 
 function Talents:IterableLoadoutsInfo()
-    INFO.TRAIT.name = nil
-    INFO.TRAIT.usesSharedActionBars = nil
-    INFO.TRAIT.isActive = nil
+    INFO.Trait.name = nil
+    INFO.Trait.usesSharedActionBars = nil
+    INFO.Trait.isActive = nil
 
     local isStarterBuildActive = self:IsStarterBuildActive()
     local i = 0
-    local n = #CACHE.TRAITS
+    local n = #CACHE.Traits
 
     return function()
         i = i + 1
         if i <= n then
-            local data = CACHE.TRAITS[i]
+            local data = CACHE.Traits[i]
 
-            INFO.TRAIT.name = data.name
-            INFO.TRAIT.usesSharedActionBars = data.usesSharedActionBars
-            INFO.TRAIT.isActive = false
+            INFO.Trait.name = data.name
+            INFO.Trait.usesSharedActionBars = data.usesSharedActionBars
+            INFO.Trait.isActive = false
 
             local lastSelectedSavedConfigID = C_ClassTalents.GetLastSelectedSavedConfigID(data.specID)
 
             if not isStarterBuildActive and data.configID == lastSelectedSavedConfigID then
-                INFO.TRAIT.isActive = true
+                INFO.Trait.isActive = true
             end
             
-            return INFO.TRAIT
+            return INFO.Trait
         end
     end
 end

@@ -2,8 +2,8 @@ local _, addon = ...
 local PvE = addon:NewObject("PvE")
 
 local INFO = {
-    INSTANCE = {},
-    WORLD_BOSS = {}
+    Instance = {},
+    WorldBoss = {}
 }
 
 PvE:RegisterEvent("PLAYER_LOGIN", function()
@@ -20,13 +20,13 @@ function PvE:IterableInstanceInfo()
             local difficultyName = GetDifficultyInfo(instanceDifficulty)
             
             if locked or extended then
-                INFO.INSTANCE.name = instanceName
-                INFO.INSTANCE.reset = reset
-                INFO.INSTANCE.difficulty = difficultyName
-                INFO.INSTANCE.isCleared = defeatedBosses >= maxBosses
-                INFO.INSTANCE.defeatedBosses = defeatedBosses
-                INFO.INSTANCE.maxBosses = maxBosses
-                return INFO.INSTANCE
+                INFO.Instance.name = instanceName
+                INFO.Instance.reset = reset
+                INFO.Instance.difficulty = difficultyName
+                INFO.Instance.isCleared = defeatedBosses >= maxBosses
+                INFO.Instance.defeatedBosses = defeatedBosses
+                INFO.Instance.maxBosses = maxBosses
+                return INFO.Instance
             end
 
             i = i + 1
@@ -41,9 +41,9 @@ function PvE:IterableSavedWorldBossInfo()
         i = i + 1
         if i <= n then
             local name, _, reset = GetSavedWorldBossInfo(i)
-            INFO.WORLD_BOSS.name = name
-            INFO.WORLD_BOSS.reset = reset
-            return INFO.WORLD_BOSS
+            INFO.WorldBoss.name = name
+            INFO.WorldBoss.reset = reset
+            return INFO.WorldBoss
         end
     end
 end

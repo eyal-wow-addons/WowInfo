@@ -13,7 +13,7 @@ local DATA = {
     SeasonState = 0
 }
 
-local ArenaSeasonState = {
+local ARENA_SEASON_STATE = {
     NoSeason = 0,           -- NO_ARENA_SEASON
     OffSeason = 1,          -- SEASON_STATE_OFFSEASON
     Preseason = 2,          -- SEASON_STATE_PRESEASON
@@ -21,7 +21,7 @@ local ArenaSeasonState = {
     Disabled = 4            -- SEASON_STATE_DISABLED
 }
 
-local BracketNames = {      -- CONQUEST_SIZE_STRINGS
+local BRACKETS_NAMES = {      -- CONQUEST_SIZE_STRINGS
     ARENA .. ": " .. RATED_SOLO_SHUFFLE_SIZE, 
     ARENA .. ": " .. ARENA_2V2, 
     ARENA .. ": " .. ARENA_3V3, 
@@ -29,7 +29,7 @@ local BracketNames = {      -- CONQUEST_SIZE_STRINGS
     BATTLEGROUNDS .. ": " .. BATTLEGROUND_10V10 
 }
 
-local BracketIndexes = {    -- CONQUEST_BRACKET_INDEXES
+local BRACKETS_INDEXES = {    -- CONQUEST_BRACKET_INDEXES
     7,  -- Solo Shuffle
     1,  -- 2v2
     2,  -- 3v3
@@ -39,17 +39,17 @@ local BracketIndexes = {    -- CONQUEST_BRACKET_INDEXES
 
 local function GetRatedPvPSeasonState(isRatedPvPDisabled)
     local season = GetCurrentArenaSeason()
-    if season == ArenaSeasonState.NoSeason then
+    if season == ARENA_SEASON_STATE.NoSeason then
         if isRatedPvPDisabled then
-            return ArenaSeasonState.Preseason
+            return ARENA_SEASON_STATE.Preseason
         else
-            return ArenaSeasonState.OffSeason
+            return ARENA_SEASON_STATE.OffSeason
         end
     else
         if isRatedPvPDisabled then
-            return ArenaSeasonState.Disabled
+            return ARENA_SEASON_STATE.Disabled
         else
-            return ArenaSeasonState.Active
+            return ARENA_SEASON_STATE.Active
         end
     end
 end
@@ -99,7 +99,7 @@ function PvP:GetConquestProgressInfo()
     INFO.Rated.Conquest.isCapped = false
     INFO.Rated.Conquest.displayType = nil
 
-    if DATA.SeasonState == ArenaSeasonState.Active or DATA.SeasonState == ArenaSeasonState.OffSeason then
+    if DATA.SeasonState == ARENA_SEASON_STATE.Active or DATA.SeasonState == ARENA_SEASON_STATE.OffSeason then
         local currencyInfo = C_CurrencyInfo.GetCurrencyInfo(Constants.CurrencyConsts.CONQUEST_CURRENCY_ID)
 
         local currentValue = currencyInfo.totalEarned
@@ -119,17 +119,17 @@ function PvP:GetConquestProgressInfo()
 end
 
 function PvP:IsPreseason()
-    return DATA.SeasonState == ArenaSeasonState.Preseason
+    return DATA.SeasonState == ARENA_SEASON_STATE.Preseason
 end
 
 function PvP:IterableBracketInfo()
     local i = 0
-    local n = #BracketNames
+    local n = #BRACKETS_NAMES
     return function()
         i = i + 1
         if i <= n then
-            local name = BracketNames[i]
-            local bracketIndex = BracketIndexes[i]
+            local name = BRACKETS_NAMES[i]
+            local bracketIndex = BRACKETS_INDEXES[i]
             local rating, _, _, _, _, weeklyPlayed, weeklyWon,_, _, pvpTier = GetPersonalRatedInfo(bracketIndex)
             local tierName, tierIconID, nextTierName = GetSeasonTierInfo(pvpTier)
             local info = INFO.Rated[i]

@@ -2,15 +2,15 @@ local _, addon = ...
 local Quests = addon:NewObject("Quests")
 
 local INFO = {
-    QUESTS = {},
-    STORY = {},
-    CAMPAIGN = {}
+    Quests = {},
+    Story = {},
+    Campaign = {}
 }
 
 local CACHE = {
-    QUESTS = {},
-    STORY = {},
-    CAMPAIGN = {}
+    Quests = {},
+    Story = {},
+    Campaign = {}
 }
 
 local EMPTY_CHAPTERS = {}
@@ -40,18 +40,18 @@ local function CacheQuestLogInfo()
         end
     end
 
-    CACHE.QUESTS.total = numQuests
-    CACHE.QUESTS.totalCompleted = completedQuests
-    CACHE.QUESTS.totalIncompleted = numQuests - completedQuests
+    CACHE.Quests.total = numQuests
+    CACHE.Quests.totalCompleted = completedQuests
+    CACHE.Quests.totalIncompleted = numQuests - completedQuests
 end
 
 local function CacheCampaignInfo()
-    CACHE.CAMPAIGN.ID = nil
-    CACHE.CAMPAIGN.title = nil
-    CACHE.CAMPAIGN.chapterIDs = nil
-    CACHE.CAMPAIGN.numChapters = 0
-    CACHE.CAMPAIGN.numCompleted = 0
-    CACHE.CAMPAIGN.isCompleted = false
+    CACHE.Campaign.ID = nil
+    CACHE.Campaign.title = nil
+    CACHE.Campaign.chapterIDs = nil
+    CACHE.Campaign.numChapters = 0
+    CACHE.Campaign.numCompleted = 0
+    CACHE.Campaign.isCompleted = false
 
     -- NOTE: When logging in for the first time, C_QuestLog.GetInfo does not return any data for campaignID. 
     -- To retrieve this data, you need to call C_QuestLog.UpdateCampaignHeaders. 
@@ -79,22 +79,22 @@ local function CacheCampaignInfo()
                 campaignID = nil
             end
             
-            CACHE.CAMPAIGN.ID = campaignID
-            CACHE.CAMPAIGN.title = questInfo.title
-            CACHE.CAMPAIGN.chapterIDs = chapterIDs
-            CACHE.CAMPAIGN.numChapters = #chapterIDs
-            CACHE.CAMPAIGN.numCompleted = completedChapters
-            CACHE.CAMPAIGN.isCompleted = state == Enum.CampaignState.Complete 
+            CACHE.Campaign.ID = campaignID
+            CACHE.Campaign.title = questInfo.title
+            CACHE.Campaign.chapterIDs = chapterIDs
+            CACHE.Campaign.numChapters = #chapterIDs
+            CACHE.Campaign.numCompleted = completedChapters
+            CACHE.Campaign.isCompleted = state == Enum.CampaignState.Complete 
         end
     end
 end
 
 local function CacheZoneStoryInfo()
-    CACHE.STORY.ID = nil
-    CACHE.STORY.title = nil
-    CACHE.STORY.numCriteria = 0
-    CACHE.STORY.numCompleted = 0
-    CACHE.STORY.isCompleted = false
+    CACHE.Story.ID = nil
+    CACHE.Story.title = nil
+    CACHE.Story.numCriteria = 0
+    CACHE.Story.numCompleted = 0
+    CACHE.Story.isCompleted = false
 
     local mapID = C_Map.GetBestMapForUnit("player")
 
@@ -113,11 +113,11 @@ local function CacheZoneStoryInfo()
                 end
             end
 
-            CACHE.STORY.ID = storyAchievementID
-            CACHE.STORY.title = mapInfo.name
-            CACHE.STORY.numCriteria = numCriteria
-            CACHE.STORY.numCompleted = numCompletedCriteria
-            CACHE.STORY.isCompleted = numCriteria == numCompletedCriteria
+            CACHE.Story.ID = storyAchievementID
+            CACHE.Story.title = mapInfo.name
+            CACHE.Story.numCriteria = numCriteria
+            CACHE.Story.numCompleted = numCompletedCriteria
+            CACHE.Story.isCompleted = numCriteria == numCompletedCriteria
         end
     end
 end
@@ -155,27 +155,27 @@ do
 end
 
 function Quests:GetQuestLogInfo()
-    INFO.QUESTS.total = CACHE.QUESTS.total
-    INFO.QUESTS.totalCompleted = CACHE.QUESTS.totalCompleted
-    INFO.QUESTS.totalIncompleted = CACHE.QUESTS.totalIncompleted
-    return INFO.QUESTS
+    INFO.Quests.total = CACHE.Quests.total
+    INFO.Quests.totalCompleted = CACHE.Quests.totalCompleted
+    INFO.Quests.totalIncompleted = CACHE.Quests.totalIncompleted
+    return INFO.Quests
 end
 
 function Quests:GetCampaignInfo()
-    INFO.CAMPAIGN.ID = CACHE.CAMPAIGN.ID
-    INFO.CAMPAIGN.title = CACHE.CAMPAIGN.title
-    INFO.CAMPAIGN.chapterIDs = CACHE.CAMPAIGN.chapterIDs
-    INFO.CAMPAIGN.numChapters = CACHE.CAMPAIGN.numChapters
-    INFO.CAMPAIGN.numCompleted = CACHE.CAMPAIGN.numCompleted
-    INFO.CAMPAIGN.isCompleted = CACHE.CAMPAIGN.isCompleted
-    return INFO.CAMPAIGN
+    INFO.Campaign.ID = CACHE.Campaign.ID
+    INFO.Campaign.title = CACHE.Campaign.title
+    INFO.Campaign.chapterIDs = CACHE.Campaign.chapterIDs
+    INFO.Campaign.numChapters = CACHE.Campaign.numChapters
+    INFO.Campaign.numCompleted = CACHE.Campaign.numCompleted
+    INFO.Campaign.isCompleted = CACHE.Campaign.isCompleted
+    return INFO.Campaign
 end
 
 function Quests:IterableCampaignChaptersInfo()
     local currentChapterID
     local i = 0
-    local campaignID = CACHE.CAMPAIGN.ID
-    local chapterIDs = CACHE.CAMPAIGN.chapterIDs
+    local campaignID = CACHE.Campaign.ID
+    local chapterIDs = CACHE.Campaign.chapterIDs
     local n = chapterIDs and #chapterIDs or 0
     return function()
         if not campaignID then
@@ -194,16 +194,16 @@ function Quests:IterableCampaignChaptersInfo()
 end
 
 function Quests:GetZoneStoryInfo()
-    INFO.STORY.ID = CACHE.STORY.ID
-    INFO.STORY.title = CACHE.STORY.title
-    INFO.STORY.numCriteria = CACHE.STORY.numCriteria
-    INFO.STORY.numCompleted = CACHE.STORY.numCompleted
-    INFO.STORY.isCompleted = CACHE.STORY.isCompleted
-    return INFO.STORY 
+    INFO.Story.ID = CACHE.Story.ID
+    INFO.Story.title = CACHE.Story.title
+    INFO.Story.numCriteria = CACHE.Story.numCriteria
+    INFO.Story.numCompleted = CACHE.Story.numCompleted
+    INFO.Story.isCompleted = CACHE.Story.isCompleted
+    return INFO.Story 
 end
 
 function Quests:IterableZoneStoryChaptersInfo()
-    local storyAchievementID = CACHE.STORY.ID
+    local storyAchievementID = CACHE.Story.ID
     local numCriteria = GetAchievementNumCriteria(storyAchievementID)
     local currentCriteria
     local i = 0
