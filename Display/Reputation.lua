@@ -11,13 +11,13 @@ Display:RegisterHookScript(CharacterMicroButton, "OnEnter", function()
     if Reputation:HasTrackedFactions() then
         Display:AddHeader(L["Reputation:"])
         local factionName, standingColor, prevHeaderName
-        for info, progressInfo in Reputation:IterableTrackedFactionsInfo() do
-            if prevHeaderName ~= info.headerName then
-                Display:AddLine(info.headerName)
-                prevHeaderName = info.headerName
+        for faction, progressInfo in Reputation:IterableTrackedFactionsInfo() do
+            if prevHeaderName ~= faction.headerName then
+                Display:AddLine(faction.headerName)
+                prevHeaderName = faction.headerName
             end
 
-            factionName = info.factionName
+            factionName = faction.name
             standingColor = FACTION_BAR_COLORS[progressInfo.standingID]
 
             if progressInfo.type == 1 then

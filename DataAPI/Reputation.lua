@@ -18,10 +18,10 @@ local MAJOR_FACTION_MAX_RENOWN_REACHED = MAJOR_FACTION_MAX_RENOWN_REACHED
 local MAJOR_FACTION_RENOWN_LEVEL_TOAST = MAJOR_FACTION_RENOWN_LEVEL_TOAST
 local MAX_REPUTATION_REACTION = MAX_REPUTATION_REACTION
 
-local function FillFactionProgressInfo(factionData)
-    local factionID = factionData.factionID
-    local standingID = factionData.reaction
-    local repMin, repMax, repValue = factionData.currentReactionThreshold, factionData.nextReactionThreshold, factionData.currentStanding
+local function FillFactionProgressInfo(faction)
+    local factionID = faction.factionID
+    local standingID = faction.reaction
+    local repMin, repMax, repValue = faction.currentReactionThreshold, faction.nextReactionThreshold, faction.currentStanding
 
     local gender = UnitSex("player")
     local standing = GetText("FACTION_STANDING_LABEL" .. standingID, gender)
@@ -112,57 +112,57 @@ local function CacheFactionData()
         Reputation:UnregisterEvent("UPDATE_FACTION")
 
         local i = 1
+        local faction = C_Reputation.GetFactionDataByIndex(i)
         local headerName
-        local factionData = C_Reputation.GetFactionDataByIndex(i)
 
-        while factionData do
-            if factionData then
-                if factionData.factionID == 0 then
-                    -- NOTE: The 'Inactive' header holds hidden factions that aren't displayed in the default UI so break out.
-                    break
-                end
-                
-                if factionData.isCollapsed then
-                    C_Reputation.ExpandFactionHeader(i)
-                    table.insert(DATA.CollapsedIndexes, i)
-                end
-
-                local data = CACHE[i]
-
-                if not data then
-                    CACHE[i] = {
-                        ProgressInfo = {}
-                    }
-                    data = CACHE[i]
-                end
-
-                -- Top level header
-                if factionData.isHeader and not factionData.isChild then
-                    headerName = factionData.name
-                end
-
-                data.headerName = headerName
-                data.factionName = factionData.name
-                data.factionID = factionData.factionID
-                data.isHeader = factionData.isHeader
-                data.isHeaderWithRep = factionData.isHeaderWithRep
-                data.isChild = factionData.isChild
-                data.isAccountWide = factionData.isAccountWide
-
-                FillFactionProgressInfo(factionData)
-
-                data.ProgressInfo.type = DATA.ProgressInfo.type
-                data.ProgressInfo.standing = DATA.ProgressInfo.standing
-                data.ProgressInfo.renownLevel = DATA.ProgressInfo.renownLevel
-                data.ProgressInfo.standingID = DATA.ProgressInfo.standingID
-                data.ProgressInfo.isCapped = DATA.ProgressInfo.isCapped
-                data.ProgressInfo.currentValue = DATA.ProgressInfo.currentValue
-                data.ProgressInfo.maxValue = DATA.ProgressInfo.maxValue
-                data.ProgressInfo.hasReward = DATA.ProgressInfo.hasReward
+        while faction do
+            if faction.factionID == 0 then
+                -- NOTE: The 'Inactive' header holds hidden factions that aren't displayed in the default UI so break out.
+                break
             end
+            
+            if faction.isCollapsed then
+                C_Reputation.ExpandFactionHeader(i)
+                table.insert(DATA.CollapsedIndexes, i)
+            end
+
+            local entry = CACHE[i]
+
+            if not entry then
+                CACHE[i] = {
+                    ProgressInfo = {}
+                }
+                entry = CACHE[i]
+            end
+
+            -- Top level header
+            if faction.isHeader and not faction.isChild then
+                headerName = faction.name
+            end
+
+            entry.ID = faction.factionID
+            entry.name = faction.name
+            entry.headerName = headerName
+            entry.isHeader = faction.isHeader
+            entry.isHeaderWithRep = faction.isHeaderWithRep
+            entry.isChild = faction.isChild
+            entry.isAccountWide = faction.isAccountWide
+
+            FillFactionProgressInfo(faction)
+
+            entry.ProgressInfo.type = DATA.ProgressInfo.type
+            entry.ProgressInfo.standing = DATA.ProgressInfo.standing
+            entry.ProgressInfo.renownLevel = DATA.ProgressInfo.renownLevel
+            entry.ProgressInfo.standingID = DATA.ProgressInfo.standingID
+            entry.ProgressInfo.isCapped = DATA.ProgressInfo.isCapped
+            entry.ProgressInfo.currentValue = DATA.ProgressInfo.currentValue
+            entry.ProgressInfo.maxValue = DATA.ProgressInfo.maxValue
+            entry.ProgressInfo.hasReward = DATA.ProgressInfo.hasReward
+
             CACHE.numFactions = i
+            
             i = i + 1
-            factionData = C_Reputation.GetFactionDataByIndex(i)
+            faction = C_Reputation.GetFactionDataByIndex(i)
         end
 
         for i = #DATA.CollapsedIndexes, 1, -1 do
@@ -175,21 +175,21 @@ local function CacheFactionData()
         Reputation:RegisterEvent("UPDATE_FACTION", CacheFactionData)
     end
     for i = 1, CACHE.numFactions do
-        local data = CACHE[i]
+        local entry = CACHE[i]
 
-        if data then
-            local factionData = C_Reputation.GetFactionDataByID(data.factionID)
+        if entry then
+            local faction = C_Reputation.GetFactionDataByID(entry.ID)
 
-            if factionData then
-                FillFactionProgressInfo(factionData)
+            if faction then
+                FillFactionProgressInfo(faction)
 
-                data.ProgressInfo.standing = DATA.ProgressInfo.standing
-                data.ProgressInfo.renownLevel = DATA.ProgressInfo.renownLevel
-                data.ProgressInfo.standingID = DATA.ProgressInfo.standingID
-                data.ProgressInfo.isCapped = DATA.ProgressInfo.isCapped
-                data.ProgressInfo.currentValue = DATA.ProgressInfo.currentValue
-                data.ProgressInfo.maxValue = DATA.ProgressInfo.maxValue
-                data.ProgressInfo.hasReward = DATA.ProgressInfo.hasReward
+                entry.ProgressInfo.standing = DATA.ProgressInfo.standing
+                entry.ProgressInfo.renownLevel = DATA.ProgressInfo.renownLevel
+                entry.ProgressInfo.standingID = DATA.ProgressInfo.standingID
+                entry.ProgressInfo.isCapped = DATA.ProgressInfo.isCapped
+                entry.ProgressInfo.currentValue = DATA.ProgressInfo.currentValue
+                entry.ProgressInfo.maxValue = DATA.ProgressInfo.maxValue
+                entry.ProgressInfo.hasReward = DATA.ProgressInfo.hasReward
             end
         end
     end
@@ -203,35 +203,35 @@ Reputation:RegisterEvent("PLAYER_LOGIN", function(self, eventName)
         "UPDATE_FACTION", CacheFactionData)
 end)
 
-function Reputation:GetFactionInfoByIndex(index)
-    local data = CACHE[index]
-    if data then
-        INFO.headerName = data.headerName
-        INFO.factionName = data.factionName
-        INFO.factionID = data.factionID
-        INFO.isHeader = data.isHeader
-        INFO.isHeaderWithRep = data.isHeaderWithRep
-        INFO.isChild = data.isChild
-        INFO.isAccountWide = data.isAccountWide
-        INFO.ProgressInfo.standing = data.ProgressInfo.standing
-        INFO.ProgressInfo.renownLevel = data.ProgressInfo.renownLevel
-        INFO.ProgressInfo.standingID = data.ProgressInfo.standingID
-        INFO.ProgressInfo.isCapped = data.ProgressInfo.isCapped
-        INFO.ProgressInfo.currentValue = data.ProgressInfo.currentValue
-        INFO.ProgressInfo.maxValue = data.ProgressInfo.maxValue
-        INFO.ProgressInfo.hasReward = data.ProgressInfo.hasReward
-        return INFO
-    end
-end
-
 function Reputation:GetNumFactions()
     return CACHE.numFactions
 end
 
+function Reputation:GetFactionInfoByIndex(index)
+    local entry = CACHE[index]
+    if entry then
+        INFO.ID = entry.ID
+        INFO.name = entry.name
+        INFO.headerName = entry.headerName
+        INFO.isHeader = entry.isHeader
+        INFO.isHeaderWithRep = entry.isHeaderWithRep
+        INFO.isChild = entry.isChild
+        INFO.isAccountWide = entry.isAccountWide
+        INFO.ProgressInfo.standing = entry.ProgressInfo.standing
+        INFO.ProgressInfo.renownLevel = entry.ProgressInfo.renownLevel
+        INFO.ProgressInfo.standingID = entry.ProgressInfo.standingID
+        INFO.ProgressInfo.isCapped = entry.ProgressInfo.isCapped
+        INFO.ProgressInfo.currentValue = entry.ProgressInfo.currentValue
+        INFO.ProgressInfo.maxValue = entry.ProgressInfo.maxValue
+        INFO.ProgressInfo.hasReward = entry.ProgressInfo.hasReward
+        return INFO
+    end
+end
+
 function Reputation:HasTrackedFactions()
     for i = 1, self:GetNumFactions() do
-        local info = self:GetFactionInfoByIndex(i)
-        if info and IsTrackedFaction(info.factionID) then
+        local faction = self:GetFactionInfoByIndex(i)
+        if faction and IsTrackedFaction(faction.ID) then
             return true
         end
     end
@@ -244,9 +244,9 @@ function Reputation:IterableTrackedFactionsInfo()
     return function()
         i = i + 1
         while i <= n do
-            local info = self:GetFactionInfoByIndex(i)
-            if info and IsTrackedFaction(info.factionID) then
-                return info, info.ProgressInfo
+            local faction = self:GetFactionInfoByIndex(i)
+            if faction and IsTrackedFaction(faction.ID) then
+                return faction, faction.ProgressInfo
             end
             i = i + 1
         end
