@@ -7,29 +7,24 @@ local L = addon.L
 local QUANTITY_LINE_FORMAT = "%s: %s"
 
 hooksecurefunc(GameTooltip, "SetCurrencyToken", function(_, index)
-    local currencyID = Currency:GetIDByIndex(index)
-    local totalQuantity = Currency:GetTotalQuantity(currencyID)
+    local totalQuantity = Currency:GetTotalQuantity(index)
     if totalQuantity > 0 then
         Display:AddFormattedHeader(L["All Characters (X):"], totalQuantity)
 
-        do
-            local charName, quantity = Currency:GetPlayerCurrencyInfo(currencyID)
-
-            charName = Display:ToPlayerClassColor(charName)
-
+        for charName, quantity, isCurrentChar in Currency:IterableCharactersCurrencyInfo(index) do
+            if isCurrentChar then
+                charName = Display:ToPlayerClassColor(charName)
+            end
             if quantity > 0 then
                 quantity = Display:ToWhite(quantity)
             else
                 quantity = Display:ToGray(quantity)
             end
-
-            Display:AddFormattedLine(QUANTITY_LINE_FORMAT, charName, quantity)
-        end
-
-        for charName, quantity in Currency:IterableCharactersCurrencyInfo(currencyID) do
             Display:AddFormattedLine(QUANTITY_LINE_FORMAT, charName, Display:ToWhite(quantity))
         end
 
-        Display:Show()
+        Display
+            :AddEmptyLine()
+            :Show()
     end
 end)

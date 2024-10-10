@@ -3,14 +3,20 @@ local Currency = addon:NewObject("Currency")
 
 local CharacterInfo = LibStub("CharacterInfo-1.0")
 
+local INFO = {}
+
 local DATA = {
     expansions = {},
-    expansionCategory = "",
-    currentExpansionLevel = 0
+    expansionHeader = "",
+    currentExpansionLevel = 0,
+    CollapsedIndexes = {}
 }
 
 local CACHE = {
-    CurrencyList = {}
+    CurrencyList = {
+        size = 0
+    },
+    CurrencyTracker = {}
 }
 
 local ACCOUNT_WIDE_CURRENCY = {
@@ -20,72 +26,169 @@ local ACCOUNT_WIDE_CURRENCY = {
 local _G = _G
 local PLAYER_V_PLAYER = PLAYER_V_PLAYER
 
-local function IterableCurrencyInfo()
+local function GetCurrencyListSize()
+    return CACHE.CurrencyList.size
+end
+
+local function GetCurrencyListEntryInfo(index)
+    local entry = CACHE.CurrencyList[index]
+    if entry then
+        INFO.ID = entry.ID
+        INFO.name = entry.name
+        INFO.headerName = entry.headerName
+        INFO.isHeader = entry.isHeader
+        INFO.isTradeable = entry.isTradeable
+        INFO.quantity = entry.quantity
+        INFO.maxQuantity = entry.maxQuantity
+        INFO.iconFileID = entry.iconFileID
+        return INFO
+    end
+end
+
+local function IterableCurrencyListEntryInfo()
     local i = 0
-    local n = C_CurrencyInfo.GetCurrencyListSize()
+    local n = GetCurrencyListSize()
     return function()
         i = i + 1
         while i <= n do
-            local info = C_CurrencyInfo.GetCurrencyListInfo(i)
-            if not info.isHeader and not info.isTradeable then
-                local link = C_CurrencyInfo.GetCurrencyListLink(i)
-                local currencyID = C_CurrencyInfo.GetCurrencyIDFromLink(link)
-                local quantity = info.quantity
-                if not ACCOUNT_WIDE_CURRENCY[currencyID] and quantity > 0 then
-                    return currencyID, quantity
-                end
+            local entry = GetCurrencyListEntryInfo(i)
+            if entry and not ACCOUNT_WIDE_CURRENCY[entry.ID] then
+                return entry
             end
             i = i + 1
         end
     end
+end
+
+local function IterableHeaderInfo(headerName)
+    local i = 0
+    local n = GetCurrencyListSize()
+    return function()
+        i = i + 1
+        while i <= n do
+            local entry = GetCurrencyListEntryInfo(i)
+            if entry and headerName:find(entry.headerName)  then
+                return entry
+            end
+            i = i + 1
+        end
+    end
+end
+
+local function FindHeaderByName(headerName)
+    for entry in IterableCurrencyListEntryInfo() do
+        if entry.quantity > 0 and headerName:find(entry.headerName) then
+            return true
+        end
+    end
+    return false
 end
 
 local function GetPlayerCurrencyQuantity(currencyID)
     if not currencyID or ACCOUNT_WIDE_CURRENCY[currencyID] then
         return 0
     end
-    for id, quantity in IterableCurrencyInfo() do
-        if id == currencyID then
-            return quantity
+    for entry in IterableCurrencyListEntryInfo() do
+        if entry.ID and entry.ID == currencyID then
+            return entry.quantity
         end
     end
     return 0
 end
 
-local function IterableCurrencyInfoByCategory(categoryName)
-    local isHeaderCategoryFound = false
-    local i = 0
-    local n = C_CurrencyInfo.GetCurrencyListSize()
-    return function()
-        i = i + 1
-        while i <= n do
-            local info = C_CurrencyInfo.GetCurrencyListInfo(i)
-            if not info.isHeader and isHeaderCategoryFound then
-                return info.name, info.isHeader, info.iconFileID, info.quantity, info.maxQuantity
-            elseif info.name == categoryName then
-                local nextInfo = C_CurrencyInfo.GetCurrencyListInfo(i + 1)
-                -- Check whether the header has children
-                if nextInfo and nextInfo.name and not nextInfo.isHeader then
-                    isHeaderCategoryFound = true
-                    return info.name, info.isHeader
-                end
-            elseif not isHeaderCategoryFound then
-                -- We didn't find a matching header for the category so try the next index
-            else
-                -- If we got this far it means currency was found and we can bail out
-                return
+local function CacheCurrencyInfo()
+    local i = 1
+    local currency = C_CurrencyInfo.GetCurrencyListInfo(i)
+    local headerName, currencyID
+
+    while currency do
+        currencyID = nil
+
+        if not currency.isHeaderExpanded then
+            C_CurrencyInfo.ExpandCurrencyList(i, true)
+            table.insert(DATA.CollapsedIndexes, i)
+        end
+
+        local entry = CACHE.CurrencyList[i]
+
+        if not entry then
+            CACHE.CurrencyList[i] = {}
+            entry = CACHE.CurrencyList[i]
+        end
+
+        if not currency.isHeader then
+            local link = C_CurrencyInfo.GetCurrencyListLink(i)
+            if link then
+                currencyID = C_CurrencyInfo.GetCurrencyIDFromLink(link)
             end
-            i = i + 1
+        else
+            headerName = currency.name
+        end
+
+        entry.ID = currencyID
+        entry.name = currency.name
+        entry.headerName = headerName
+        entry.isHeader = currency.isHeader
+        entry.isTradeable = currency.isTradeable
+        entry.quantity = currency.quantity
+        entry.maxQuantity = currency.maxQuantity
+        entry.iconFileID = currency.iconFileID
+        
+        CACHE.CurrencyList.size = i
+
+        i = i + 1
+        currency = C_CurrencyInfo.GetCurrencyListInfo(i)
+    end
+
+    for i = #DATA.CollapsedIndexes, 1, -1 do
+        local collapsedIndex = DATA.CollapsedIndexes[i]
+        C_CurrencyInfo.ExpandCurrencyList(collapsedIndex, false)
+        DATA.CollapsedIndexes[i] = nil
+    end
+end
+
+local function CacheCharactersCurrencyQuantity()
+    local currentCharName = CharacterInfo:GetFullName()
+    local charName, currency
+    local charDisplayName
+    for entry in IterableCurrencyListEntryInfo() do 
+        if entry.ID then
+            charName, currency = Currency.storage:GetCharacterCurrencyInfo(charName)
+            while charName do
+                if charName ~= currentCharName then
+                    local onCurrentRealm = CharacterInfo:IsCharacterOnCurrentRealm(charName)
+                    local onConnectedRealm = CharacterInfo:IsCharacterOnConnectedRealm(charName)
+                    if onCurrentRealm or onConnectedRealm then
+                        for id, quantity in pairs(currency) do
+                            if id == entry.ID then
+                                charDisplayName = charName
+                                if onConnectedRealm then
+                                    charDisplayName = CharacterInfo:ShortConnectedRealm(charDisplayName)
+                                else
+                                    charDisplayName = CharacterInfo:RemoveRealm(charDisplayName)
+                                end
+                                local charEntry = CACHE.CurrencyTracker[id]
+                                if not charEntry then
+                                    CACHE.CurrencyTracker[id] = {}
+                                    charEntry = CACHE.CurrencyTracker[id]
+                                end
+                                charEntry[charDisplayName] = quantity
+                            end
+                        end
+                    end
+                end
+                charName, currency = Currency.storage:GetCharacterCurrencyInfo(charName)
+            end
         end
     end
 end
 
-local function GetExpansionCategory()
+local function SetLatestExpansionHeader()
+    local headerName
     local expansionLevel = DATA.currentExpansionLevel + 1
-    local categoryName
     while expansionLevel > 0 do
-        categoryName = IterableCurrencyInfoByCategory(DATA.expansions[expansionLevel])()
-        if not categoryName then
+        headerName = DATA.expansions[expansionLevel]
+        if not FindHeaderByName(headerName) then
             -- If we didn't find a header for the latest expansion available
             -- then try the expansion before that
             expansionLevel = expansionLevel - 1
@@ -93,62 +196,7 @@ local function GetExpansionCategory()
             break
         end
     end
-    return categoryName
-end
-
-local function CacheCurrencyInfoByCategory(categoryName)
-    local index = 1
-    CACHE[categoryName] = CACHE[categoryName] or {}
-    for name, isHeader, icon, quantity, maxQuantity in IterableCurrencyInfoByCategory(categoryName) do
-        local category = CACHE[categoryName]
-        if not category[name] then
-            category[name] = {index, isHeader, icon, quantity, maxQuantity}
-        else
-            category[name][1] = index
-            category[name][4] = quantity
-            category[name][5] = maxQuantity
-        end
-        index = index + 1
-    end
-end
-
-local function CacheCategoriesCurrencyInfo()
-    local expansionCategory = GetExpansionCategory()
-    if not expansionCategory then
-        return
-    end
-    CacheCurrencyInfoByCategory(expansionCategory)
-    CacheCurrencyInfoByCategory(PLAYER_V_PLAYER)
-    DATA.expansionCategory = expansionCategory
-end
-
-local function CacheCharactersCurrencyInfo()
-    local charName, data
-    local charDisplayName
-    for currencyID in IterableCurrencyInfo() do
-        charName, data = Currency.storage:GetCharacterCurrencyInfo(charName)
-        while charName do
-            local onCurrentRealm = CharacterInfo:IsCharacterOnCurrentRealm(charName)
-            local onConnectedRealm = CharacterInfo:IsCharacterOnConnectedRealm(charName)
-            if onCurrentRealm or onConnectedRealm then
-                for id, quantity in pairs(data) do
-                    if id == currencyID then
-                        charDisplayName = charName
-                        if onConnectedRealm then
-                            charDisplayName = CharacterInfo:ShortConnectedRealm(charDisplayName)
-                        else
-                            charDisplayName = CharacterInfo:RemoveRealm(charDisplayName)
-                        end
-                        if not CACHE.CurrencyList[currencyID] then
-                            CACHE.CurrencyList[currencyID] = {}
-                        end
-                        CACHE.CurrencyList[currencyID][charDisplayName] = quantity
-                    end
-                end
-            end
-            charName, data = Currency.storage:GetCharacterCurrencyInfo(charName)
-        end
-    end
+    DATA.expansionHeader = headerName
 end
 
 function Currency:OnInitializing()
@@ -158,80 +206,67 @@ function Currency:OnInitializing()
     end
 end
 
-Currency:RegisterEvents(
-    "PLAYER_LOGIN",
-    "PLAYER_LOGOUT",
-    "CURRENCY_DISPLAY_UPDATE", 
-    function(_, eventName)
-        if eventName == "PLAYER_LOGIN" then
-            Currency.storage:ClearCurrencyData()
-            CacheCategoriesCurrencyInfo()
-            CacheCharactersCurrencyInfo()
-        elseif eventName == "PLAYER_LOGOUT" then
-            Currency.storage:StoreCurrencyData(IterableCurrencyInfo)
-        elseif eventName == "CURRENCY_DISPLAY_UPDATE" then
-            CacheCategoriesCurrencyInfo()
-            CacheCharactersCurrencyInfo()
+Currency:RegisterEvent("PLAYER_LOGIN", function(self, eventName)
+    CacheCurrencyInfo()
+    CacheCharactersCurrencyQuantity()
+    SetLatestExpansionHeader()
+
+    self:RegisterEvents(
+        "PLAYER_LOGOUT",
+        "CURRENCY_DISPLAY_UPDATE", 
+        function(self, eventName)
+            if eventName == "PLAYER_LOGOUT" then
+                self.storage:StoreCurrencyData(IterableCurrencyListEntryInfo)
+            elseif eventName == "CURRENCY_DISPLAY_UPDATE" then
+                CacheCurrencyInfo()
+                CacheCharactersCurrencyQuantity()
+                SetLatestExpansionHeader()
+            end
+        end)
+
+    self.storage:RegisterEvent("WOWINFO_CURRENCY_RESET", function()
+        for id in pairs(CACHE.CurrencyTracker) do
+            CACHE.CurrencyTracker[id] = nil
         end
     end)
+end)
 
-do
-    local function IterableCurrencyInfoByCategory(categoryName)
-        local category = CACHE[categoryName]
-        local index = 1
-        return function()
-            for name, currencyData in next, category do
-                if currencyData[1] == index then
-                    index = index + 1
-                    return name, currencyData[2], currencyData[3], currencyData[4], currencyData[5]
-                end
-            end
-        end
-    end
+Currency.GetCurrencyListSize = GetCurrencyListSize
+Currency.GetCurrencyListEntryInfo = GetCurrencyListEntryInfo
+Currency.IterableCurrencyListEntryInfo = IterableCurrencyListEntryInfo
 
-    function Currency:IterableLatestExpansionInfo()
-        return IterableCurrencyInfoByCategory(DATA.expansionCategory)
-    end
-    
-    function Currency:IterablePvPInfo()
-        return IterableCurrencyInfoByCategory(PLAYER_V_PLAYER)
-    end
+function Currency:IterableLatestExpansionInfo()
+    return IterableHeaderInfo(DATA.expansionHeader)
 end
 
-function Currency:GetPlayerCurrencyInfo(currencyID)
-    return CharacterInfo:GetName(), GetPlayerCurrencyQuantity(currencyID)
+function Currency:IterablePvPInfo()
+    return IterableHeaderInfo(PLAYER_V_PLAYER)
 end
 
-function Currency:IterableCharactersCurrencyInfo(currencyID)
-    local data = CACHE.CurrencyList[currencyID]
-    local key, value
+function Currency:IterableCharactersCurrencyInfo(index)
+    local link = C_CurrencyInfo.GetCurrencyListLink(index)
+    local currencyID = link and C_CurrencyInfo.GetCurrencyIDFromLink(link)
+    local entry = CACHE.CurrencyTracker[currencyID]
+    local charName, quantity, visitedCurrentChar
     return function()
-        if data then
-            key, value = next(data, key)
-            if key then
-                return key, value
+        if currencyID and not visitedCurrentChar then
+            visitedCurrentChar = true
+            return CharacterInfo:GetName(), GetPlayerCurrencyQuantity(currencyID), true
+        end
+        if entry then
+            charName, quantity = next(entry, charName)
+            if charName then
+                return charName, quantity, false
             end
         end
         return nil, 0
     end
 end
 
-function Currency:GetIDByIndex(index)
-    local link = C_CurrencyInfo.GetCurrencyListLink(index)
-    return link and C_CurrencyInfo.GetCurrencyIDFromLink(link)
-end
-
-function Currency:GetTotalQuantity(currencyID)
-    local totalQuantity = GetPlayerCurrencyQuantity(currencyID)
-    for _, quantity in self:IterableCharactersCurrencyInfo(currencyID) do
+function Currency:GetTotalQuantity(index)
+    local totalQuantity = 0
+    for _, quantity in self:IterableCharactersCurrencyInfo(index) do
         totalQuantity = totalQuantity + quantity
     end
     return totalQuantity
-end
-
-function Currency:Reset()
-    self.storage:Reset()
-    for currencyID in IterableCurrencyInfo() do
-        CACHE.CurrencyList[currencyID] = nil
-    end
 end

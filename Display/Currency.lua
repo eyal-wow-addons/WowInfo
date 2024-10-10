@@ -9,26 +9,26 @@ local MAX_QUANTITY_LINE_FORMAT = "%s |cffffffff/ %s|r"
 
 local function AddCurrencyInfo(iterator)
     local refreshTooltip
-    for name, isHeader, icon, quantity, maxQuantity in iterator() do
+    for currency in iterator() do
         refreshTooltip = true
-        if isHeader then
-            Display:AddFormattedHeader(L["S Currency:"], name)
+        if currency.isHeader then
+            Display:AddFormattedHeader(L["S Currency:"], currency.name)
         else
-            local currentQuantity = BreakUpLargeNumbers(quantity)
+            local currentQuantity = BreakUpLargeNumbers(currency.quantity)
 
             Display
-                :SetFormattedLine(ITEM_LINE_FORMAT, icon, name)
+                :SetFormattedLine(ITEM_LINE_FORMAT, currency.iconFileID, currency.name)
                 :SetLine(currentQuantity)
                 :SetHighlight()
 
-            if quantity > 0 then
+            if currency.quantity > 0 then
                 local percent
 
-                if maxQuantity > 0 then
-                    percent = Round(quantity / maxQuantity * 100)
+                if currency.maxQuantity > 0 then
+                    percent = Round(currency.quantity / currency.maxQuantity * 100)
 
                     if IsShiftKeyDown() then
-                        Display:SetFormattedLine(MAX_QUANTITY_LINE_FORMAT, currentQuantity, BreakUpLargeNumbers(maxQuantity))
+                        Display:SetFormattedLine(MAX_QUANTITY_LINE_FORMAT, currentQuantity, BreakUpLargeNumbers(currency.maxQuantity))
                     end
 
                     if percent == 100 then

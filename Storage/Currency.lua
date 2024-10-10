@@ -25,22 +25,16 @@ function Storage:OnInitialized()
     DB.__character_data = DB.__data[charName]
 
     if not DB.__character_data then
-        DB.__character_data = {}
-        DB.__data[charName] = DB.__character_data
+        DB.__data[charName] = {}
+        DB.__character_data = DB.__data[charName]
     end
 end
 
-function Storage:ClearCurrencyData()
-    local currencyID = next(DB.__character_data)
-    while currencyID do
-        DB.__character_data[currencyID] = nil
-        currencyID = next(DB.__character_data, currencyID)
-    end
-end
-
-function Storage:StoreCurrencyData(iterableCurrencyInfo)
-    for currencyID, quantity in iterableCurrencyInfo() do
-        DB.__character_data[currencyID] = quantity
+function Storage:StoreCurrencyData(iterator)
+    for entry in iterator() do
+        if entry.ID and entry.quantity > 0 and not entry.isTradeable then
+            DB.__character_data[entry.ID] = entry.quantity
+        end
     end
 end
 
@@ -50,15 +44,11 @@ function Storage:GetCharacterCurrencyInfo(charName)
 end
 
 function Storage:Reset()
-    for key, value in pairs(addon.DB.global.Currency) do
-        if type(value) ~= "table" then
-            addon.DB.global.Currency[key] = nil
-        end
-    end
-
     for charName in pairs(DB.__data) do
         DB.__data[charName] = nil
     end
+    local charName = CharacterInfo:GetFullName()
+    DB.__data[charName] = {}
+    DB.__character_data = DB.__data[charName]
+    self:TriggerEvent("WOWINFO_CURRENCY_RESET")
 end
-
-
