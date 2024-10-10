@@ -25,20 +25,20 @@ Display:RegisterHookScript(LFDMicroButton, "OnEnter", function(self)
         :ToLine()
 
     if IsPlayerAtEffectiveMaxLevel() then
-        local conquestInfo = PvP:GetConquestProgressInfo()
+        local conquest = PvP:GetConquestProgressInfo()
 
-        if conquestInfo then
+        if conquest then
             Display:SetLine(L["Conquest"])
-            if not conquestInfo.isCapped then
-                Display:SetFormattedLine(STANDING_FORMAT, conquestInfo.currentValue, conquestInfo.maxValue)
-                if conquestInfo.displayType == Enum.ConquestProgressBarDisplayType.Seasonal then
+            if not conquest.isCapped then
+                Display:SetFormattedLine(STANDING_FORMAT, conquest.currentValue, conquest.maxValue)
+                if conquest.displayType == Enum.ConquestProgressBarDisplayType.Seasonal then
                     Display:SetYellowColor()
                 else
                     Display:SetBlueColor()
                 end
             else
                 Display
-                    :SetFormattedLine(conquestInfo.currentValue)
+                    :SetFormattedLine(conquest.currentValue)
                     :SetGrayColor()
             end
             Display:ToLine()
@@ -47,27 +47,27 @@ Display:RegisterHookScript(LFDMicroButton, "OnEnter", function(self)
                 :SetDoubleLine(L["Rated PvP"], L["Weekly Stats"])
                 :ToHeader()
 
-            for info in PvP:IterableBracketInfo() do
-                if info.rating > 0 then
+            for bracket in PvP:IterableBracketInfo() do
+                if bracket.rating > 0 then
                     Display
-                        :SetFormattedLine(RATED_PVP_LABEL_FORMAT, info.name, info.rating)
-                        :SetFormattedLine(RATED_PVP_WEEKLY_STATUS_FORMAT, info.weeklyPlayed, info.weeklyWon, info.weeklyLost)
+                        :SetFormattedLine(RATED_PVP_LABEL_FORMAT, bracket.name, bracket.rating)
+                        :SetFormattedLine(RATED_PVP_WEEKLY_STATUS_FORMAT, bracket.weeklyPlayed, bracket.weeklyWon, bracket.weeklyLost)
                         :SetHighlight()
                 else
                     Display
-                        :SetLine(info.name)
+                        :SetLine(bracket.name)
                         :SetGrayColor()
                         :SetLine(0)
                         :SetGrayColor()
                 end
                 Display:ToLine()
 
-                if info.tierName and IsShiftKeyDown() then
+                if bracket.tierName and IsShiftKeyDown() then
                     Display
-                        :SetFormattedLine(RATED_PVP_NEXT_RANK, info.tierName, info.nextTierName)
+                        :SetFormattedLine(RATED_PVP_NEXT_RANK, bracket.tierName, bracket.nextTierName)
                         :ToLine()
 
-                    Display:AddIcon(info.tierIcon)
+                    Display:AddIcon(bracket.tierIcon)
                 end
             end
 

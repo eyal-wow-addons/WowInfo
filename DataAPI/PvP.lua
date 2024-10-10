@@ -100,10 +100,10 @@ function PvP:GetConquestProgressInfo()
     INFO.Rated.Conquest.displayType = nil
 
     if DATA.SeasonState == ARENA_SEASON_STATE.Active or DATA.SeasonState == ARENA_SEASON_STATE.OffSeason then
-        local currencyInfo = C_CurrencyInfo.GetCurrencyInfo(Constants.CurrencyConsts.CONQUEST_CURRENCY_ID)
+        local currency = C_CurrencyInfo.GetCurrencyInfo(Constants.CurrencyConsts.CONQUEST_CURRENCY_ID)
 
-        local currentValue = currencyInfo.totalEarned
-        local maxValue = currencyInfo.maxQuantity
+        local currentValue = currency.totalEarned
+        local maxValue = currency.maxQuantity
         local isCapped = currentValue >= maxValue
 
         local weeklyProgress = C_WeeklyRewards.GetConquestWeeklyProgress()
