@@ -38,7 +38,7 @@ Display:RegisterHookScript(LFDMicroButton, "OnEnter", function(self)
                 end
             else
                 Display
-                    :SetFormattedLine(conquest.currentValue)
+                    :SetLine(conquest.currentValue)
                     :SetGrayColor()
             end
             Display:ToLine()
