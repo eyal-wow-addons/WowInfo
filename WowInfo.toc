@@ -54,25 +54,26 @@ DataAPI\WeeklyRewards.lua
 
 Locales\enUS.lua
 
-Display\Extensions\Friends.lua
+UI\Extensions\Friends.lua
 
-Display\Achievements.lua
-Display\Collections.lua
-Display\Currency.lua
-Display\CurrencyTracker.lua
-Display\DailyReset.lua
-Display\Durability.lua
-Display\Experience.lua
-Display\Friends.lua
-Display\GreatVaultProgress.lua
-Display\GuildFriends.lua
-Display\Money.lua
-Display\MonthlyActivities.lua
-Display\Professions.lua
-Display\PvE.lua
-Display\PvP.lua
-Display\Quests.lua
-Display\Realms.lua
-Display\Reputation.lua
-Display\Speedometer.lua
-Display\Talents.lua
+UI\Display\Achievements.lua
+UI\Display\Collections.lua
+UI\Display\Currency.lua
+UI\Display\CurrencyTracker.lua
+UI\Display\DailyReset.lua
+UI\Display\Durability.lua
+UI\Display\Experience.lua
+UI\Display\Friends.lua
+UI\Display\GreatVaultProgress.lua
+UI\Display\GuildFriends.lua
+UI\Display\Money.lua
+UI\Display\MonthlyActivities.lua
+UI\Display\Professions.lua
+UI\Display\PvE.lua
+UI\Display\PvP.lua
+UI\Display\Quests.lua
+UI\Display\Realms.lua
+UI\Display\Reputation.lua
+UI\Display\Talents.lua
+
+UI\Speedometer.lua
