@@ -1,19 +1,19 @@
 local _, addon = ...
 local Reputation = addon:GetObject("Reputation")
-local Display = addon:NewDisplay("Reputation")
+local Tooltip = addon:NewTooltip("Reputation")
 
 local L = addon.L
 
 local PROGRESS_FORMAT = "%s / %s"
 local ICON_AVAILABLE_REWARD = " |TInterface\\RaidFrame\\ReadyCheck-Ready:0|t"
 
-Display:RegisterHookScript(CharacterMicroButton, "OnEnter", function()
+Tooltip:RegisterHookScript(CharacterMicroButton, "OnEnter", function()
     if Reputation:HasTrackedFactions() then
-        Display:AddHeader(L["Reputation:"])
+        Tooltip:AddHeader(L["Reputation:"])
         local factionName, standingColor, prevHeaderName
         for faction, progressInfo in Reputation:IterableTrackedFactionsInfo() do
             if prevHeaderName ~= faction.headerName then
-                Display:AddLine(faction.headerName)
+                Tooltip:AddLine(faction.headerName)
                 prevHeaderName = faction.headerName
             end
 
@@ -34,21 +34,21 @@ Display:RegisterHookScript(CharacterMicroButton, "OnEnter", function()
                 factionName = factionName .. ICON_AVAILABLE_REWARD
             end
 
-            Display
+            Tooltip
                 :SetLine(factionName)
                 :Indent(4)
                 :SetColor(standingColor)
     
             if progressInfo.isCapped or IsShiftKeyDown() then
-                Display:SetLine(progressInfo.standing)
+                Tooltip:SetLine(progressInfo.standing)
             else
-                Display:SetFormattedLine(PROGRESS_FORMAT, progressInfo.currentValue, progressInfo.maxValue)
+                Tooltip:SetFormattedLine(PROGRESS_FORMAT, progressInfo.currentValue, progressInfo.maxValue)
             end
 
-            Display
+            Tooltip
                 :SetHighlight()
                 :ToLine()
         end
-        Display:Show()
+        Tooltip:Show()
     end
 end)

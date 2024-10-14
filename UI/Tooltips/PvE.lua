@@ -1,36 +1,36 @@
 local _, addon = ...
 local PvE = addon:GetObject("PvE")
-local Display = addon:NewDisplay("PvE")
+local Tooltip = addon:NewTooltip("PvE")
 
 local L = addon.L
 
 local INSTANCE_NAME_FORMAT = "%s (%s)"
 local INSTANCE_PROGRESS_FORMAT = "%d / %d"
 
-Display:RegisterHookScript(LFDMicroButton, "OnEnter", function(self)
+Tooltip:RegisterHookScript(LFDMicroButton, "OnEnter", function(self)
     if not self:IsEnabled() then
         return
     end
 
-    Display:AddHeader(L["Dungeons & Raids:"])
+    Tooltip:AddHeader(L["Dungeons & Raids:"])
 
     local isSaved
 
     for info in PvE:IterableInstanceInfo() do
-        Display:SetFormattedLine(INSTANCE_NAME_FORMAT, info.name, info.difficulty)
+        Tooltip:SetFormattedLine(INSTANCE_NAME_FORMAT, info.name, info.difficulty)
         if info.isCleared then
-            Display
+            Tooltip
                 :SetLine(L["Cleared"])
                 :SetRedColor()
         else
-            Display:SetFormattedLine(INSTANCE_PROGRESS_FORMAT, Display:ToRed(info.defeatedBosses), Display:ToGreen(info.maxBosses))
+            Tooltip:SetFormattedLine(INSTANCE_PROGRESS_FORMAT, Tooltip:ToRed(info.defeatedBosses), Tooltip:ToGreen(info.maxBosses))
         end
-        Display:ToLine()
+        Tooltip:ToLine()
         isSaved = true
     end
 
     for info in PvE:IterableSavedWorldBossInfo() do
-        Display
+        Tooltip
             :SetDoubleLine(info.name, L["Defeated"])
             :SetRedColor()
             :ToLine()
@@ -38,8 +38,8 @@ Display:RegisterHookScript(LFDMicroButton, "OnEnter", function(self)
     end
 
     if not isSaved then
-        Display:AddLine(L["You are not saved to any instances."])
+        Tooltip:AddLine(L["You are not saved to any instances."])
     end
 
-    Display:Show()
+    Tooltip:Show()
 end)

@@ -2,11 +2,11 @@ if not MainMenuBarBackpackButton:IsVisible() then return end
 
 local _, addon = ...
 local Money = addon:GetObject("Money")
-local Display = addon:NewDisplay("Money")
+local Tooltip = addon:NewTooltip("Money")
 
 local L = addon.L
 
-function Display:AddPlayerMoneyLine()
+function Tooltip:AddPlayerMoneyLine()
     local charName, moneyString = Money:GetPlayerMoneyInfo()
 
     return
@@ -17,7 +17,7 @@ function Display:AddPlayerMoneyLine()
             :ToLine()
 end
 
-function Display:AddMoneyLine(text, moneyString)
+function Tooltip:AddMoneyLine(text, moneyString)
     return
         self:SetLine(text)
             :SetLine(moneyString)
@@ -25,19 +25,19 @@ function Display:AddMoneyLine(text, moneyString)
             :ToLine()
 end
 
-Display:RegisterHookScript(MainMenuBarBackpackButton, "OnEnter", function()
-    Display:AddHeader(L["Money:"])
+Tooltip:RegisterHookScript(MainMenuBarBackpackButton, "OnEnter", function()
+    Tooltip:AddHeader(L["Money:"])
 
-    Display:AddPlayerMoneyLine()
+    Tooltip:AddPlayerMoneyLine()
 
     for charName, moneyString in Money:IterableCharactersMoneyInfo() do
-        Display:AddMoneyLine(charName, moneyString)
+        Tooltip:AddMoneyLine(charName, moneyString)
     end
 
-    Display
+    Tooltip
         :AddEmptyLine()
         :AddMoneyLine(L["Total"], Money:GetTotalMoneyString())
         :AddEmptyLine()
 
-    Display:Show()
+    Tooltip:Show()
 end)

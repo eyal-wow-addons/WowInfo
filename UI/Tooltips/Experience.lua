@@ -1,6 +1,6 @@
 local _, addon = ...
 local Experience = addon:GetObject("Experience")
-local Display = addon:NewDisplay("Experience")
+local Tooltip = addon:NewTooltip("Experience")
 
 local L = addon.L
 
@@ -15,37 +15,37 @@ local function GetFormattedProgress(tnl, tnlPct)
     return AbbreviateNumbers(tnl), FormatPercentage(tnlPct, true)
 end
 
-Display:RegisterHookScript(MainStatusTrackingBarContainer.bars[4], "OnEnter", function()
-    Display:Clear()
+Tooltip:RegisterHookScript(MainStatusTrackingBarContainer.bars[4], "OnEnter", function()
+    Tooltip:Clear()
 
     local xp, xpMax, xpPct = Experience:GetInfo()
     local tnl, tnlPct = Experience:GetNextLevelInfo(xp, xpMax)
     local exhaustionThreshold, restedPct = Experience:GetRestedInfo(xpMax)
 
-    Display
+    Tooltip
         :SetLine(L["Experience:"])
         :SetHighlight()
         :ToLine()
 
-    Display
+    Tooltip
         :SetLine(L["Current"])
         :SetFormattedLine(CURRENT_PROGRESS_LINE_FORMAT, GetFormattedXpProgress(xp, xpMax, xpPct))
         :SetHighlight()
         :ToLine()
 
-    Display
+    Tooltip
         :SetFormattedLine(L["To Next Level (X)"], UnitLevel("player") + 1)
         :SetFormattedLine(PROGRESS_FORMAT, GetFormattedProgress(tnl, tnlPct))
         :SetHighlight()
         :ToLine()
 
     if exhaustionThreshold then
-        Display
+        Tooltip
             :SetLine(L["Rested"])
             :SetFormattedLine(PROGRESS_FORMAT, GetFormattedProgress(exhaustionThreshold, restedPct))
             :SetHighlight()
             :ToLine()
     end
 
-    Display:Show()
+    Tooltip:Show()
 end)

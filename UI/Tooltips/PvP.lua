@@ -1,6 +1,6 @@
 local _, addon = ...
 local PvP = addon:GetObject("PvP")
-local Display = addon:NewDisplay("PvP")
+local Tooltip = addon:NewTooltip("PvP")
 
 local L = addon.L
 
@@ -9,16 +9,16 @@ local RATED_PVP_LABEL_FORMAT = "%s: |cff00ff00%d|r"
 local RATED_PVP_WEEKLY_STATUS_FORMAT = "%d (|cff00ff00%d|r + |cffff0000%d|r)"
 local RATED_PVP_NEXT_RANK = "%s > %s"
 
-Display:RegisterHookScript(LFDMicroButton, "OnEnter", function(self)
+Tooltip:RegisterHookScript(LFDMicroButton, "OnEnter", function(self)
     if not self:IsEnabled() then
         return
     end
 
-    Display:AddHeader(L["PvP Progress:"])
+    Tooltip:AddHeader(L["PvP Progress:"])
 
     local honorInfo = PvP:GetHonorProgressInfo()
 
-    Display
+    Tooltip
         :SetFormattedLine(L["Honor Level X"], honorInfo.level)
         :SetFormattedLine(STANDING_FORMAT, honorInfo.currentValue, honorInfo.maxValue)
         :SetHighlight()
@@ -28,63 +28,63 @@ Display:RegisterHookScript(LFDMicroButton, "OnEnter", function(self)
         local conquest = PvP:GetConquestProgressInfo()
 
         if conquest then
-            Display:SetLine(L["Conquest"])
+            Tooltip:SetLine(L["Conquest"])
             if not conquest.isCapped then
-                Display:SetFormattedLine(STANDING_FORMAT, conquest.currentValue, conquest.maxValue)
+                Tooltip:SetFormattedLine(STANDING_FORMAT, conquest.currentValue, conquest.maxValue)
                 if conquest.displayType == Enum.ConquestProgressBarDisplayType.Seasonal then
-                    Display:SetYellowColor()
+                    Tooltip:SetYellowColor()
                 else
-                    Display:SetBlueColor()
+                    Tooltip:SetBlueColor()
                 end
             else
-                Display
+                Tooltip
                     :SetLine(conquest.currentValue)
                     :SetGrayColor()
             end
-            Display:ToLine()
+            Tooltip:ToLine()
 
-            Display
+            Tooltip
                 :SetDoubleLine(L["Rated PvP"], L["Weekly Stats"])
                 :ToHeader()
 
             for bracket in PvP:IterableBracketInfo() do
                 if bracket.rating > 0 then
-                    Display
+                    Tooltip
                         :SetFormattedLine(RATED_PVP_LABEL_FORMAT, bracket.name, bracket.rating)
                         :SetFormattedLine(RATED_PVP_WEEKLY_STATUS_FORMAT, bracket.weeklyPlayed, bracket.weeklyWon, bracket.weeklyLost)
                         :SetHighlight()
                 else
-                    Display
+                    Tooltip
                         :SetLine(bracket.name)
                         :SetGrayColor()
                         :SetLine(0)
                         :SetGrayColor()
                 end
-                Display:ToLine()
+                Tooltip:ToLine()
 
                 if bracket.tierName and IsShiftKeyDown() then
-                    Display
+                    Tooltip
                         :SetFormattedLine(RATED_PVP_NEXT_RANK, bracket.tierName, bracket.nextTierName)
                         :ToLine()
 
-                    Display:AddIcon(bracket.tierIcon)
+                    Tooltip:AddIcon(bracket.tierIcon)
                 end
             end
 
             PvP:TryLoadSeasonItemReward()
         elseif PvP:IsPreseason() then
-            Display:AddLine(L["Player vs. Player (Preseason)"])
+            Tooltip:AddLine(L["Player vs. Player (Preseason)"])
         end
     end
 
-    Display:Show()
+    Tooltip:Show()
 end)
 
 PvP:RegisterEvent("WOWINFO_PVP_SEASON_REWARD", function(_, _, itemName, itemQuality, itemIcon, progress)
     local itemQualityColor = itemQuality and BAG_ITEM_QUALITY_COLORS[itemQuality] or HIGHLIGHT_FONT_COLOR
     local progressPct = FormatPercentage(progress)
 
-    Display
+    Tooltip
         :AddEmptyLine()
         :SetLine(itemName)
         :SetColor(itemQualityColor)
@@ -95,7 +95,7 @@ PvP:RegisterEvent("WOWINFO_PVP_SEASON_REWARD", function(_, _, itemName, itemQual
         :Show()
 end)
 
-Display:RegisterHookScript(LFDMicroButton, "OnLeave", function(self)
-    Display:Hide()
+Tooltip:RegisterHookScript(LFDMicroButton, "OnLeave", function(self)
+    Tooltip:Hide()
 	PvP:CancelSeasonItemReward()
 end)

@@ -45,17 +45,17 @@ do
         end
     }
 
-    function addon:NewDisplay(name, extensionName)
-        local display = addon:NewObject(name .. "Display")
+    function addon:NewTooltip(name, extensionName)
+        local tooltip = addon:NewObject(name .. "Tooltip")
         local friend = addon:GetObject(name .. "Extension", true)
-        -- When the Display and the Extension have the same name they are considered friends,
-        -- meaning, the Display can access the Extension as if it was part of the same object.
-        display.__friend = friend
-        -- REVIEW: For now each Display can have a single extension.
+        -- When the Tooltip and the Extension have the same name they are considered friends,
+        -- meaning, the Tooltip can access the Extension as if it was part of the same object.
+        tooltip.__friend = friend
+        -- REVIEW: For now each Tooltip can have a single extension.
         if extensionName then
-            display.__extension = addon:GetObject(extensionName .. "Extension")
+            tooltip.__extension = addon:GetObject(extensionName .. "Extension")
         end
-        return setmetatable(display, MT)
+        return setmetatable(tooltip, MT)
     end
 end
 

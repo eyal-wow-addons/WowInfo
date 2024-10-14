@@ -1,6 +1,6 @@
 local _, addon = ...
 local Quests = addon:GetObject("Quests")
-local Display = addon:NewDisplay("Quests")
+local Tooltip = addon:NewTooltip("Quests")
 
 local L = addon.L
 
@@ -8,27 +8,27 @@ local function AddQuestHeader(headerInfo, progressString, progressIterator)
     if not headerInfo.ID then
         return
     end
-    Display:AddEmptyLine()
+    Tooltip:AddEmptyLine()
     if not headerInfo.isCompleted then
-        Display
+        Tooltip
             :SetLine(headerInfo.title)
             :SetHighlight()
             :ToLine()
             :AddEmptyLine()
             :AddLine(progressString)
         for stepName, isCurrentStep, isStepCompleted in progressIterator(Quests) do
-            Display:SetLine(stepName)
+            Tooltip:SetLine(stepName)
             if isCurrentStep then
-                Display:SetHighlight()
+                Tooltip:SetHighlight()
             elseif isStepCompleted then
-                Display:SetGreenColor()
+                Tooltip:SetGreenColor()
             else
-                Display:SetGrayColor()
+                Tooltip:SetGrayColor()
             end
-            Display:ToLine()
+            Tooltip:ToLine()
         end
     else
-        Display
+        Tooltip
             :SetLine(headerInfo.title)
             :SetHighlight()
             :SetLine(L["Completed"])
@@ -37,22 +37,22 @@ local function AddQuestHeader(headerInfo, progressString, progressIterator)
     end
 end
 
-Display:RegisterHookScript(QuestLogMicroButton, "OnEnter", function()
+Tooltip:RegisterHookScript(QuestLogMicroButton, "OnEnter", function()
     local questLogInfo = Quests:GetQuestLogInfo()
     local campaignInfo = Quests:GetCampaignInfo()
     local storyInfo = Quests:GetZoneStoryInfo()
 
     if questLogInfo.total > 0 then
-        Display
+        Tooltip
             :SetDoubleLine(L["Total Quests"], questLogInfo.total)
             :ToHeader()
 
-        Display
+        Tooltip
             :SetDoubleLine(L["Completed"], questLogInfo.totalCompleted)
             :SetHighlight()
             :ToLine()
 
-         Display
+         Tooltip
             :SetDoubleLine(L["Incompleted"], questLogInfo.totalIncompleted)
             :SetHighlight()
             :ToLine()
@@ -68,6 +68,6 @@ Display:RegisterHookScript(QuestLogMicroButton, "OnEnter", function()
         L["Story Progress: X/Y Chapters"]:format(storyInfo.numCompleted, storyInfo.numCriteria), 
         Quests.IterableZoneStoryChaptersInfo)
 
-    Display:Show()
+    Tooltip:Show()
 end)
 

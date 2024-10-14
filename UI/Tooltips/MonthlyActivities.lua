@@ -1,12 +1,12 @@
 local _, addon = ...
 local MonthlyActivities = addon:GetObject("MonthlyActivities")
-local Display = addon:NewDisplay("MonthlyActivities")
+local Tooltip = addon:NewTooltip("MonthlyActivities")
 
 local L = addon.L
 
 local PROGRESS_FORMAT = "%s / %s"
 
-Display:RegisterHookScript(EJMicroButton, "OnEnter", function(self)
+Tooltip:RegisterHookScript(EJMicroButton, "OnEnter", function(self)
     if not self:IsEnabled() then
         return
     end
@@ -16,11 +16,11 @@ Display:RegisterHookScript(EJMicroButton, "OnEnter", function(self)
     if earnedThresholdAmount then
         local thresholdProgressString = PROGRESS_FORMAT:format(earnedThresholdAmount, thresholdMax)
 
-        if itemReward and not Display.itemDataLoadedCancelFunc then
-            Display.itemDataLoadedCancelFunc = function()
+        if itemReward and not Tooltip.itemDataLoadedCancelFunc then
+            Tooltip.itemDataLoadedCancelFunc = function()
                 local itemName = itemReward:GetItemName()
                 if itemName then
-                    Display
+                    Tooltip
                         :SetLine(L["Traveler's Log Progress:"])
                         :SetHighlight()
                         :ToLine()
@@ -35,7 +35,7 @@ Display:RegisterHookScript(EJMicroButton, "OnEnter", function(self)
             end
         end
 
-        Display
+        Tooltip
             :SetDoubleLine(L["Traveler's Log:"], monthString)
             :ToHeader()
             :AddEmptyLine()
@@ -45,31 +45,31 @@ Display:RegisterHookScript(EJMicroButton, "OnEnter", function(self)
             :AddEmptyLine()
 
         if itemReward then
-            itemReward:ContinueWithCancelOnItemLoad(Display.itemDataLoadedCancelFunc)
+            itemReward:ContinueWithCancelOnItemLoad(Tooltip.itemDataLoadedCancelFunc)
         else
-            Display
+            Tooltip
                 :SetDoubleLine(L["Travel Points"], thresholdProgressString)
                 :SetHighlight()
                 :ToLine()
         end
 
         if pendingReward then
-            Display
+            Tooltip
                 :AddEmptyLine()
                 :SetLine(L["Collect your reward in the Collector's Cache at the Trading Post."])
                 :SetGreenColor()
                 :ToLine()
         end
 
-        Display:Show()
+        Tooltip:Show()
     end
 end)
 
-Display:RegisterHookScript(EJMicroButton, "OnLeave", function(self)
-    Display:Hide()
-	if Display.itemDataLoadedCancelFunc then
-		Display.itemDataLoadedCancelFunc()
-		Display.itemDataLoadedCancelFunc = nil
+Tooltip:RegisterHookScript(EJMicroButton, "OnLeave", function(self)
+    Tooltip:Hide()
+	if Tooltip.itemDataLoadedCancelFunc then
+		Tooltip.itemDataLoadedCancelFunc()
+		Tooltip.itemDataLoadedCancelFunc = nil
 	end
 end)
 

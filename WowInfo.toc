@@ -56,24 +56,24 @@ Locales\enUS.lua
 
 UI\Extensions\Friends.lua
 
-UI\Display\Achievements.lua
-UI\Display\Collections.lua
-UI\Display\Currency.lua
-UI\Display\CurrencyTracker.lua
-UI\Display\DailyReset.lua
-UI\Display\Durability.lua
-UI\Display\Experience.lua
-UI\Display\Friends.lua
-UI\Display\GreatVaultProgress.lua
-UI\Display\GuildFriends.lua
-UI\Display\Money.lua
-UI\Display\MonthlyActivities.lua
-UI\Display\Professions.lua
-UI\Display\PvE.lua
-UI\Display\PvP.lua
-UI\Display\Quests.lua
-UI\Display\Realms.lua
-UI\Display\Reputation.lua
-UI\Display\Talents.lua
+UI\Tooltips\Achievements.lua
+UI\Tooltips\Collections.lua
+UI\Tooltips\Currency.lua
+UI\Tooltips\CurrencyTracker.lua
+UI\Tooltips\DailyReset.lua
+UI\Tooltips\Durability.lua
+UI\Tooltips\Experience.lua
+UI\Tooltips\Friends.lua
+UI\Tooltips\GreatVaultProgress.lua
+UI\Tooltips\GuildFriends.lua
+UI\Tooltips\Money.lua
+UI\Tooltips\MonthlyActivities.lua
+UI\Tooltips\Professions.lua
+UI\Tooltips\PvE.lua
+UI\Tooltips\PvP.lua
+UI\Tooltips\Quests.lua
+UI\Tooltips\Realms.lua
+UI\Tooltips\Reputation.lua
+UI\Tooltips\Talents.lua
 
 UI\Speedometer.lua

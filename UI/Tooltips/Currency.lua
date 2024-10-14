@@ -1,6 +1,6 @@
 local _, addon = ...
 local Currency = addon:GetObject("Currency")
-local Display = addon:NewDisplay("Currency")
+local Tooltip = addon:NewTooltip("Currency")
 
 local L = addon.L
 
@@ -12,11 +12,11 @@ local function AddCurrencyInfo(iterator)
     for currency in iterator() do
         refreshTooltip = true
         if currency.isHeader then
-            Display:AddFormattedHeader(L["S Currency:"], currency.name)
+            Tooltip:AddFormattedHeader(L["S Currency:"], currency.name)
         else
             local currentQuantity = BreakUpLargeNumbers(currency.quantity)
 
-            Display
+            Tooltip
                 :SetFormattedLine(ITEM_LINE_FORMAT, currency.iconFileID, currency.name)
                 :SetLine(currentQuantity)
                 :SetHighlight()
@@ -28,31 +28,31 @@ local function AddCurrencyInfo(iterator)
                     percent = Round(currency.quantity / currency.maxQuantity * 100)
 
                     if IsShiftKeyDown() then
-                        Display:SetFormattedLine(MAX_QUANTITY_LINE_FORMAT, currentQuantity, BreakUpLargeNumbers(currency.maxQuantity))
+                        Tooltip:SetFormattedLine(MAX_QUANTITY_LINE_FORMAT, currentQuantity, BreakUpLargeNumbers(currency.maxQuantity))
                     end
 
                     if percent == 100 then
-                        Display:SetRedColor()
+                        Tooltip:SetRedColor()
                     elseif percent > 90 then
-                        Display:SetOrangeColor()
+                        Tooltip:SetOrangeColor()
                     elseif percent >= 80 then
-                        Display:SetYellowColor()
+                        Tooltip:SetYellowColor()
                     end
                 end
             else
-                Display:SetGrayColor()
+                Tooltip:SetGrayColor()
             end
 
-            Display:ToLine()
+            Tooltip:ToLine()
         end
     end
     return refreshTooltip
 end
 
-Display:RegisterHookScript(CharacterMicroButton, "OnEnter", function()
+Tooltip:RegisterHookScript(CharacterMicroButton, "OnEnter", function()
     local refreshTooltip1 = AddCurrencyInfo(Currency.IterableLatestExpansionInfo)
     local refreshTooltip2 = AddCurrencyInfo(Currency.IterablePvPInfo)
     if refreshTooltip1 or refreshTooltip2 then
-        Display:Show()
+        Tooltip:Show()
     end
 end)

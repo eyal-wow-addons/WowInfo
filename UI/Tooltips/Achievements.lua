@@ -1,13 +1,13 @@
 local _, addon = ...
 local Achievements = addon:GetObject("Achievements")
-local Display = addon:NewDisplay("Achievements")
+local Tooltip = addon:NewTooltip("Achievements")
 
 local L = addon.L
 local MicroMenu = addon.MicroMenu
 
 local PROGRESS_FORMAT = "%s / %s"
 
-function Display:AddAchievementSummaryProgressLine(guildOnly)
+function Tooltip:AddAchievementSummaryProgressLine(guildOnly)
     local total, completed = Achievements:GetSummaryProgressInfo(guildOnly)
 
     total = BreakUpLargeNumbers(total)
@@ -26,7 +26,7 @@ function Display:AddAchievementSummaryProgressLine(guildOnly)
         :AddEmptyLine()
 end
 
-function Display:AddAchievementCategoriesSummaryInfo(guildOnly)
+function Tooltip:AddAchievementCategoriesSummaryInfo(guildOnly)
     for categoryName, total, completed in Achievements:IterableCategoriesSummaryInfo(guildOnly) do
 
         total = BreakUpLargeNumbers(total)
@@ -39,7 +39,7 @@ function Display:AddAchievementCategoriesSummaryInfo(guildOnly)
     end
 end
 
-Display:RegisterHookScript(AchievementMicroButton, "OnEnter", function(self)
+Tooltip:RegisterHookScript(AchievementMicroButton, "OnEnter", function(self)
     if not self:IsEnabled() then
         return
     end
@@ -48,13 +48,13 @@ Display:RegisterHookScript(AchievementMicroButton, "OnEnter", function(self)
         return
     end
 
-    Display:AddAchievementSummaryProgressLine()
-    Display:AddAchievementCategoriesSummaryInfo()
+    Tooltip:AddAchievementSummaryProgressLine()
+    Tooltip:AddAchievementCategoriesSummaryInfo()
 
     if IsInGuild() then
-        Display:AddAchievementSummaryProgressLine(true)
-        Display:AddAchievementCategoriesSummaryInfo(true)
+        Tooltip:AddAchievementSummaryProgressLine(true)
+        Tooltip:AddAchievementCategoriesSummaryInfo(true)
     end
 
-    Display:Show()
+    Tooltip:Show()
 end)
