@@ -1,8 +1,9 @@
 local _, addon = ...
-local L = addon.L
 local Collections = addon:GetObject("Collections")
 local Achievements = addon:GetObject("Achievements")
 local Tooltip = addon:NewTooltip("Collections")
+
+local L = addon.L
 
 local ACHIEVEMENT_LINE_FORMAT = "- %s: |cffffffff%d|r / |cff20ff20%d|r"
 
