@@ -22,8 +22,8 @@ local PROFESSION_RANKS =  {
 }
 
 function Professions:HasProfessions()
-    for info in self:IterableProfessionInfo() do
-        if info then
+    for prof in self:IterableProfessionInfo() do
+        if prof then
             return true
         end
     end

@@ -19,19 +19,19 @@ Tooltip:RegisterHookScript(CharacterMicroButton, "OnEnter", function()
                 :ToLine()
         end
 
-        for info in WeeklyRewards:IterableGreatVaultInfo() do
-            Tooltip:SetLine(info.header)
-            if info.index == 1 then
+        for row in WeeklyRewards:IterableGreatVaultInfo() do
+            Tooltip:SetLine(row.header)
+            if row.index == 1 then
                 Tooltip:SetColor(GREAT_VAULT_UNLOCKED_1ST_REWARD_COLOR)
-            elseif info.index == 2 then
+            elseif row.index == 2 then
                 Tooltip:SetColor(GREAT_VAULT_UNLOCKED_2ND_REWARD_COLOR)
-            elseif info.index == 3 then
+            elseif row.index == 3 then
                 Tooltip:SetColor(GREAT_VAULT_UNLOCKED_3RD_REWARD_COLOR)
             else
                 Tooltip:SetGrayColor()
             end
-            Tooltip:SetLine(info.progress)
-            if info.progress > 0 then
+            Tooltip:SetLine(row.progress)
+            if row.progress > 0 then
                 Tooltip:SetWhiteColor()
             else
                 Tooltip:SetGrayColor()

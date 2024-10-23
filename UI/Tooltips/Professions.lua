@@ -12,20 +12,20 @@ Tooltip:RegisterHookScript(ProfessionMicroButton, "OnEnter", function()
     if Professions:HasProfessions() then
         Tooltip:AddHeader(L["Professions:"])
 
-        for info in Professions:IterableProfessionInfo() do
-            Tooltip:SetFormattedLine(PROFESIONS_LABEL_FORMAT, info.name, info.skillTitle)
+        for prof in Professions:IterableProfessionInfo() do
+            Tooltip:SetFormattedLine(PROFESIONS_LABEL_FORMAT, prof.name, prof.skillTitle)
 
-            if info.skillModifier > 0 then
-                Tooltip:SetFormattedLine(PROFESIONS_RANK_WITH_MODIFIER_FORMAT, info.skillLevel, info.skillModifier, info.skillMaxLevel)
+            if prof.skillModifier > 0 then
+                Tooltip:SetFormattedLine(PROFESIONS_RANK_WITH_MODIFIER_FORMAT, prof.skillLevel, prof.skillModifier, prof.skillMaxLevel)
             else
-                Tooltip:SetFormattedLine(PROFESIONS_RANK_FORMAT, info.skillLevel, info.skillMaxLevel)
+                Tooltip:SetFormattedLine(PROFESIONS_RANK_FORMAT, prof.skillLevel, prof.skillMaxLevel)
             end
 
             Tooltip
                 :SetHighlight()
                 :ToLine()
 
-            Tooltip:AddIcon(info.icon)
+            Tooltip:AddIcon(prof.icon)
         end
 
         Tooltip:Show()

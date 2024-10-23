@@ -18,7 +18,7 @@ end
 Tooltip:RegisterHookScript(MainStatusTrackingBarContainer.bars[4], "OnEnter", function()
     Tooltip:Clear()
 
-    local xp, xpMax, xpPct = Experience:GetInfo()
+    local xp, xpMax, xpPct = Experience:GetXpInfo()
     local tnl, tnlPct = Experience:GetNextLevelInfo(xp, xpMax)
     local exhaustionThreshold, restedPct = Experience:GetRestedInfo(xpMax)
 

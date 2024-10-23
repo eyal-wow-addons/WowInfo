@@ -28,14 +28,14 @@ Tooltip:RegisterHookScript(PlayerSpellsMicroButton, "OnEnter", function(self)
         end
         Tooltip:ToLine()
 
-        for info in Talents:IterableLoadoutsInfo() do
-            if info and info.name then
-                local name = info.name
-                if info.usesSharedActionBars then
+        for loadout in Talents:IterableLoadoutsInfo() do
+            if loadout and loadout.name then
+                local name = loadout.name
+                if loadout.usesSharedActionBars then
                     name = TALENTS_LOADOUT_SHARED_ACTION_BARS:format(name)
                 end
                 Tooltip:SetLine(name)
-                if info.isActive then
+                if loadout.isActive then
                     Tooltip:SetGreenColor()
                 else
                     Tooltip:SetGrayColor()

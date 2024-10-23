@@ -16,22 +16,22 @@ Tooltip:RegisterHookScript(LFDMicroButton, "OnEnter", function(self)
 
     local isSaved
 
-    for info in PvE:IterableInstanceInfo() do
-        Tooltip:SetFormattedLine(INSTANCE_NAME_FORMAT, info.name, info.difficulty)
-        if info.isCleared then
+    for instance in PvE:IterableInstanceInfo() do
+        Tooltip:SetFormattedLine(INSTANCE_NAME_FORMAT, instance.name, instance.difficulty)
+        if instance.isCleared then
             Tooltip
                 :SetLine(L["Cleared"])
                 :SetRedColor()
         else
-            Tooltip:SetFormattedLine(INSTANCE_PROGRESS_FORMAT, Tooltip:ToRed(info.defeatedBosses), Tooltip:ToGreen(info.maxBosses))
+            Tooltip:SetFormattedLine(INSTANCE_PROGRESS_FORMAT, Tooltip:ToRed(instance.defeatedBosses), Tooltip:ToGreen(instance.maxBosses))
         end
         Tooltip:ToLine()
         isSaved = true
     end
 
-    for info in PvE:IterableSavedWorldBossInfo() do
+    for boss in PvE:IterableSavedWorldBossInfo() do
         Tooltip
-            :SetDoubleLine(info.name, L["Defeated"])
+            :SetDoubleLine(boss.name, L["Defeated"])
             :SetRedColor()
             :ToLine()
         isSaved = true

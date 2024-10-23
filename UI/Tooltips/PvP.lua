@@ -16,11 +16,11 @@ Tooltip:RegisterHookScript(LFDMicroButton, "OnEnter", function(self)
 
     Tooltip:AddHeader(L["PvP Progress:"])
 
-    local honorInfo = PvP:GetHonorProgressInfo()
+    local honor = PvP:GetHonorProgressInfo()
 
     Tooltip
-        :SetFormattedLine(L["Honor Level X"], honorInfo.level)
-        :SetFormattedLine(STANDING_FORMAT, honorInfo.currentValue, honorInfo.maxValue)
+        :SetFormattedLine(L["Honor Level X"], honor.level)
+        :SetFormattedLine(STANDING_FORMAT, honor.currentValue, honor.maxValue)
         :SetHighlight()
         :ToLine()
 

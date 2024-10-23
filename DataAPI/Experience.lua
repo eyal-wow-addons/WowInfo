@@ -1,7 +1,7 @@
 local _, addon = ...
 local Experience = addon:NewObject("Experience")
 
-function Experience:GetInfo()
+function Experience:GetXpInfo()
     local xp, xpMax = UnitXP("player"), UnitXPMax("player")
     return xp, xpMax, xp / xpMax
 end

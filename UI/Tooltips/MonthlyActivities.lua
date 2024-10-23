@@ -11,7 +11,7 @@ Tooltip:RegisterHookScript(EJMicroButton, "OnEnter", function(self)
         return
     end
 
-    local earnedThresholdAmount, thresholdMax, itemReward, pendingReward, monthString, timeString = MonthlyActivities:GetInfo()
+    local earnedThresholdAmount, thresholdMax, itemReward, pendingReward, monthString, timeString = MonthlyActivities:GetProgressInfo()
   
     if earnedThresholdAmount then
         local thresholdProgressString = PROGRESS_FORMAT:format(earnedThresholdAmount, thresholdMax)

@@ -14,16 +14,16 @@ Tooltip:RegisterHookScript(QuickJoinToastButton, "OnEnter", function()
     if numWoWOnline > 0 then
         Tooltip:AddFormattedHeader(L["World of Warcraft (X):"], numWoWOnline)
 
-        for info in Friends:IterableWoWFriendsInfo() do
-            local charName = Tooltip:GetFormattedCharName(info)
-            charName = Tooltip:GetFormattedStatus(info, charName)
+        for friend in Friends:IterableWoWFriendsInfo() do
+            local charName = Tooltip:GetFormattedCharName(friend)
+            charName = Tooltip:GetFormattedStatus(friend, charName)
 
             Tooltip:SetLine(charName):ToLine()
 
-            if IsShiftKeyDown() and info.zoneName then
-                Tooltip:SetLine(info.zoneName):Indent(6)
+            if IsShiftKeyDown() and friend.zoneName then
+                Tooltip:SetLine(friend.zoneName):Indent(6)
 
-                if info.sameZone then
+                if friend.sameZone then
                     Tooltip:SetGreenColor()
                 else
                     Tooltip:SetGrayColor()
@@ -37,35 +37,35 @@ Tooltip:RegisterHookScript(QuickJoinToastButton, "OnEnter", function()
     if numBNetOnline > 0 then
         Tooltip:AddFormattedHeader(L["Battle.net (X):"], numBNetOnline)
 
-        for info in Friends:IterableBattleNetFriendsInfo() do
-            local accountName = info.accountName
-            --accountName = info.isFavorite and info.appearOffline and Tooltip:ToGray(accountName) or accountName
-            accountName = Tooltip:GetFormattedStatus(info, accountName)
+        for friend in Friends:IterableBattleNetFriendsInfo() do
+            local accountName = friend.accountName
+            --accountName = friend.isFavorite and friend.appearOffline and Tooltip:ToGray(accountName) or accountName
+            accountName = Tooltip:GetFormattedStatus(friend, accountName)
 
-            if info.characterName then
-                Tooltip:SetFormattedLine(BNET_CHAR_LINE_FORMAT, accountName, Tooltip:GetFormattedCharName(info))
+            if friend.characterName then
+                Tooltip:SetFormattedLine(BNET_CHAR_LINE_FORMAT, accountName, Tooltip:GetFormattedCharName(friend))
             else
                 Tooltip:SetLine(accountName)
             end
 
             Tooltip
                 :SetColor(BATTLENET_FONT_COLOR)
-                :SetLine(info.clientProgram)
+                :SetLine(friend.clientProgram)
                 :SetColor(BATTLENET_FONT_COLOR)
                 :ToLine()
 
-            if IsShiftKeyDown() and info.characterName then
-                if info.zoneName then
-                    Tooltip:SetLine(info.zoneName):Indent(6)
-                    if info.sameZone then
+            if IsShiftKeyDown() and friend.characterName then
+                if friend.zoneName then
+                    Tooltip:SetLine(friend.zoneName):Indent(6)
+                    if friend.sameZone then
                         Tooltip:SetGreenColor()
                     else
                         Tooltip:SetGrayColor()
                     end
                 end
-                if info.realmName then
-                    Tooltip:SetLine(info.realmName):Indent()
-                    if info.sameRealm then
+                if friend.realmName then
+                    Tooltip:SetLine(friend.realmName):Indent()
+                    if friend.sameRealm then
                         Tooltip:SetGreenColor()
                     else
                         Tooltip:SetGrayColor()

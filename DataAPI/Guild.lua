@@ -123,10 +123,10 @@ end
 function Guild:GetTotalOnlineFriends()
     local onlineGuildFriendsCounter = 0
     local onlineGuildFriendsMobileCounter = 0
-    for _, info in self:IterableGuildFriendsInfo() do
-        if info.status > 1 then
+    for _, friend in self:IterableGuildFriendsInfo() do
+        if friend.status > 1 then
             onlineGuildFriendsCounter = onlineGuildFriendsCounter + 1
-        elseif info.isMobile then
+        elseif friend.isMobile then
             onlineGuildFriendsMobileCounter = onlineGuildFriendsMobileCounter + 1
         end
     end
@@ -141,14 +141,14 @@ function Guild:IterableOnlineFriendsInfo()
         if maxOnlineGuildFriends <= 0 then
             return
         end
-        for index, info in self:IterableGuildFriendsInfo(i) do
+        for index, friend in self:IterableGuildFriendsInfo(i) do
             if onlineGuildFriendsCounter >= maxOnlineGuildFriends then
                 return
             end
             i = index
-            if info.status > 1 then
+            if friend.status > 1 then
                 onlineGuildFriendsCounter = onlineGuildFriendsCounter + 1
-                return info
+                return friend
             end
         end
     end

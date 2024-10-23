@@ -109,7 +109,7 @@ MonthlyActivities:RegisterEvents(
         CacheActivitiesInfo()
     end)
 
-function MonthlyActivities:GetInfo()
+function MonthlyActivities:GetProgressInfo()
     if AreMonthlyActivitiesRestricted() then
         return nil
     end

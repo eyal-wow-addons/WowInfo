@@ -58,21 +58,21 @@ function Friends:GetOnlineFriendsInfo()
     local onlineFriendsCounter = 0
 
     for i = 1, numWoWTotal do
-        local info = CACHE.Friends[i]
-        if info and info.connected then
-            INFO.OnlineFriends[info.name] = true
+        local friend = CACHE.Friends[i]
+        if friend and friend.connected then
+            INFO.OnlineFriends[friend.name] = true
             onlineFriendsCounter = onlineFriendsCounter + 1
-        elseif INFO.OnlineFriends[info.name] then
-            INFO.OnlineFriends[info.name] = nil
+        elseif INFO.OnlineFriends[friend.name] then
+            INFO.OnlineFriends[friend.name] = nil
         end
     end
 
     for i = 1, numBNetTotal do
-        local accountInfo = CACHE.BattleNetFriends[i]
-        if accountInfo then
-            local characterName = accountInfo.gameAccountInfo.characterName
-            local client = accountInfo.gameAccountInfo.clientProgram
-            local isOnline = accountInfo.gameAccountInfo.isOnline
+        local friend = CACHE.BattleNetFriends[i]
+        if friend then
+            local characterName = friend.gameAccountInfo.characterName
+            local client = friend.gameAccountInfo.clientProgram
+            local isOnline = friend.gameAccountInfo.isOnline
             if client == BNET_CLIENT_WOW and isOnline then
                 INFO.OnlineFriends[characterName] = true
                 onlineFriendsCounter = onlineFriendsCounter + 1

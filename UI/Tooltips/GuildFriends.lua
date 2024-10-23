@@ -19,16 +19,16 @@ Tooltip:RegisterHookScript(GuildMicroButton, "OnEnter", function(self)
         if totalOnlineGuildFriends > 0 then
             Tooltip:AddFormattedHeader(L["Guild Friends (X):"], totalOnlineGuildFriends)
 
-            for info in Guild:IterableOnlineFriendsInfo() do
-                local charName = Tooltip:GetFormattedCharName(info)
-                charName = Tooltip:GetFormattedStatus(info, charName)
+            for friend in Guild:IterableOnlineFriendsInfo() do
+                local charName = Tooltip:GetFormattedCharName(friend)
+                charName = Tooltip:GetFormattedStatus(friend, charName)
 
                 Tooltip:SetLine(charName)
 
-                if IsShiftKeyDown() and info.zoneName then
-                    Tooltip:SetLine(info.zoneName)
+                if IsShiftKeyDown() and friend.zoneName then
+                    Tooltip:SetLine(friend.zoneName)
 
-                    if info.sameZone then
+                    if friend.sameZone then
                         Tooltip:SetGreenColor()
                     else
                         Tooltip:SetGrayColor()

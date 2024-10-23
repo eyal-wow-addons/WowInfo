@@ -144,15 +144,15 @@ end
 
 function Achievements:IterableCategoriesSummaryInfo(guildOnly)
     local cacheKey = guildOnly and "GuildSummary" or "Summary"
-    local catInfo = CACHE[cacheKey].CategoriesInfo
-    local info
+    local categories = CACHE[cacheKey].CategoriesInfo
+    local category
     local i = 0
-    local n = #catInfo
+    local n = #categories
     return function()
         i = i + 1
         if i <= n then
-            info = catInfo[i]
-            return info.name, info.total, info.completed
+            category = categories[i]
+            return category.name, category.total, category.completed
         end
     end
 end
