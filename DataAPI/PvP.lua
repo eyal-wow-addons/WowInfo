@@ -132,23 +132,23 @@ function PvP:IterableBracketInfo()
             local bracketIndex = BRACKETS_INDEXES[i]
             local rating, _, _, _, _, weeklyPlayed, weeklyWon,_, _, pvpTier = GetPersonalRatedInfo(bracketIndex)
             local tierName, tierIconID, nextTierName = GetSeasonTierInfo(pvpTier)
-            local info = INFO.Rated[i]
+            local bracket = INFO.Rated.Bracket[i]
 
-            if not info then
-                INFO.Rated[i] = {}
-                info = INFO.Rated[i]
+            if not bracket then
+                INFO.Rated.Bracket[i] = {}
+                bracket = INFO.Rated.Bracket[i]
             end
 
-            info.name = name
-            info.rating = rating
-            info.weeklyPlayed = weeklyPlayed
-            info.weeklyWon = weeklyWon
-            info.weeklyLost = weeklyPlayed - weeklyWon
-            info.tierName = tierName
-            info.tierIcon = tierIconID
-            info.nextTierName = nextTierName
+            bracket.name = name
+            bracket.rating = rating
+            bracket.weeklyPlayed = weeklyPlayed
+            bracket.weeklyWon = weeklyWon
+            bracket.weeklyLost = weeklyPlayed - weeklyWon
+            bracket.tierName = tierName
+            bracket.tierIcon = tierIconID
+            bracket.nextTierName = nextTierName
 
-            return info
+            return bracket
         end
     end
 end
