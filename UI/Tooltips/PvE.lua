@@ -5,7 +5,7 @@ local Tooltip = addon:NewTooltip("PvE")
 local L = addon.L
 
 local INSTANCE_NAME_FORMAT = "%s (%s)"
-local INSTANCE_PROGRESS_FORMAT = "%d / %d"
+local INSTANCE_PROGRESS_FORMAT = "%s / %s"
 
 Tooltip:RegisterHookScript(LFDMicroButton, "OnEnter", function(self)
     if not self:IsEnabled() then
