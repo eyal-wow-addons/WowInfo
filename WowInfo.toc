@@ -37,6 +37,7 @@ Storage\Reputation.lua
 DataAPI\Achievements.lua
 DataAPI\Collections.lua
 DataAPI\Currency.lua
+DataAPI\Delves.lua
 DataAPI\Durability.lua
 DataAPI\Experience.lua
 DataAPI\Friends.lua
@@ -70,6 +71,7 @@ UI\Tooltips\Money.lua
 UI\Tooltips\MonthlyActivities.lua
 UI\Tooltips\Professions.lua
 UI\Tooltips\PvE.lua
+UI\Tooltips\Delves.lua
 UI\Tooltips\PvP.lua
 UI\Tooltips\Quests.lua
 UI\Tooltips\Realms.lua
