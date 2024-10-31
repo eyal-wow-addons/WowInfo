@@ -20,8 +20,32 @@ local function TryLoadAddOn(name)
     return true
 end
 
+local function RegisterTooltips()
+    for object in addon:IterableObjects() do
+        local target = object.target
+        if object.type == "tooltip" and target then
+            local frame = target.button or target.frame
+            if frame then
+                if target.onEnter then
+                    object:RegisterHookScript(frame, "OnEnter", target.onEnter)
+                end
+                if target.onLeave then
+                    object:RegisterHookScript(frame, "OnLeave", target.onLeave)
+                end
+            elseif target.funcName then
+                if target.table then
+                    hooksecurefunc(target.table, target.funcName, target.func)
+                else
+                    hooksecurefunc(target.funcName, target.func)
+                end
+            end
+        end
+    end
+end
+
 function addon:OnInitialized()
     self.DB = LibStub("AceDB-3.0"):New("WowInfoDB", {}, true)
+
     SLASH_WOWINFO1 = "/wowinfo"
     SLASH_WOWINFO2 = "/wowi"
     SLASH_WOWINFO3 = "/wi"
@@ -33,6 +57,8 @@ function addon:OnInitialized()
             addon.__options:Open()
         end
     end
+
+    RegisterTooltips()
 end
 
 do
@@ -55,6 +81,7 @@ do
         if extensionName then
             tooltip.__extension = addon:GetObject(extensionName .. "Extension")
         end
+        tooltip.type = "tooltip"
         return setmetatable(tooltip, MT)
     end
 end
