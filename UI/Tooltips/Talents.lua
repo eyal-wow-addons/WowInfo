@@ -9,10 +9,6 @@ local TALENTS_LOADOUT_SHARED_ACTION_BARS = "%s*"
 Tooltip.target = {
     button = PlayerSpellsMicroButton,
     onEnter = function()
-        --[[if not button:IsEnabled() then
-            return
-        end]]
-    
         local spec = Talents:GetCurrentSpec()
     
         if spec then

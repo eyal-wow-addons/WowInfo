@@ -9,10 +9,6 @@ local PROGRESS_FORMAT = "%s / %s"
 Tooltip.target = {
     button = EJMicroButton,
     onEnter = function()
-        --[[if not button:IsEnabled() then
-            return
-        end]]
-    
         local earnedThresholdAmount, thresholdMax, itemReward, pendingReward, monthString, timeString = MonthlyActivities:GetProgressInfo()
       
         if earnedThresholdAmount then

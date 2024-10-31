@@ -9,10 +9,6 @@ local PROGRESS_FORMAT = "%s / %s"
 Tooltip.target = {
     button = LFDMicroButton,
     onEnter = function()
-        --[[if not button:IsEnabled() then
-            return
-        end]]
-    
         local delves = Delves:GetProgressInfo()
     
         if delves then

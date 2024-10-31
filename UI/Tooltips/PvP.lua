@@ -27,10 +27,6 @@ end)
 Tooltip.target = {
     button = LFDMicroButton,
     onEnter = function()
-        --[[if not button:IsEnabled() then
-            return
-        end]]
-    
         Tooltip:AddHeader(L["PvP Progress:"])
     
         local honor = PvP:GetHonorProgressInfo()

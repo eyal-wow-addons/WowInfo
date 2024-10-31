@@ -10,10 +10,6 @@ local INSTANCE_PROGRESS_FORMAT = "%s / %s"
 Tooltip.target = {
     button = LFDMicroButton,
     onEnter = function()
-        --[[if not button:IsEnabled() then
-            return
-        end]]
-    
         Tooltip:AddHeader(L["Dungeons & Raids:"])
     
         local isSaved

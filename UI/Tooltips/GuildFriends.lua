@@ -7,10 +7,6 @@ local L = addon.L
 Tooltip.target = {
     button = GuildMicroButton,
     onEnter = function()
-        --[[if not button:IsEnabled() then
-            return
-        end]]
-    
         local numTotalGuildMembers, numOnlineGuildMembers = GetNumGuildMembers()
     
         if numTotalGuildMembers > 0 then
