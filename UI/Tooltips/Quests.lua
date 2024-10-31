@@ -37,37 +37,39 @@ local function AddQuestHeader(headerInfo, progressString, progressIterator)
     end
 end
 
-Tooltip:RegisterHookScript(QuestLogMicroButton, "OnEnter", function()
-    local questLogInfo = Quests:GetQuestLogInfo()
-    local campaignInfo = Quests:GetCampaignInfo()
-    local storyInfo = Quests:GetZoneStoryInfo()
-
-    if questLogInfo.total > 0 then
-        Tooltip
-            :SetDoubleLine(L["Total Quests"], questLogInfo.total)
-            :ToHeader()
-
-        Tooltip
-            :SetDoubleLine(L["Completed"], questLogInfo.totalCompleted)
-            :SetHighlight()
-            :ToLine()
-
-         Tooltip
-            :SetDoubleLine(L["Incompleted"], questLogInfo.totalIncompleted)
-            :SetHighlight()
-            :ToLine()
+Tooltip.target = {
+    button = QuestLogMicroButton,
+    onEnter = function()
+        local questLogInfo = Quests:GetQuestLogInfo()
+        local campaignInfo = Quests:GetCampaignInfo()
+        local storyInfo = Quests:GetZoneStoryInfo()
+    
+        if questLogInfo.total > 0 then
+            Tooltip
+                :SetDoubleLine(L["Total Quests"], questLogInfo.total)
+                :ToHeader()
+    
+            Tooltip
+                :SetDoubleLine(L["Completed"], questLogInfo.totalCompleted)
+                :SetHighlight()
+                :ToLine()
+    
+             Tooltip
+                :SetDoubleLine(L["Incompleted"], questLogInfo.totalIncompleted)
+                :SetHighlight()
+                :ToLine()
+        end
+    
+        AddQuestHeader(
+            campaignInfo, 
+            L["Campaign Progress: X/Y Chapters"]:format(campaignInfo.numCompleted, campaignInfo.numChapters), 
+            Quests.IterableCampaignChaptersInfo)
+    
+        AddQuestHeader(
+            storyInfo,
+            L["Story Progress: X/Y Chapters"]:format(storyInfo.numCompleted, storyInfo.numCriteria), 
+            Quests.IterableZoneStoryChaptersInfo)
+    
+        Tooltip:Show()
     end
-
-    AddQuestHeader(
-        campaignInfo, 
-        L["Campaign Progress: X/Y Chapters"]:format(campaignInfo.numCompleted, campaignInfo.numChapters), 
-        Quests.IterableCampaignChaptersInfo)
-
-    AddQuestHeader(
-        storyInfo,
-        L["Story Progress: X/Y Chapters"]:format(storyInfo.numCompleted, storyInfo.numCriteria), 
-        Quests.IterableZoneStoryChaptersInfo)
-
-    Tooltip:Show()
-end)
-
+}

@@ -6,53 +6,56 @@ local L = addon.L
 
 local TALENTS_LOADOUT_SHARED_ACTION_BARS = "%s*"
 
-Tooltip:RegisterHookScript(PlayerSpellsMicroButton, "OnEnter", function(self)
-    if not self:IsEnabled() then
-        return
-    end
-
-    local spec = Talents:GetCurrentSpec()
-
-    if spec then
-        Tooltip:AddFormattedHeader(L["Specialization: S"], Tooltip:ToPlayerClassColor(spec))
-    end
-
-    if Talents:HasLoadouts() then
-        Tooltip:AddHeader(L["Loadouts:"])
-
-        Tooltip:SetLine(TALENT_FRAME_DROP_DOWN_STARTER_BUILD)
-        if Talents:IsStarterBuildActive() then
-            Tooltip:SetGreenColor()
-        else
-            Tooltip:SetGrayColor()
+Tooltip.target = {
+    button = PlayerSpellsMicroButton,
+    onEnter = function()
+        --[[if not button:IsEnabled() then
+            return
+        end]]
+    
+        local spec = Talents:GetCurrentSpec()
+    
+        if spec then
+            Tooltip:AddFormattedHeader(L["Specialization: S"], Tooltip:ToPlayerClassColor(spec))
         end
-        Tooltip:ToLine()
-
-        for loadout in Talents:IterableLoadoutsInfo() do
-            if loadout and loadout.name then
-                local name = loadout.name
-                if loadout.usesSharedActionBars then
-                    name = TALENTS_LOADOUT_SHARED_ACTION_BARS:format(name)
+    
+        if Talents:HasLoadouts() then
+            Tooltip:AddHeader(L["Loadouts:"])
+    
+            Tooltip:SetLine(TALENT_FRAME_DROP_DOWN_STARTER_BUILD)
+            if Talents:IsStarterBuildActive() then
+                Tooltip:SetGreenColor()
+            else
+                Tooltip:SetGrayColor()
+            end
+            Tooltip:ToLine()
+    
+            for loadout in Talents:IterableLoadoutsInfo() do
+                if loadout and loadout.name then
+                    local name = loadout.name
+                    if loadout.usesSharedActionBars then
+                        name = TALENTS_LOADOUT_SHARED_ACTION_BARS:format(name)
+                    end
+                    Tooltip:SetLine(name)
+                    if loadout.isActive then
+                        Tooltip:SetGreenColor()
+                    else
+                        Tooltip:SetGrayColor()
+                    end
+                    Tooltip:ToLine()
                 end
-                Tooltip:SetLine(name)
-                if loadout.isActive then
-                    Tooltip:SetGreenColor()
-                else
-                    Tooltip:SetGrayColor()
-                end
-                Tooltip:ToLine()
             end
         end
-    end
-
-    if Talents:HasPvpTalents() then
-        Tooltip:AddHeader(L["PvP Talents:"])
-
-        for name, icon in Talents:IteratablePvpTalents() do
-            Tooltip:AddLine(name)
-            Tooltip:AddIcon(icon)
+    
+        if Talents:HasPvpTalents() then
+            Tooltip:AddHeader(L["PvP Talents:"])
+    
+            for name, icon in Talents:IteratablePvpTalents() do
+                Tooltip:AddLine(name)
+                Tooltip:AddIcon(icon)
+            end
         end
+    
+        Tooltip:Show()
     end
-
-    Tooltip:Show()
-end)
+}

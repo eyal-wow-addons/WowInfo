@@ -18,14 +18,17 @@ local function GetColoredString(percent)
     return ("|cff%02x%02x%02x%d%%|r"):format(r * 255, g * 255, 0, (percent * 100))
 end
 
-Tooltip:RegisterHookScript(CharacterMicroButton, "OnEnter", function()
-    local inventoryPct, bagsPct = Durability:GetPercentages()
-
-    inventoryPct = inventoryPct and GetColoredString(inventoryPct) or L["N/A"]
-    bagsPct = bagsPct and GetColoredString(bagsPct) or L["None"]
-
-    Tooltip:AddHeader(L["Durability:"])
-    Tooltip:AddDoubleLine(L["Equipped"], inventoryPct)
-    Tooltip:AddDoubleLine(L["Bags"], bagsPct)
-    Tooltip:Show()
-end)
+Tooltip.target = {
+    button = CharacterMicroButton,
+    onEnter = function()
+        local inventoryPct, bagsPct = Durability:GetPercentages()
+    
+        inventoryPct = inventoryPct and GetColoredString(inventoryPct) or L["N/A"]
+        bagsPct = bagsPct and GetColoredString(bagsPct) or L["None"]
+    
+        Tooltip:AddHeader(L["Durability:"])
+        Tooltip:AddDoubleLine(L["Equipped"], inventoryPct)
+        Tooltip:AddDoubleLine(L["Bags"], bagsPct)
+        Tooltip:Show()
+    end
+}

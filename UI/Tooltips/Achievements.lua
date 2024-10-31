@@ -39,22 +39,25 @@ function Tooltip:AddAchievementCategoriesSummaryInfo(guildOnly)
     end
 end
 
-Tooltip:RegisterHookScript(AchievementMicroButton, "OnEnter", function(self)
-    if not self:IsEnabled() then
-        return
+Tooltip.target = {
+    button = AchievementMicroButton,
+    onEnter = function()
+        --[[if not button:IsEnabled() then
+            return
+        end
+    
+        if MicroMenu:SetButtonTooltip(button, ACHIEVEMENT_BUTTON, "TOGGLEACHIEVEMENT") then
+            return
+        end]]
+    
+        Tooltip:AddAchievementSummaryProgressLine()
+        Tooltip:AddAchievementCategoriesSummaryInfo()
+    
+        if IsInGuild() then
+            Tooltip:AddAchievementSummaryProgressLine(true)
+            Tooltip:AddAchievementCategoriesSummaryInfo(true)
+        end
+    
+        Tooltip:Show()
     end
-
-    if MicroMenu:SetButtonTooltip(self, ACHIEVEMENT_BUTTON, "TOGGLEACHIEVEMENT") then
-        return
-    end
-
-    Tooltip:AddAchievementSummaryProgressLine()
-    Tooltip:AddAchievementCategoriesSummaryInfo()
-
-    if IsInGuild() then
-        Tooltip:AddAchievementSummaryProgressLine(true)
-        Tooltip:AddAchievementCategoriesSummaryInfo(true)
-    end
-
-    Tooltip:Show()
-end)
+}

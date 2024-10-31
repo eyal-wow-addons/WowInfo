@@ -25,19 +25,22 @@ function Tooltip:AddMoneyLine(text, moneyString)
             :ToLine()
 end
 
-Tooltip:RegisterHookScript(MainMenuBarBackpackButton, "OnEnter", function()
-    Tooltip:AddHeader(L["Money:"])
-
-    Tooltip:AddPlayerMoneyLine()
-
-    for charName, moneyString in Money:IterableCharactersMoneyInfo() do
-        Tooltip:AddMoneyLine(charName, moneyString)
+Tooltip.target = {
+    button = MainMenuBarBackpackButton,
+    onEnter = function()
+        Tooltip:AddHeader(L["Money:"])
+    
+        Tooltip:AddPlayerMoneyLine()
+    
+        for charName, moneyString in Money:IterableCharactersMoneyInfo() do
+            Tooltip:AddMoneyLine(charName, moneyString)
+        end
+    
+        Tooltip
+            :AddEmptyLine()
+            :AddMoneyLine(L["Total"], Money:GetTotalMoneyString())
+            :AddEmptyLine()
+    
+        Tooltip:Show()
     end
-
-    Tooltip
-        :AddEmptyLine()
-        :AddMoneyLine(L["Total"], Money:GetTotalMoneyString())
-        :AddEmptyLine()
-
-    Tooltip:Show()
-end)
+}

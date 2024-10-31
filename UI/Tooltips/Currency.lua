@@ -49,10 +49,13 @@ local function AddCurrencyInfo(iterator)
     return refreshTooltip
 end
 
-Tooltip:RegisterHookScript(CharacterMicroButton, "OnEnter", function()
-    local refreshTooltip1 = AddCurrencyInfo(Currency.IterableLatestExpansionInfo)
-    local refreshTooltip2 = AddCurrencyInfo(Currency.IterablePvPInfo)
-    if refreshTooltip1 or refreshTooltip2 then
-        Tooltip:Show()
+Tooltip.target = {
+    button = CharacterMicroButton,
+    onEnter = function()
+        local refreshTooltip1 = AddCurrencyInfo(Currency.IterableLatestExpansionInfo)
+        local refreshTooltip2 = AddCurrencyInfo(Currency.IterablePvPInfo)
+        if refreshTooltip1 or refreshTooltip2 then
+            Tooltip:Show()
+        end
     end
-end)
+}
