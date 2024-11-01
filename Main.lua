@@ -20,42 +20,6 @@ local function TryLoadAddOn(name)
     return true
 end
 
-local function RegisterTooltips()
-    local menu = addon.MicroMenu
-    for object in addon:IterableObjects() do
-        local target = object.target
-        if object.type == "tooltip" and target then
-            local frame = target.button or target.frame
-            if frame then
-                if target.onEnter then
-                    object:RegisterHookScript(frame, "OnEnter", function(frame)
-                        if frame.IsEnabled and not frame:IsEnabled() then
-                            return
-                        end
-                    
-                        if frame == AchievementMicroButton and menu:SetButtonTooltip(frame, ACHIEVEMENT_BUTTON, "TOGGLEACHIEVEMENT") then
-                            return
-                        end
-
-                        target.onEnter()
-                    end)
-                end
-                if target.onLeave then
-                    object:RegisterHookScript(frame, "OnLeave", function(frame)
-                        target.onLeave()
-                    end)
-                end
-            elseif target.funcName then
-                if target.table then
-                    hooksecurefunc(target.table, target.funcName, target.func)
-                else
-                    hooksecurefunc(target.funcName, target.func)
-                end
-            end
-        end
-    end
-end
-
 function addon:OnInitialized()
     self.DB = LibStub("AceDB-3.0"):New("WowInfoDB", {}, true)
 
@@ -70,8 +34,6 @@ function addon:OnInitialized()
             addon.__options:Open()
         end
     end
-
-    RegisterTooltips()
 end
 
 do
@@ -85,21 +47,20 @@ do
     }
 
     function addon:NewTooltip(name, extensionName)
-        local tooltip = addon:NewObject(name .. "Tooltip")
-        tooltip.type = "tooltip"
-
-        local friend = addon:GetObject(name .. "Extension", true)
-
+        local tooltip = addon:NewObject(name .. ".Tooltip")
+        local friend = addon:GetObject(name .. ".Extension", true)
         -- When the Tooltip and the Extension have the same name they are considered friends,
         -- meaning, the Tooltip can access the Extension as if it was part of the same object.
         tooltip.__friend = friend
-
         -- REVIEW: For now each Tooltip can have a single extension.
         if extensionName then
-            tooltip.__extension = addon:GetObject(extensionName .. "Extension")
+            tooltip.__extension = addon:GetObject(extensionName .. ".Extension")
         end
-        
         return setmetatable(tooltip, MT)
+    end
+
+    function addon:GetTooltip(name)
+        return addon:GetObject(name .. ".Tooltip")
     end
 end
 
@@ -114,7 +75,7 @@ do
 
     function addon:NewExtension(name)
         local root = addon:GetObject(name)
-        local extension = addon:NewObject(name .. "Extension")
+        local extension = addon:NewObject(name .. ".Extension")
         extension.__root = root
         return setmetatable(extension, MT)
     end
