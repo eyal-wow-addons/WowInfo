@@ -4,7 +4,6 @@ local Tooltip = addon:NewTooltip("Achievements")
 
 local L = addon.L
 
-
 local PROGRESS_FORMAT = "%s / %s"
 
 function Tooltip:AddAchievementSummaryProgressLine(guildOnly)
