@@ -33,6 +33,7 @@ Storage\Friends.lua
 Storage\Guild.lua
 Storage\Money.lua
 Storage\Reputation.lua
+Storage\TooltipManager.lua
 
 DataAPI\Achievements.lua
 DataAPI\Collections.lua
