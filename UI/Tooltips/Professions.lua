@@ -1,6 +1,6 @@
 local _, addon = ...
 local Professions = addon:GetObject("Professions")
-local Tooltip = addon:NewTooltip("Spellbook")
+local Tooltip = addon:NewTooltip("Professions")
 
 local L = addon.L
 
