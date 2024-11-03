@@ -9,7 +9,7 @@ local RATED_PVP_LABEL_FORMAT = "%s: |cff00ff00%d|r"
 local RATED_PVP_WEEKLY_STATUS_FORMAT = "%d (|cff00ff00%d|r + |cffff0000%d|r)"
 local RATED_PVP_NEXT_RANK = "%s > %s"
 
-PvP:RegisterEvent("WOWINFO_PVP_SEASON_REWARD", function(_, _, itemName, itemQuality, itemIcon, progress)
+PvP:RegisterEvent("WOWINFO_PVP_SEASON_REWARD", function(_, _, itemName, itemQuality, progress, itemIcon)
     local itemQualityColor = itemQuality and BAG_ITEM_QUALITY_COLORS[itemQuality] or HIGHLIGHT_FONT_COLOR
     local progressPct = FormatPercentage(progress)
 
@@ -20,8 +20,12 @@ PvP:RegisterEvent("WOWINFO_PVP_SEASON_REWARD", function(_, _, itemName, itemQual
         :SetLine(progressPct)
         :SetHighlight()
         :ToLine()
-        :AddIcon(itemIcon)
-        :Show()
+        
+    if itemIcon then
+        Tooltip:AddIcon(itemIcon)
+    end
+
+    Tooltip:Show()
 end)
 
 Tooltip.target = {
