@@ -6,67 +6,63 @@ local L = addon.L
 
 local PROGRESS_FORMAT = "%s / %s"
 
+MonthlyActivities:RegisterEvent("WOWINFO_MONTHLY_ACTIVITIES_REWARD", function(_, _, itemName, itemColor, progress, itemIcon)
+    local progressPct = FormatPercentage(progress)
+
+    Tooltip
+        :SetLine(L["Traveler's Log Progress:"])
+        :SetHighlight()
+        :ToLine()
+        :SetLine(itemName)
+        :SetColor(itemColor)
+        :SetLine(progressPct)
+        :SetHighlight()
+        :ToLine()
+
+    if itemIcon then
+        Tooltip:AddIcon(itemIcon)
+    end
+
+    Tooltip:Show()
+end)
+
 Tooltip.target = {
     button = EJMicroButton,
     onEnter = function()
-        local earnedThresholdAmount, thresholdMax, itemReward, pendingReward, monthString, timeString = MonthlyActivities:GetProgressInfo()
+        local monthlyActivities = MonthlyActivities:GetProgressInfo()
       
-        if earnedThresholdAmount then
-            local thresholdProgressString = PROGRESS_FORMAT:format(earnedThresholdAmount, thresholdMax)
+        Tooltip
+            :SetDoubleLine(L["Traveler's Log:"], monthlyActivities.monthString)
+            :ToHeader()
+            :AddEmptyLine()
+            :SetDoubleLine(" ", monthlyActivities.timeString)
+            :SetHighlight()
+            :ToLine()
+            :AddEmptyLine()
     
-            if itemReward and not Tooltip.itemDataLoadedCancelFunc then
-                Tooltip.itemDataLoadedCancelFunc = function()
-                    local itemName = itemReward:GetItemName()
-                    if itemName then
-                        Tooltip
-                            :SetLine(L["Traveler's Log Progress:"])
-                            :SetHighlight()
-                            :ToLine()
-                            :SetLine(itemName)
-                            :SetItemQualityColor(itemReward)
-                            :SetLine(thresholdProgressString)
-                            :SetHighlight()
-                            :ToLine()
-                            :AddIcon(itemReward:GetItemIcon())
-                            :Show()
-                    end
-                end
-            end
-    
+        if monthlyActivities.hasReward then
+            MonthlyActivities:TryLoadItemReward()
+        else
+            local progressString = PROGRESS_FORMAT:format(monthlyActivities.currentValue, monthlyActivities.maxValue)
+
             Tooltip
-                :SetDoubleLine(L["Traveler's Log:"], monthString)
-                :ToHeader()
-                :AddEmptyLine()
-                :SetDoubleLine(" ", timeString)
+                :SetDoubleLine(L["Travel Points"], progressString)
                 :SetHighlight()
                 :ToLine()
-                :AddEmptyLine()
-    
-            if itemReward then
-                itemReward:ContinueWithCancelOnItemLoad(Tooltip.itemDataLoadedCancelFunc)
-            else
-                Tooltip
-                    :SetDoubleLine(L["Travel Points"], thresholdProgressString)
-                    :SetHighlight()
-                    :ToLine()
-            end
-    
-            if pendingReward then
-                Tooltip
-                    :AddEmptyLine()
-                    :SetLine(L["Collect your reward in the Collector's Cache at the Trading Post."])
-                    :SetGreenColor()
-                    :ToLine()
-            end
-    
-            Tooltip:Show()
         end
+
+        if monthlyActivities.hasRewardPending then
+            Tooltip
+                :AddEmptyLine()
+                :SetLine(L["Collect your reward in the Collector's Cache at the Trading Post."])
+                :SetGreenColor()
+                :ToLine()
+        end
+
+        Tooltip:Show()
     end,
     onLeave = function()
         Tooltip:Hide()
-        if Tooltip.itemDataLoadedCancelFunc then
-            Tooltip.itemDataLoadedCancelFunc()
-            Tooltip.itemDataLoadedCancelFunc = nil
-        end
+        MonthlyActivities:CancelItemReward()
     end
 }

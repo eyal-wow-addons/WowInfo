@@ -1,6 +1,8 @@
 local _, addon = ...
 local MonthlyActivities = addon:NewObject("MonthlyActivities")
 
+local INFO = {}
+
 local CACHE = {}
 
 local MONTHLY_ACTIVITIES_MONTH_NAMES = {
@@ -113,5 +115,45 @@ function MonthlyActivities:GetProgressInfo()
     if AreMonthlyActivitiesRestricted() then
         return nil
     end
-    return CACHE.earnedThresholdAmount, CACHE.thresholdMax, CACHE.itemReward, CACHE.pendingReward, GetMonthlyActivitiesTimeInfo(CACHE.displayMonthName, CACHE.secondsRemaining)
+
+    local monthString, timeString = GetMonthlyActivitiesTimeInfo(CACHE.displayMonthName, CACHE.secondsRemaining)
+
+    INFO.hasReward = CACHE.itemReward ~= nil
+    INFO.hasRewardPending = CACHE.pendingReward
+    INFO.maxValue = CACHE.thresholdMax
+    INFO.currentValue = CACHE.earnedThresholdAmount
+    INFO.monthString = monthString
+    INFO.timeString = timeString
+
+    return INFO
+end
+
+function MonthlyActivities:TryLoadItemReward()
+    local itemReward = CACHE.itemReward
+
+    if itemReward then
+        if not self.__itemDataLoadedCancelFunc then
+            self.__itemDataLoadedCancelFunc = function()
+                local itemName = itemReward:GetItemName()
+                if itemName then
+                    local itemColor = item:GetItemQualityColor()
+                    local itemIcon = itemReward:GetItemIcon()
+                    local progress =  CACHE.earnedThresholdAmount / CACHE.thresholdMax
+
+                    itemColor = itemColor and itemColor.color or NORMAL_FONT_COLOR
+
+                    PvP:TriggerEvent("WOWINFO_MONTHLY_ACTIVITIES_REWARD", itemName, itemColor, progress, itemIcon)
+                end
+            end
+        end
+
+        itemReward:ContinueWithCancelOnItemLoad(self.__itemDataLoadedCancelFunc)
+    end
+end
+
+function MonthlyActivities:CancelItemReward()
+    if self.__itemDataLoadedCancelFunc then
+		self.__itemDataLoadedCancelFunc()
+		self.__itemDataLoadedCancelFunc = nil
+	end
 end
