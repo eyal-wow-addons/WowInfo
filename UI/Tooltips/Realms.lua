@@ -21,6 +21,5 @@ Tooltip.target = {
         else
             Tooltip:AddFormattedHeader(L["Realm: X"], Tooltip:ToPlayerClassColor(CharacterInfo:GetRealm()))
         end
-        Tooltip:Show()
     end
 }

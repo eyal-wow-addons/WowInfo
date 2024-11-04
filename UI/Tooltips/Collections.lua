@@ -38,7 +38,5 @@ Tooltip.target = {
                 :AddFormattedHeader(L["Toys: X / Y"], totalLearnedToys, totalToys)
                 :AddAchievementLine(Achievements.GetToysAchievementInfo)
         end
-    
-        Tooltip:Show()
     end
 }

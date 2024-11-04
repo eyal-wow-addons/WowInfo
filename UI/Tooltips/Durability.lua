@@ -29,6 +29,5 @@ Tooltip.target = {
         Tooltip:AddHeader(L["Durability:"])
         Tooltip:AddDoubleLine(L["Equipped"], inventoryPct)
         Tooltip:AddDoubleLine(L["Bags"], bagsPct)
-        Tooltip:Show()
     end
 }

@@ -93,11 +93,8 @@ Tooltip.target = {
                 Tooltip:AddLine(L["Player vs. Player (Preseason)"])
             end
         end
-    
-        Tooltip:Show()
     end,
     onLeave = function()
-        Tooltip:Hide()
         PvP:CancelSeasonItemReward()
     end
 }

@@ -29,8 +29,6 @@ Tooltip.target = {
     
                 Tooltip:AddIcon(prof.icon)
             end
-    
-            Tooltip:Show()
         end
     end
 }

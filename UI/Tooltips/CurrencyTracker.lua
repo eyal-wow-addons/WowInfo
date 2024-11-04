@@ -26,9 +26,7 @@ Tooltip.target = {
                 Tooltip:AddFormattedLine(QUANTITY_LINE_FORMAT, charName, Tooltip:ToWhite(quantity))
             end
     
-            Tooltip
-                :AddEmptyLine()
-                :Show()
+            Tooltip:AddEmptyLine()
         end
     end
 }

@@ -51,7 +51,5 @@ Tooltip.target = {
                 Tooltip:AddIcon(icon)
             end
         end
-    
-        Tooltip:Show()
     end
 }

@@ -40,8 +40,6 @@ Tooltip.target = {
                 end
                 Tooltip:ToLine()
             end
-    
-            Tooltip:Show()
         end
     end
 }

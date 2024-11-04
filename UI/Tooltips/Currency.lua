@@ -8,9 +8,7 @@ local ITEM_LINE_FORMAT = "|T%s:0|t %s"
 local MAX_QUANTITY_LINE_FORMAT = "%s |cffffffff/ %s|r"
 
 local function AddCurrencyInfo(iterator)
-    local refreshTooltip
     for currency in iterator() do
-        refreshTooltip = true
         if currency.isHeader then
             Tooltip:AddFormattedHeader(L["S Currency:"], currency.name)
         else
@@ -46,16 +44,12 @@ local function AddCurrencyInfo(iterator)
             Tooltip:ToLine()
         end
     end
-    return refreshTooltip
 end
 
 Tooltip.target = {
     button = CharacterMicroButton,
     onEnter = function()
-        local refreshTooltip1 = AddCurrencyInfo(Currency.IterableLatestExpansionInfo)
-        local refreshTooltip2 = AddCurrencyInfo(Currency.IterablePvPInfo)
-        if refreshTooltip1 or refreshTooltip2 then
-            Tooltip:Show()
-        end
+        AddCurrencyInfo(Currency.IterableLatestExpansionInfo)
+        AddCurrencyInfo(Currency.IterablePvPInfo)
     end
 }

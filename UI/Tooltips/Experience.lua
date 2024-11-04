@@ -48,7 +48,5 @@ Tooltip.target = {
                 :SetHighlight()
                 :ToLine()
         end
-    
-        Tooltip:Show()
     end
 }

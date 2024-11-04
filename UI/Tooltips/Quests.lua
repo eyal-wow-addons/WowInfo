@@ -69,7 +69,5 @@ Tooltip.target = {
             storyInfo,
             L["Story Progress: X/Y Chapters"]:format(storyInfo.numCompleted, storyInfo.numCriteria), 
             Quests.IterableZoneStoryChaptersInfo)
-    
-        Tooltip:Show()
     end
 }

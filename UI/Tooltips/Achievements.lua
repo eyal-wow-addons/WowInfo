@@ -42,7 +42,5 @@ Tooltip.target = {
             Tooltip:AddAchievementSummaryProgressLine(true)
             Tooltip:AddAchievementCategoriesSummaryInfo(true)
         end
-
-        Tooltip:Show()
     end
 }

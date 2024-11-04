@@ -38,7 +38,5 @@ Tooltip.target = {
         if not isSaved then
             Tooltip:AddLine(L["You are not saved to any instances."])
         end
-    
-        Tooltip:Show()
     end
 }

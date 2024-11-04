@@ -40,7 +40,5 @@ Tooltip.target = {
             :AddEmptyLine()
             :AddMoneyLine(L["Total"], Money:GetTotalMoneyString())
             :AddEmptyLine()
-    
-        Tooltip:Show()
     end
 }

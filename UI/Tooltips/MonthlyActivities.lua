@@ -58,11 +58,8 @@ Tooltip.target = {
                 :SetGreenColor()
                 :ToLine()
         end
-
-        Tooltip:Show()
     end,
     onLeave = function()
-        Tooltip:Hide()
         MonthlyActivities:CancelItemReward()
     end
 }

@@ -10,6 +10,5 @@ Tooltip.target = {
         Tooltip
             :SetDoubleLine(L["Daily Reset:"], Quests:GetResetTimeString())
             :ToHeader()
-            :Show()
     end
 }

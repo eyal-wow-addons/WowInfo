@@ -70,22 +70,26 @@ local function RegisterTooltip(tooltip)
                 end
 
                 target.onEnter()
-
-                --tooltip:Show()
+                tooltip:Show()
             end)
         end
         if target.onLeave then
             frame:HookScript("OnLeave", function(frame)
-                --tooltip:Hide()
-                
+                tooltip:Hide()
                 target.onLeave()
             end)
         end
     elseif target.funcName then
         if target.table then
-            hooksecurefunc(target.table, target.funcName, target.func)
+            hooksecurefunc(target.table, target.funcName, function(...)
+                target.func(...)
+                tooltip:Show()
+            end)
         else
-            hooksecurefunc(target.funcName, target.func)
+            hooksecurefunc(target.funcName, function(...)
+                target.func(...)
+                tooltip:Show()
+            end)
         end
     end
     tooltip.isTooltipRegistered = true

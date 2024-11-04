@@ -77,7 +77,5 @@ Tooltip.target = {
                 end
             end
         end
-    
-        Tooltip:Show()
     end
 }

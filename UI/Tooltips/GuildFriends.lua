@@ -36,8 +36,6 @@ Tooltip.target = {
                     Tooltip:ToLine()
                 end
             end
-    
-            Tooltip:Show()
         end
     end
 }
