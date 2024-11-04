@@ -28,10 +28,10 @@ function addon:OnInitialized()
     SLASH_WOWINFO3 = "/wi"
     SlashCmdList["WOWINFO"] = function(input)
         if TryLoadAddOn("WowInfo_Options") then
-            if not addon.__options then
-                addon.__options = LibStub("AceOptions-1.0")
+            if not self.__options then
+                self.__options = LibStub("AceOptions-1.0")
             end
-            addon.__options:Open()
+            self.__options:Open()
         end
     end
 end
@@ -47,20 +47,20 @@ do
     }
 
     function addon:NewTooltip(name, extensionName)
-        local tooltip = addon:NewObject(name .. ".Tooltip")
-        local friend = addon:GetObject(name .. ".Extension", true)
+        local tooltip = self:NewObject(name .. ".Tooltip")
+        local friend = self:GetObject(name .. ".Extension", true)
         -- When the Tooltip and the Extension have the same name they are considered friends,
         -- meaning, the Tooltip can access the Extension as if it was part of the same object.
         tooltip.__friend = friend
         -- REVIEW: For now each Tooltip can have a single extension.
         if extensionName then
-            tooltip.__extension = addon:GetObject(extensionName .. ".Extension")
+            tooltip.__extension = self:GetObject(extensionName .. ".Extension")
         end
         return setmetatable(tooltip, MT)
     end
 
     function addon:GetTooltip(name)
-        return addon:GetObject(name .. ".Tooltip")
+        return self:GetObject(name .. ".Tooltip")
     end
 end
 
@@ -74,8 +74,8 @@ do
     }
 
     function addon:NewExtension(name)
-        local root = addon:GetObject(name)
-        local extension = addon:NewObject(name .. ".Extension")
+        local root = self:GetObject(name)
+        local extension = self:NewObject(name .. ".Extension")
         extension.__root = root
         return setmetatable(extension, MT)
     end
