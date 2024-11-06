@@ -19,10 +19,6 @@ local CACHE = {
     CurrencyTracker = {}
 }
 
-local ACCOUNT_WIDE_CURRENCY = {
-    [2032] = true -- Trader's Tender
-}
-
 local _G = _G
 local PLAYER_V_PLAYER = PLAYER_V_PLAYER
 
@@ -41,6 +37,7 @@ local function GetCurrencyListEntryInfo(index)
         INFO.quantity = entry.quantity
         INFO.maxQuantity = entry.maxQuantity
         INFO.iconFileID = entry.iconFileID
+        INFO.isAccountWide = entry.isAccountWide
         return INFO
     end
 end
@@ -52,7 +49,7 @@ local function IterableCurrencyListEntryInfo()
         i = i + 1
         while i <= n do
             local entry = GetCurrencyListEntryInfo(i)
-            if entry and not ACCOUNT_WIDE_CURRENCY[entry.ID] then
+            if entry and not entry.isAccountWide then
                 return entry
             end
             i = i + 1
@@ -85,7 +82,7 @@ local function FindHeaderByName(headerName)
 end
 
 local function GetPlayerCurrencyQuantity(currencyID)
-    if not currencyID or ACCOUNT_WIDE_CURRENCY[currencyID] then
+    if not currencyID then
         return 0
     end
     for entry in IterableCurrencyListEntryInfo() do
@@ -133,6 +130,7 @@ local function CacheCurrencyInfo()
         entry.quantity = currency.quantity
         entry.maxQuantity = currency.maxQuantity
         entry.iconFileID = currency.iconFileID
+        entry.isAccountWide = currency.isAccountWide
         
         CACHE.CurrencyList.size = i
 
