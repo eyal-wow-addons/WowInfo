@@ -27,6 +27,7 @@ Core\Colorizer.lua
 Core\MicroMenu.lua
 
 Main.lua
+API.lua
 
 Storage\Currency.lua
 Storage\Friends.lua
