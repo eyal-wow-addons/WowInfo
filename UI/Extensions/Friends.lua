@@ -1,5 +1,5 @@
 local _, addon = ...
-local Friends = addon:NewExtension("Friends")
+local Friends = addon:Extend("Friends")
 
 local WOW_CHAR_FORMAT = "%s |cffffffff%d|r"
 local WOW_CHAR_GROUPED_FORMAT = "|cffaaaaaa[|r%s|cffaaaaaa]|r"

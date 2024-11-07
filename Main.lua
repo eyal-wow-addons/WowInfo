@@ -73,7 +73,7 @@ do
         end
     }
 
-    function addon:NewExtension(name)
+    function addon:Extend(name)
         local root = self:GetObject(name)
         local extension = self:NewObject(name .. ".Extension")
         extension.__root = root
