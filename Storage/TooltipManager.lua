@@ -48,7 +48,8 @@ local defaults = {
 }
 
 local function IsObjectTooltip(object)
-    return object.name and object.name:find(".Tooltip") and object.target
+    local name = object:GetName()
+    return name and name:find(".Tooltip$") and object.target
 end
 
 local function RegisterTooltip(tooltip)
