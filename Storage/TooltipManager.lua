@@ -126,14 +126,14 @@ function Storage:OnInitialized()
 end
 
 function Storage:Disable(name)
-    DB.__objects.Disabled[name] = true
+    DB.profile.Disabled[name] = true
 end
 
 function Storage:Enable(name)
-    DB.__objects.Disabled[name] = false
+    DB.profile.Disabled[name] = false
 end
 
 function Storage:IsDisabled(name)
-    return DB.__objects.Disabled[name] == true
+    return DB.profile.Disabled[name] == true
 end
 
