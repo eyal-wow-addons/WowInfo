@@ -1,6 +1,6 @@
 local _, addon = ...
 
-WowInfo = {}
+WowInfo = addon:NewObject(addon:GetName())
 
 function WowInfo:GetObject(name)
     return addon:GetObject(name)

@@ -7,9 +7,6 @@ externals:
   Libs/CallbackHandler-1.0: https://repos.curseforge.com/wow/callbackhandler/trunk
   Libs/LibDataBroker-1.1: https://repos.curseforge.com/wow/libdatabroker-1-1
   Libs/AceDB-3.0: https://repos.curseforge.com/wow/ace3/trunk/AceDB-3.0
-  Libs/AceGUI-3.0: https://repos.curseforge.com/wow/ace3/trunk/AceGUI-3.0
-  Libs/AceConfig-3.0: https://repos.curseforge.com/wow/ace3/trunk/AceConfig-3.0
-  Libs/AceDBOptions-3.0: https://repos.curseforge.com/wow/ace3/trunk/AceDBOptions-3.0
   AddOns/WowInfo_Options: https://github.com/eyal-wow-addons/WowInfo_Options
   AddOns/WowLibs: https://github.com/eyal-wow-addons/WowLibs
 
@@ -29,7 +26,4 @@ move-folders:
   WowInfo/Libs/CallbackHandler-1.0/CallbackHandler-1.0: WowInfo/Libs/CallbackHandler-1.0
   WowInfo/AddOns/WowLibs/Libs/Toolkit: WowInfo/Libs/Toolkit
   WowInfo/AddOns/WowInfo_Options: WowInfo_Options
-  WowInfo/Libs/AceGUI-3.0: WowInfo_Options/Libs/AceGUI-3.0
-  WowInfo/Libs/AceConfig-3.0: WowInfo_Options/Libs/AceConfig-3.0
-  WowInfo/Libs/AceDBOptions-3.0: WowInfo_Options/Libs/AceDBOptions-3.0
   WowInfo/AddOns/WowLibs/Libs/AceOptions: WowInfo_Options/Libs/AceOptions

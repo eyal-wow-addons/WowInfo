@@ -7,16 +7,14 @@ local Colorizer = addon.Colorizer
 local ADDON_LOAD_FAILED = "<< %s >> " .. ADDON_LOAD_FAILED
 
 local function TryLoadAddOn(name)
-	local loaded, reason = C_AddOns.LoadAddOn(name)
-	if not loaded and not reason then
-        C_AddOns.LoadAddOn(name)
-    elseif reason then
-        local _, title = GetAddOnInfo(addon:GetName())
+    local loaded, reason = C_AddOns.LoadAddOn(name)
+    if not loaded and reason then
+        local _, title = C_AddOns.GetAddOnInfo(addon:GetName())
         title = NORMAL_FONT_COLOR:WrapTextInColorCode(title)
         local state = RED_FONT_COLOR:WrapTextInColorCode(_G["ADDON_" .. reason])
         print(YELLOW_FONT_COLOR:WrapTextInColorCode(ADDON_LOAD_FAILED:format(title, name, state)))
         return false
-	end
+    end
     return true
 end
 
@@ -28,10 +26,7 @@ function addon:OnInitialized()
     SLASH_WOWINFO3 = "/wi"
     SlashCmdList["WOWINFO"] = function(input)
         if TryLoadAddOn("WowInfo_Options") then
-            if not self.__options then
-                self.__options = LibStub("AceOptions-1.0")
-            end
-            self.__options:Open()
+            WowInfo:TriggerEvent("WOWINFO_OPTIONS_OPENED")
         end
     end
 end
