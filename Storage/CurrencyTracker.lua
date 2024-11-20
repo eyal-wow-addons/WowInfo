@@ -1,5 +1,5 @@
 local _, addon = ...
-local Storage, DB = addon:NewStorage("Currency")
+local Storage, DB = addon:NewStorage("CurrencyTracker")
 
 local CharacterInfo = LibStub("CharacterInfo-1.0")
 
@@ -50,5 +50,5 @@ function Storage:Reset()
     local charName = CharacterInfo:GetFullName()
     DB.__data[charName] = {}
     DB.__character_data = DB.__data[charName]
-    self:TriggerEvent("WOWINFO_CURRENCY_RESET")
+    self:TriggerEvent("WOWINFO_CURRENCY_TRACKER_RESET")
 end

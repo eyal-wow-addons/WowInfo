@@ -29,7 +29,7 @@ Core\MicroMenu.lua
 Main.lua
 API.lua
 
-Storage\Currency.lua
+Storage\CurrencyTracker.lua
 Storage\Friends.lua
 Storage\Guild.lua
 Storage\Money.lua
@@ -39,6 +39,7 @@ Storage\TooltipManager.lua
 DataAPI\Achievements.lua
 DataAPI\Collections.lua
 DataAPI\Currency.lua
+DataAPI\CurrencyTracker.lua
 DataAPI\Delves.lua
 DataAPI\Durability.lua
 DataAPI\Experience.lua

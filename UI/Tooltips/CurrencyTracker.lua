@@ -1,5 +1,5 @@
 local _, addon = ...
-local Currency = addon:GetObject("Currency")
+local CurrencyTracker = addon:GetObject("CurrencyTracker")
 local Tooltip = addon:NewTooltip("CurrencyTracker")
 
 local L = addon.L
@@ -10,11 +10,11 @@ Tooltip.target = {
     table = GameTooltip,
     funcName = "SetCurrencyToken",
     func = function(_, index)
-        local totalQuantity = Currency:GetTotalQuantity(index)
+        local totalQuantity = CurrencyTracker:GetTotalQuantity(index)
         if totalQuantity > 0 then
             Tooltip:AddFormattedHeader(L["All Characters (X):"], totalQuantity)
     
-            for charName, quantity, isCurrentChar in Currency:IterableCharactersCurrencyInfo(index) do
+            for charName, quantity, isCurrentChar in CurrencyTracker:IterableCharactersCurrencyInfo(index) do
                 if isCurrentChar then
                     charName = Tooltip:ToPlayerClassColor(charName)
                 end
