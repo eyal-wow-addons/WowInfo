@@ -27,14 +27,15 @@ Core\Colorizer.lua
 Core\MicroMenu.lua
 
 Main.lua
-API.lua
+
+Core\API.lua
+Core\TooltipManager.lua
 
 Storage\CurrencyTracker.lua
 Storage\Friends.lua
 Storage\Guild.lua
 Storage\Money.lua
 Storage\Reputation.lua
-Storage\TooltipManager.lua
 
 DataAPI\Achievements.lua
 DataAPI\Collections.lua
