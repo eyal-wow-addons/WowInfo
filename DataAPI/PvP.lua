@@ -190,11 +190,13 @@ function PvP:TryLoadSeasonItemReward()
                 if not self.__itemDataLoadedCancelFunc then
                     self.__itemDataLoadedCancelFunc = function()
                         local itemName = itemReward:GetItemName()
+                        
                         if itemName then
                             local itemQuality = itemReward:GetItemQuality()
                             local itemIcon = itemReward:GetItemIcon()
                             local progress =  quantity / reqQuantity
-                            PvP:TriggerEvent("WOWINFO_PVP_SEASON_REWARD", itemName, itemQuality, progress, itemIcon)
+                            
+                            self:TriggerEvent("WOWINFO_PVP_SEASON_REWARD", itemName, itemQuality, progress, itemIcon)
                         end
                     end
                 end
