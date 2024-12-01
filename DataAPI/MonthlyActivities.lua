@@ -135,14 +135,15 @@ function MonthlyActivities:TryLoadItemReward()
         if not self.__itemDataLoadedCancelFunc then
             self.__itemDataLoadedCancelFunc = function()
                 local itemName = itemReward:GetItemName()
+                
                 if itemName then
-                    local itemColor = item:GetItemQualityColor()
+                    local itemColor = itemReward:GetItemQualityColor()
                     local itemIcon = itemReward:GetItemIcon()
                     local progress =  CACHE.earnedThresholdAmount / CACHE.thresholdMax
 
                     itemColor = itemColor and itemColor.color or NORMAL_FONT_COLOR
 
-                    PvP:TriggerEvent("WOWINFO_MONTHLY_ACTIVITIES_REWARD", itemName, itemColor, progress, itemIcon)
+                    self:TriggerEvent("WOWINFO_MONTHLY_ACTIVITIES_REWARD", itemName, itemColor, progress, itemIcon)
                 end
             end
         end
